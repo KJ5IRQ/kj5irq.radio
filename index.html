@@ -1,0 +1,1465 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="KJ5IRQ - Director of NetSuite Administration, ham radio enthusiast, and technology tinkerer.">
+    <title>KJ5IRQ | kj5irq.radio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@300;400;500&display=swap"
+        rel="stylesheet">
+    <style>
+        /*
+         * DESIGN RATIONALE - REFACTOR V2
+         * ==============================
+         * 
+         * COLOR UPDATE: FORD FIELD GREEN
+         * - Primary Accent: #4F6A3A (Ford Field Green)
+         *   Used for: Graphical elements (cursor, underlines, borders) to maintain brand authenticity.
+         * - Text Accent: #789c5e (Accessible Variant)
+         *   Used for: Text links and callsign.
+         *   Reasoning: The base brand color (#4F6A3A) is ~3.4:1 contrast on black, which is low for text.
+         *   This lighter variant achieves better readability while keeping the green tone.
+         *
+         * LAYOUT & MICRO-INTERACTIONS:
+         * - Retained 32/68 asymmetrical CSS Grid.
+         * - Added hover lift to work list items for better tactility.
+         * - Refined link interactions with the new green palette.
+         */
+
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* ═══ SURFACES ═══ */
+            --surface-0: #0A0A0A;
+            --surface-1: #131313;
+            --surface-2: #1A1A1A;
+
+            /* ═══ STROKES ═══ */
+            --stroke-1: #1F1F1F;
+            --stroke-2: #2A2A2A;
+
+            /* ═══ SHADOWS ═══ */
+            --shadow-1: 0 1px 3px rgba(0, 0, 0, 0.4);
+            --shadow-2: 0 4px 12px rgba(0, 0, 0, 0.5);
+
+            /* ═══ COLORS ═══ */
+            --color-text-primary: #E8E8E8;
+            --color-text-secondary: #9F9F9F;
+            --color-accent: #5A7A48;
+            --color-accent-text: #6B8F55;
+            --color-accent-hover: #4F6A3A;
+            --color-accent-dim: rgba(90, 122, 72, 0.2);
+            --color-focus: #6B8F55;
+
+            /* ═══ LEGACY ALIASES ═══ */
+            --color-bg: var(--surface-0);
+            --color-bg-primary: var(--surface-0);
+            --color-bg-sidebar: var(--surface-1);
+            --color-bg-secondary: var(--surface-1);
+            --color-text: var(--color-text-primary);
+            --color-muted: var(--color-text-secondary);
+            --color-border: var(--stroke-1);
+
+            /* ═══ TYPOGRAPHY ═══ */
+            --font-mono: 'Courier New', Courier, monospace;
+            --font-serif: 'Cormorant Garamond', Georgia, serif;
+            --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+
+            /* ═══ TYPE SCALE ═══ */
+            --type-hero: clamp(1.5rem, 3vw, 2.2rem);
+            --type-h1: clamp(2rem, 4vw, 2.8rem);
+            --type-h2: 1.5rem;
+            --type-body: 1rem;
+            --type-small: 0.875rem;
+            --type-meta: 0.75rem;
+            --tracking-caps: 0.12em;
+            --tracking-body: 0.01em;
+
+            /* ═══ SPACING (8px base) ═══ */
+            --space-1: 0.5rem;
+            --space-2: 0.75rem;
+            --space-3: 1rem;
+            --space-4: 1.5rem;
+            --space-5: 2rem;
+            --space-6: 3rem;
+            --space-7: 4rem;
+
+            /* ═══ LAYOUT ═══ */
+            --sidebar-width: 32%;
+            --content-width: 68%;
+        }
+
+        /* Light Mode - System Preference */
+        @media (prefers-color-scheme: light) {
+            :root {
+                --surface-0: #fafaf8;
+                --surface-1: #f5f5f3;
+                --surface-2: #ededeb;
+
+                --stroke-1: #d7d7d4;
+                --stroke-2: #c9c9c6;
+
+                --color-text-primary: #111111;
+                --color-text-secondary: #4b4b4b;
+
+                --color-accent: #3D5230;
+                --color-accent-text: #2f4025;
+                --color-accent-hover: #2a3a20;
+                --color-accent-dim: rgba(61, 82, 48, 0.12);
+                --color-focus: #3D5230;
+
+                /* Legacy aliases */
+                --color-bg: var(--surface-0);
+                --color-bg-primary: var(--surface-0);
+                --color-bg-sidebar: var(--surface-1);
+                --color-bg-secondary: var(--surface-1);
+                --color-text: var(--color-text-primary);
+                --color-muted: var(--color-text-secondary);
+                --color-border: var(--stroke-1);
+            }
+        }
+
+        /* Light Mode - Manual Override */
+        html.light-theme {
+            --surface-0: #fafaf8;
+            --surface-1: #f5f5f3;
+            --surface-2: #ededeb;
+
+            --stroke-1: #d7d7d4;
+            --stroke-2: #c9c9c6;
+
+            --color-text-primary: #111111;
+            --color-text-secondary: #4b4b4b;
+
+            --color-accent: #3D5230;
+            --color-accent-text: #2f4025;
+            --color-accent-hover: #2a3a20;
+            --color-accent-dim: rgba(61, 82, 48, 0.12);
+            --color-focus: #3D5230;
+
+            /* Legacy aliases */
+            --color-bg: var(--surface-0);
+            --color-bg-primary: var(--surface-0);
+            --color-bg-sidebar: var(--surface-1);
+            --color-bg-secondary: var(--surface-1);
+            --color-text: var(--color-text-primary);
+            --color-muted: var(--color-text-secondary);
+            --color-border: var(--stroke-1);
+        }
+
+        /* Dark Mode - Manual Override */
+        html.dark-theme {
+            --color-bg: #0a0a0a;
+            --color-bg-sidebar: #0d0d0d;
+            --color-text: #e8e8e8;
+            --color-muted: #888;
+            --color-accent: #5a7a48;
+            --color-accent-text: #6B8F55;
+            --color-accent-dim: rgba(90, 122, 72, 0.25);
+            --color-border: #1a1a1a;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            font-weight: 300;
+            background-color: var(--color-bg);
+            color: var(--color-text);
+            line-height: 1.75;
+            font-size: 17px;
+            letter-spacing: 0.01em;
+            cursor: default;
+        }
+
+        /* Custom Cursor */
+        .cursor {
+            width: 20px;
+            height: 20px;
+            border: 1.5px solid var(--color-muted);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            opacity: 0;
+            transition: transform 0.15s ease,
+                border-color 0.2s ease,
+                background-color 0.2s ease,
+                opacity 0.15s ease;
+            transform: translate(-50%, -50%);
+        }
+
+        .cursor.hover {
+            transform: translate(-50%, -50%) scale(1.5);
+            border-color: var(--color-accent);
+            /* Brand color for graphical border */
+            background-color: var(--color-accent-dim);
+        }
+
+        /* Hide custom cursor on touch devices */
+        @media (hover: none) {
+            .cursor {
+                display: none;
+            }
+        }
+
+        /* Links - accessible accent color with brand color underline */
+        a {
+            color: var(--color-accent-text);
+            text-decoration: none;
+            position: relative;
+            display: inline-block;
+            transition: color 0.2s ease;
+        }
+
+        a::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background-color: var(--color-accent);
+            /* Brand color for the graphic line */
+            transition: width 0.2s ease;
+        }
+
+        a:hover::after {
+            width: 100%;
+        }
+
+        /* Scoped Focus States - Interactive Elements Only */
+        a:focus-visible,
+        button:focus-visible,
+        input:focus-visible,
+        select:focus-visible,
+        textarea:focus-visible,
+        [tabindex]:not([tabindex="-1"]):focus-visible {
+            outline: none;
+            box-shadow: 0 0 0 3px var(--color-bg-primary), 0 0 0 5px var(--color-focus);
+            border-radius: 2px;
+        }
+
+        /* Skip Link */
+        .skip-link {
+            position: absolute;
+            top: -100px;
+            left: 1rem;
+            padding: 0.75rem 1.5rem;
+            background: var(--color-accent);
+            color: var(--color-text-primary);
+            font-weight: 500;
+            text-decoration: none;
+            border-radius: 2px;
+            z-index: 10000;
+            transition: top 0.2s ease;
+        }
+
+        .skip-link:focus {
+            top: 1rem;
+        }
+
+        /* Layout: CSS Grid for asymmetrical split */
+        .layout {
+            display: grid;
+            grid-template-columns: var(--sidebar-width) var(--content-width);
+            min-height: 100vh;
+        }
+
+        /* Left Sidebar - Sticky identity */
+        .sidebar {
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            background-color: var(--color-bg-sidebar);
+            border-right: 1px solid var(--color-border);
+            display: flex;
+            flex-direction: column;
+            padding: 3rem 2.5rem;
+        }
+
+        .identity {
+            animation: fadeInUp 0.8s ease forwards;
+            opacity: 0;
+            text-align: center;
+        }
+
+        @media (prefers-reduced-motion: no-preference) {
+            @keyframes fadeInUp {
+                from {
+                    opacity: 0;
+                    transform: translateY(20px);
+                }
+
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+        }
+
+        .identity h1 {
+            font-family: 'Courier New', Courier, monospace;
+            font-variant-numeric: tabular-nums;
+            font-size: clamp(1.4rem, 3vw, 1.8rem);
+            font-weight: 400;
+            letter-spacing: 0.08em;
+            line-height: 1.2;
+            margin-top: 0;
+            margin-bottom: var(--space-3);
+        }
+
+        .bio-row {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-top: 0.75rem;
+        }
+
+        .callsign {
+            display: block;
+            font-family: var(--font-serif);
+            font-size: 1.25rem;
+            font-weight: 400;
+            letter-spacing: 0.08em;
+            color: var(--color-text-primary);
+            margin: 0;
+            line-height: 1.2;
+        }
+
+        .title {
+            font-size: 0.85rem;
+            color: var(--color-muted);
+            margin: 0;
+            line-height: 1.4;
+            text-align: left;
+        }
+
+        .logo-link {
+            display: block;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .logo-link:focus-visible {
+            outline: 2px solid var(--color-focus);
+            outline-offset: 4px;
+            border-radius: 4px;
+        }
+
+        .logo {
+            width: 140px;
+            max-width: 100%;
+            height: auto;
+            margin: 0 auto var(--space-3) auto;
+            filter: invert(1);
+            opacity: 0.7;
+            display: block;
+            transition: filter 0.3s ease, opacity 0.3s ease;
+            cursor: pointer;
+        }
+
+        .logo:hover {
+            filter: invert(45%) sepia(18%) saturate(928%) hue-rotate(63deg) brightness(94%) contrast(88%);
+            opacity: 1;
+        }
+
+        /* Navigation in sidebar */
+        .nav {
+            margin-top: var(--space-4);
+        }
+
+        /* Headshot placeholder */
+        .headshot {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 1px solid var(--stroke-2);
+            background: var(--surface-1);
+            margin: var(--space-3) auto var(--space-2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--color-text-secondary);
+            font-size: var(--type-meta);
+            letter-spacing: var(--tracking-caps);
+            text-transform: uppercase;
+            overflow: hidden;
+        }
+
+        .headshot img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center 20%;
+        }
+
+        .nav ul {
+            list-style: none;
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1rem 1.5rem;
+        }
+
+        .nav a {
+            color: var(--color-muted);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            font-weight: 400;
+        }
+
+        .nav a::after {
+            bottom: -1px;
+            background-color: var(--color-accent);
+        }
+
+        .nav a:hover {
+            color: var(--color-accent-text);
+            /* Accessible highlight color */
+        }
+
+        /* Right Content Area */
+        .content {
+            padding: 6rem 4rem 4rem 4rem;
+            max-width: 700px;
+        }
+
+        section {
+            margin-bottom: 6rem;
+        }
+
+        section:last-of-type {
+            margin-bottom: 0;
+        }
+
+        h2 {
+            font-family: var(--font-serif);
+            font-size: 1.6rem;
+            font-weight: 400;
+            margin-bottom: 2rem;
+            letter-spacing: -0.01em;
+            color: var(--color-text);
+        }
+
+        p {
+            margin-bottom: 1.25rem;
+            color: var(--color-muted);
+        }
+
+        p:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Work section */
+        .work-list {
+            list-style: none;
+        }
+
+        .work-list li {
+            padding: 1.25rem 0;
+            border-bottom: 1px solid var(--color-border);
+            color: var(--color-muted);
+            transition: transform 0.2s ease, color 0.2s ease;
+        }
+
+        .work-list li:first-child {
+            border-top: 1px solid var(--color-border);
+        }
+
+        /* Enhancement: Subtle lift on hover */
+        .work-list li:hover {
+            transform: translateX(4px);
+            color: var(--color-text);
+        }
+
+        .work-list li:hover .work-title {
+            color: var(--color-accent-text);
+        }
+
+        .work-title {
+            color: var(--color-text);
+            font-weight: 400;
+            display: block;
+            margin-bottom: 0.25rem;
+            transition: color 0.2s ease;
+        }
+
+        /* Hobbies */
+        .hobby-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem 2rem;
+            list-style: none;
+        }
+
+        .hobby-list li {
+            color: var(--color-muted);
+            font-size: 1rem;
+            position: relative;
+            padding-left: 1.25rem;
+            transition: color 0.2s ease;
+        }
+
+        .hobby-list li::before {
+            content: "—";
+            position: absolute;
+            left: 0;
+            color: var(--color-border);
+            transition: color 0.2s ease;
+        }
+
+        .hobby-list li:hover {
+            color: var(--color-accent-text);
+        }
+
+        .hobby-list li:hover::before {
+            color: var(--color-accent);
+        }
+
+        /* Contact */
+        .contact-links {
+            display: flex;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .contact-links a {
+            font-size: 1rem;
+        }
+
+        /* Footer */
+        footer {
+            padding: 4rem 0;
+            color: var(--color-muted);
+            font-size: 0.85rem;
+            font-style: italic;
+            font-family: var(--font-serif);
+        }
+
+        /* ==========================================
+         * MOBILE RESPONSIVE (<768px)
+         * ==========================================
+         */
+        @media (max-width: 768px) {
+            .layout {
+                display: block;
+            }
+
+            .sidebar {
+                position: relative;
+                height: auto;
+                border-right: none;
+                border-bottom: 1px solid var(--color-border);
+                padding: 2rem 1.5rem;
+            }
+
+            .identity h1 {
+                font-size: 2rem;
+            }
+
+            .title {
+                margin-top: 1rem;
+            }
+
+            .nav {
+                margin-top: 2rem;
+            }
+
+            .nav ul {
+                flex-direction: row;
+                flex-wrap: wrap;
+                gap: 1rem 1.5rem;
+            }
+
+            .nav a {
+                font-size: 0.75rem;
+                padding: 0.5rem 0;
+                /* Larger tap target */
+            }
+
+            .content {
+                padding: 3rem 1.5rem;
+                max-width: 100%;
+            }
+
+            section {
+                margin-bottom: 4rem;
+            }
+
+            h2 {
+                font-size: 1.4rem;
+                margin-bottom: 1.5rem;
+            }
+
+            .work-list li {
+                padding: 1rem 0;
+            }
+
+            .hobby-list {
+                gap: 0.5rem 1.5rem;
+            }
+        }
+
+        /* Small phones */
+        @media (max-width: 400px) {
+            .content {
+                padding: 2rem 1.25rem;
+            }
+
+            .identity h1 {
+                font-size: 1.75rem;
+            }
+
+            .nav ul {
+                gap: 0.75rem 1rem;
+            }
+        }
+
+        /* Hero Section
+         * ============
+         * POSITIONING: "Systems that integrate, not coexist" differentiates from commodity admins.
+         * ACCENT LINE: Loud green signals confidence in positioning.
+         * SUB-LINE: Four domains (automation, AI, infrastructure, leadership) communicate breadth.
+         */
+        #hero {
+            min-height: 85vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 4rem 0 4rem 4rem;
+            margin-bottom: 6rem;
+            position: relative;
+        }
+
+        /* Animated accent line */
+        #hero::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 6px;
+            height: 0;
+            background-color: var(--color-accent);
+            animation: accentSlideIn 0.6s ease 0.2s forwards;
+        }
+
+        @media (prefers-reduced-motion: no-preference) {
+            @keyframes accentSlideIn {
+                to {
+                    height: 120px;
+                }
+            }
+        }
+
+        .hero-headline {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: clamp(1.75rem, 4vw, 2.6rem);
+            line-height: 1.2;
+            margin-bottom: var(--space-4);
+            color: var(--color-text-primary);
+            font-weight: 400;
+        }
+
+        .hero-subhead {
+            font-family: var(--font-sans);
+            font-size: var(--type-meta);
+            letter-spacing: var(--tracking-caps);
+            color: var(--color-text-secondary);
+            text-transform: uppercase;
+            font-weight: 400;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease 0.5s forwards;
+            margin-bottom: var(--space-3);
+        }
+
+        /* Mobile Hero */
+        @media (max-width: 768px) {
+            #hero {
+                min-height: 60vh;
+                padding: 3rem 1.5rem 3rem 2rem;
+            }
+
+            #hero::before {
+                width: 4px;
+                left: 0.5rem;
+            }
+
+            @media (prefers-reduced-motion: no-preference) {
+                @keyframes accentSlideIn {
+                    to {
+                        height: 80px;
+                    }
+                }
+            }
+        }
+
+        /* Typewriter Animation
+         * =====================
+         * Classic IBM-style typewriter effect with block cursor.
+         */
+        .hero-headline {
+            position: relative;
+            display: inline;
+        }
+
+        .cursor-char {
+            display: inline;
+            color: var(--color-text-secondary);
+            animation: blink-cursor 1.5s step-end infinite;
+        }
+
+        @media (prefers-reduced-motion: no-preference) {
+            @keyframes blink-cursor {
+                50% {
+                    opacity: 0;
+                }
+            }
+        }
+
+        /* Proof Chips */
+        .proof-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--space-2);
+            margin-top: var(--space-5);
+        }
+
+        /* Chip: Neutral label with green left accent */
+        .chip {
+            display: inline-block;
+            padding: var(--space-1) var(--space-3);
+            font-family: var(--font-sans);
+            font-size: var(--type-meta);
+            font-weight: 400;
+            letter-spacing: var(--tracking-caps);
+            text-transform: uppercase;
+            color: var(--color-text-secondary);
+            background: transparent;
+            border: 1px solid var(--stroke-2);
+            border-left: 2px solid var(--color-accent);
+        }
+
+        .chip-primary {
+            color: var(--color-text-primary);
+            border-left-width: 3px;
+        }
+
+        /* Hero Fact Line */
+        .hero-fact {
+            font-family: var(--font-mono);
+            font-size: var(--type-meta);
+            letter-spacing: var(--tracking-caps);
+            text-transform: uppercase;
+            color: var(--color-text-secondary);
+            margin-top: var(--space-4);
+            margin-bottom: var(--space-4);
+        }
+
+        /* CTA Button: Ghost style with green left accent */
+        .cta-button {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-1);
+            margin-top: var(--space-6);
+            padding: var(--space-2) var(--space-4);
+            font-family: var(--font-sans);
+            font-size: var(--type-small);
+            font-weight: 500;
+            letter-spacing: var(--tracking-caps);
+            text-transform: uppercase;
+            color: var(--color-text-primary);
+            background: transparent;
+            border: 1px solid var(--stroke-2);
+            border-left: 2px solid var(--color-accent);
+            cursor: pointer;
+            transition: background 0.15s ease, border-color 0.15s ease;
+        }
+
+        .cta-button:hover {
+            background: var(--surface-2);
+            border-color: var(--color-text-secondary);
+        }
+
+        .cta-button:focus-visible {
+            outline: none;
+            box-shadow: 0 0 0 2px var(--surface-0), 0 0 0 4px var(--color-focus);
+        }
+
+        @media (max-width: 768px) {
+            .proof-chips {
+                gap: 0.5rem;
+            }
+
+            .chip {
+                font-size: 0.7rem;
+                padding: 0.4rem 0.75rem;
+            }
+
+            .cta-button {
+                width: 100%;
+                text-align: center;
+            }
+        }
+
+        /* Professional Context Section (below Hero) */
+        #context {
+            margin-bottom: 6rem;
+        }
+
+        .context-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-6) var(--space-5);
+            margin-top: var(--space-6);
+            padding-top: var(--space-6);
+            border-top: 1px solid var(--stroke-1);
+        }
+
+        .context-item {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-2);
+            padding-left: var(--space-3);
+            border-left: 2px solid var(--color-accent-dim);
+        }
+
+        .context-label {
+            display: block;
+            font-family: var(--font-sans);
+            font-size: var(--type-meta);
+            letter-spacing: var(--tracking-caps);
+            text-transform: uppercase;
+            color: var(--color-text-secondary);
+            font-weight: 500;
+        }
+
+        #context p {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: var(--color-muted);
+            margin: 0;
+        }
+
+        @media (max-width: 768px) {
+            .context-grid {
+                grid-template-columns: 1fr;
+                gap: var(--space-4);
+                margin-top: var(--space-5);
+                padding-top: var(--space-5);
+            }
+
+            #context p {
+                font-size: 0.9rem;
+            }
+        }
+
+        /* Featured Projects Grid */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--space-6);
+            margin-top: var(--space-5);
+        }
+
+        .project-card {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-4);
+            padding: var(--space-5);
+            border: 1px solid var(--stroke-1);
+            background: transparent;
+            transition: border-color 0.2s ease, background 0.2s ease, transform 0.2s ease;
+        }
+
+        .project-card:hover {
+            border-color: var(--color-accent);
+            background: var(--surface-1);
+            transform: translateY(-4px);
+        }
+
+        .project-name {
+            font-family: var(--font-serif);
+            font-size: 1.2rem;
+            font-weight: 400;
+            color: var(--color-text);
+            margin: 0;
+            letter-spacing: -0.01em;
+            line-height: 1.3;
+        }
+
+        .project-meta {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-2);
+        }
+
+        .project-label {
+            display: block;
+            font-family: var(--font-sans);
+            font-size: var(--type-meta);
+            letter-spacing: var(--tracking-caps);
+            text-transform: uppercase;
+            color: var(--color-text-secondary);
+            font-weight: 500;
+        }
+
+        .project-meta p {
+            font-size: 0.9rem;
+            line-height: 1.55;
+            color: var(--color-muted);
+            margin: 0;
+        }
+
+        .project-meta p strong {
+            color: var(--color-text);
+            font-weight: 500;
+        }
+
+        @media (max-width: 1000px) {
+            .projects-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: var(--space-5);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .projects-grid {
+                grid-template-columns: 1fr;
+                gap: var(--space-4);
+            }
+
+            .project-card {
+                padding: var(--space-4);
+            }
+
+            .project-name {
+                font-size: 1.1rem;
+            }
+
+            .project-meta p {
+                font-size: 0.85rem;
+            }
+        }
+
+        /* Contact Section Redesign */
+        #contact {
+            margin-top: 8rem;
+            padding: var(--space-6);
+            border: 1px solid var(--stroke-1);
+            border-left: 2px solid var(--color-accent);
+            background: var(--surface-1);
+        }
+
+        #contact h2 {
+            margin-top: 0;
+            margin-bottom: var(--space-5);
+            font-size: 1.8rem;
+        }
+
+        .contact-container {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-5);
+        }
+
+        .contact-email-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: var(--space-3) var(--space-5);
+            font-size: 1rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: var(--tracking-caps);
+            color: var(--color-text-primary);
+            background: var(--color-accent);
+            border: none;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+            text-decoration: none;
+        }
+
+        .contact-email-button:hover {
+            transform: translateY(-2px);
+        }
+
+        .contact-email-button:focus-visible {
+            outline: none;
+            box-shadow: 0 0 0 2px var(--stroke-1);
+        }
+
+        .contact-social {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-3);
+        }
+
+        .contact-label {
+            display: block;
+            font-family: var(--font-sans);
+            font-size: var(--type-meta);
+            letter-spacing: var(--tracking-caps);
+            text-transform: uppercase;
+            color: var(--color-text-secondary);
+            font-weight: 500;
+        }
+
+        .social-links {
+            display: flex;
+            gap: var(--space-4);
+        }
+
+        .social-links a {
+            font-size: 0.95rem;
+            color: var(--color-accent-text);
+        }
+
+        .social-links a::after {
+            background-color: var(--color-accent);
+        }
+
+        @media (max-width: 768px) {
+            #contact {
+                padding: var(--space-4);
+            }
+
+            #contact h2 {
+                font-size: 1.5rem;
+                margin-bottom: var(--space-4);
+            }
+
+            .contact-email-button {
+                width: 100%;
+                padding: var(--space-2) var(--space-4);
+            }
+
+            .social-links {
+                flex-wrap: wrap;
+                gap: var(--space-3);
+            }
+        }
+
+        /* Theme Toggle Button */
+        .theme-toggle {
+            position: fixed;
+            top: 2rem;
+            right: 2rem;
+            width: 40px;
+            height: 40px;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            z-index: 1000;
+            opacity: 0.5;
+            transition: opacity 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .theme-toggle:hover {
+            opacity: 1;
+        }
+
+        .theme-toggle svg {
+            width: 24px;
+            height: 24px;
+            color: var(--color-text);
+            transition: transform 0.3s ease, opacity 0.2s ease;
+        }
+
+        .sun-icon {
+            position: absolute;
+            opacity: 1;
+            transform: rotate(0deg);
+        }
+
+        .moon-icon {
+            position: absolute;
+            opacity: 0;
+            transform: rotate(-180deg);
+        }
+
+        html.light-theme .sun-icon {
+            opacity: 0;
+            transform: rotate(180deg);
+        }
+
+        html.light-theme .moon-icon {
+            opacity: 1;
+            transform: rotate(0deg);
+        }
+
+        /* Logo filter for light mode */
+        html.light-theme .logo {
+            filter: none;
+        }
+
+        html.light-theme .logo:hover {
+            filter: brightness(0.8) contrast(1.1);
+        }
+
+        @media (max-width: 768px) {
+            .theme-toggle {
+                width: 36px;
+                height: 36px;
+                top: 1.5rem;
+                right: 1.5rem;
+            }
+
+            .theme-toggle svg {
+                width: 20px;
+                height: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Skip Link for Keyboard Navigation -->
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <!-- Theme Toggle Button -->
+    <button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme" aria-pressed="false">
+        <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="5" />
+            <line x1="12" y1="1" x2="12" y2="3" />
+            <line x1="12" y1="21" x2="12" y2="23" />
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+            <line x1="1" y1="12" x2="3" y2="12" />
+            <line x1="21" y1="12" x2="23" y2="12" />
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+        </svg>
+        <svg class="moon-icon" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+        </svg>
+    </button>
+
+    <!-- Custom cursor element -->
+    <div class="cursor"></div>
+
+    <div class="layout">
+        <!-- Left Sidebar: Sticky identity anchor -->
+        <aside class="sidebar" role="complementary" aria-label="Site navigation and identity">
+            <div class="identity">
+                <a href="#hero" aria-label="KJ5IRQ - Return to top" class="logo-link">
+                    <img src="logo.png" alt="KJ5IRQ Logo" class="logo">
+                </a>
+                <h1 class="callsign-display">KJ5IRQ</h1>
+                <div class="bio-row">
+                    <span class="callsign">Joshua W. Ford</span>
+                    <span style="color: var(--color-accent);">|</span>
+                    <p class="title">Director of NetSuite Administration<br>Nextlink Internet</p>
+                </div>
+            </div>
+
+            <nav class="nav">
+                <ul>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#work">Work</a></li>
+                    <li><a href="#hobbies">Hobbies</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </nav>
+
+            <!-- Headshot -->
+            <div class="headshot">
+                <img src="headshot.jpg" alt="Joshua W. Ford headshot" loading="lazy" decoding="async">
+            </div>
+        </aside>
+
+        <!-- Right Content: Scrollable sections -->
+        <main id="main" class="content">
+            <section id="hero">
+                <p class="hero-subhead">Enterprise Automation • AI Integration • Infrastructure Design • Technical
+                    Leadership</p>
+                <h1 class="hero-headline" data-text="I build systems that integrate, not just coexist."></h1>
+
+                <p class="hero-fact">ERP systems ownership • Automation strategy • Integration execution</p>
+
+                <div class="proof-chips">
+                    <span class="chip chip-primary">6 years NetSuite</span>
+                    <span class="chip">Enterprise AI Integration</span>
+                    <span class="chip">Systems Architect</span>
+                </div>
+
+                <button class="cta-button"
+                    onclick="document.getElementById('contact').scrollIntoView({behavior: 'smooth'})">Let's Talk
+                    Systems</button>
+            </section>
+
+            <section id="context" aria-label="Professional context">
+                <div class="context-grid">
+                    <div class="context-item">
+                        <span class="context-label">From Operations to Ownership</span>
+                        <p>Warehouse operations → NetSuite ownership → technical leadership at Nextlink Internet (AMG
+                            Technologies).</p>
+                    </div>
+
+                    <div class="context-item">
+                        <span class="context-label">Core Expertise</span>
+                        <p>NetSuite administration, workflow design, automation strategy, integration planning, and
+                            operational enablement.</p>
+                    </div>
+
+                    <div class="context-item">
+                        <span class="context-label">Systems Scope</span>
+                        <p>ERP + connected platforms, process orchestration, data flow reliability, and scaling
+                            cross-team execution.</p>
+                    </div>
+
+                    <div class="context-item">
+                        <span class="context-label">Current Focus</span>
+                        <p>Practical AI integration patterns, infrastructure automation, and systems thinking via
+                            homelab + radio.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="about">
+                <h2>About</h2>
+                <p>
+                    I build and maintain the systems that keep things running. At Nextlink Internet,
+                    part of AMG Technologies,
+                    I lead NetSuite administration—designing workflows,
+                    automating processes,
+                    and connecting the platforms that power the business. </p>
+                <p>I'm drawn to things that are well-designed and understandable. Whether it' s an ERP configuration,
+                    a home network,
+                    or a radio antenna,
+                    I enjoy figuring out how things connect and making them work better. </p>
+                <p>Based in Texas. Usually tinkering with something. </p>
+            </section>
+            <section id="work">
+                <h2>Featured Projects</h2>
+                <div class="projects-grid">
+                    <article class="project-card">
+                        <h3 class="project-name">NetSuite Process Automation</h3>
+                        <div class="project-meta">
+                            <span class="project-label">Problem</span>
+                            <p>Order-to-cash cycle required <strong>[X hours/week]</strong> of manual entry and
+                                reconciliation across disconnected systems.</p>
+                        </div>
+                        <div class="project-meta">
+                            <span class="project-label">Action</span>
+                            <p>Built workflow automation (scripts + controls) to automate posting, matching, and
+                                exception handling with auditable checkpoints.</p>
+                        </div>
+                        <div class="project-meta">
+                            <span class="project-label">Result</span>
+                            <p><strong>[X hours/week saved]. [Y% accuracy]. Reduced manual dependency.</strong></p>
+                        </div>
+                    </article>
+
+                    <article class="project-card">
+                        <h3 class="project-name">Enterprise System Integration</h3>
+                        <div class="project-meta">
+                            <span class="project-label">Problem</span>
+                            <p>Data silos between systems caused sync errors, delayed reporting, and manual workarounds
+                                across <strong>[N teams]</strong>.</p>
+                        </div>
+                        <div class="project-meta">
+                            <span class="project-label">Action</span>
+                            <p>Designed an integration approach with controlled data flow, conflict handling, and audit
+                                visibility to improve reliability.</p>
+                        </div>
+                        <div class="project-meta">
+                            <span class="project-label">Result</span>
+                            <p><strong>[Y% reduction in sync errors]. Reporting latency reduced. [X hours/week] of
+                                    workarounds eliminated.</strong></p>
+                        </div>
+                    </article>
+
+                    <article class="project-card">
+                        <h3 class="project-name">AI Integration & Inference</h3>
+                        <div class="project-meta">
+                            <span class="project-label">Problem</span>
+                            <p>Manual review became a bottleneck as automation scaled; anomaly triage created decision
+                                lag and inconsistency.</p>
+                        </div>
+                        <div class="project-meta">
+                            <span class="project-label">Action</span>
+                            <p>Prototyped decision-support workflows to flag anomalies and assist review, integrated
+                                into the operational workflow.</p>
+                        </div>
+                        <div class="project-meta">
+                            <span class="project-label">Result</span>
+                            <p><strong>[Y% faster decision cycles]. [Z% reduction in manual review]. Accuracy improving
+                                    over time.</strong></p>
+                        </div>
+                    </article>
+                </div>
+            </section>
+            <section id="hobbies">
+                <h2>Hobbies</h2>
+                <ul class="hobby-list">
+                    <li>Ham Radio</li>
+                    <li>Homelab</li>
+                    <li>Electronics</li>
+                    <li>Networking</li>
+                    <li>Linux</li>
+                </ul>
+            </section>
+            <section id="contact" aria-label="Contact and get in touch">
+                <h2>Let's Build Something Together</h2>
+                <div class="contact-container">
+                    <a href="mailto:kj5irq@kj5irq.radio" class="contact-email-button"
+                        aria-label="Send email to kj5irq at kj5irq.radio">
+                        kj5irq@kj5irq.radio
+                    </a>
+                    <div class="contact-social">
+                        <span class="contact-label">Find me elsewhere</span>
+                        <div class="social-links">
+                            <a href="https://www.linkedin.com/in/kj5irq" target="_blank" rel="noopener">LinkedIn</a>
+                            <a href="https://github.com/kj5irq" target="_blank" rel="noopener">GitHub</a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <footer>73 de KJ5IRQ </footer>
+        </main>
+    </div>
+    <script>
+        /*
+         * MICRO-INTERACTIONS
+         * ==================
+         * Custom cursor: follows mouse, morphs on interactive elements
+         * Kept lightweight—no libraries, pure vanilla JS
+         */
+
+        const cursor = document.querySelector('.cursor');
+        const interactiveElements = document.querySelectorAll('a, button, .logo');
+
+        // Only enable custom cursor on devices with fine pointer (mouse)
+        if (window.matchMedia('(pointer: fine)').matches) {
+            document.addEventListener('mousemove', (e) => {
+                cursor.style.left = e.clientX + 'px';
+                cursor.style.top = e.clientY + 'px';
+            });
+
+            interactiveElements.forEach(el => {
+                el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
+                el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
+            });
+
+            // Hide cursor when leaving window
+            document.addEventListener('mouseleave', () => {
+                cursor.style.opacity = '0';
+            });
+
+            document.addEventListener('mouseenter', () => {
+                cursor.style.opacity = '1';
+            });
+        }
+
+        else {
+            // Remove cursor element on touch devices
+            cursor.remove();
+        }
+
+        /*
+         * TYPEWRITER ANIMATION - IBM STYLE
+         * =================================
+         * Types out the headline character by character with block cursor.
+         */
+        (function initTypewriter() {
+            const headline = document.querySelector('.hero-headline');
+            const text = headline.dataset.text;
+            const typingSpeed = 70; // ms per character
+            const startDelay = 800; // ms, after subhead appears
+            let charIndex = 0;
+            const cursor = '_'; // thin underscore cursor
+
+            function typeChar() {
+                if (charIndex < text.length) {
+                    // Show typed text + cursor
+                    headline.innerHTML = text.substring(0, charIndex + 1) +
+                        '<span class="cursor-char">' + cursor + '</span>';
+                    charIndex++;
+                    setTimeout(typeChar, typingSpeed);
+                } else {
+                    // Typing complete - blink for 2.5s then stop
+                    headline.innerHTML = text + '<span class="cursor-char">' + cursor + '</span>';
+                    setTimeout(() => {
+                        const cursorEl = headline.querySelector('.cursor-char');
+                        if (cursorEl) cursorEl.style.animation = 'none';
+                    }, 2500);
+                }
+            }
+
+            // Start with just cursor
+            headline.innerHTML = '<span class="cursor-char">' + cursor + '</span>';
+            setTimeout(typeChar, startDelay);
+        })();
+
+        /*
+         * THEME SWITCHING
+         * ================
+         * Detects system preference, allows manual toggle, persists choice.
+         */
+        function initTheme() {
+            const storedTheme = localStorage.getItem('theme');
+            if (storedTheme) {
+                applyTheme(storedTheme);
+            }
+            // If no stored theme, let CSS handle system preference
+
+            // Set initial aria-pressed state
+            const html = document.documentElement;
+            const button = document.getElementById('theme-toggle');
+            const isDark = html.classList.contains('dark-theme') ||
+                (!html.classList.contains('light-theme') && window.matchMedia('(prefers-color-scheme: dark)').matches);
+            button.setAttribute('aria-pressed', isDark ? 'true' : 'false');
+        }
+
+        function applyTheme(theme) {
+            const html = document.documentElement;
+            html.classList.remove('light-theme', 'dark-theme');
+            html.classList.add(theme + '-theme');
+            localStorage.setItem('theme', theme);
+        }
+
+        function toggleTheme() {
+            const html = document.documentElement;
+            const isLight = html.classList.contains('light-theme') ||
+                (!html.classList.contains('dark-theme') && window.matchMedia('(prefers-color-scheme: light)').matches);
+            const newTheme = isLight ? 'dark' : 'light';
+            applyTheme(newTheme);
+
+            // Update aria-pressed state
+            const button = document.getElementById('theme-toggle');
+            const isDarkNow = html.classList.contains('dark-theme');
+            button.setAttribute('aria-pressed', isDarkNow ? 'true' : 'false');
+        }
+
+        // Initialize theme on page load
+        initTheme();
+
+        // Theme toggle button listener
+        document.getElementById('theme-toggle').addEventListener('click', toggleTheme);
+
+    </script>
+</body>
+
+</html>
