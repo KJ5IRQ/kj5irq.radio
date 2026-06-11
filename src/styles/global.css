@@ -1,0 +1,268 @@
+@import './tokens.css';
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+}
+
+html {
+  color-scheme: light dark;
+}
+
+body {
+  font-family: var(--font-serif);
+  font-size: var(--size-body);
+  line-height: 1.7;
+  color: var(--ink);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3 {
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+}
+
+h1 {
+  font-size: var(--size-h1);
+}
+
+h2 {
+  font-size: var(--size-h2);
+}
+
+h3 {
+  font-size: var(--size-h3);
+}
+
+p {
+  max-width: var(--measure);
+}
+
+a {
+  color: var(--link);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.15em;
+}
+
+a:hover {
+  color: var(--accent);
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+img,
+svg {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+hr {
+  border: 0;
+  border-top: 1px solid var(--rule);
+  margin: var(--space-7) 0;
+}
+
+code,
+pre,
+kbd {
+  font-family: var(--font-mono);
+  font-size: 0.875em;
+  font-variant-numeric: tabular-nums slashed-zero;
+}
+
+pre {
+  overflow-x: auto;
+  padding: var(--space-5);
+  border: 1px solid var(--rule);
+  background: var(--surface);
+  line-height: 1.5;
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--bg);
+}
+
+/* Layout primitives */
+.wrap {
+  max-width: var(--page-max);
+  margin-inline: auto;
+  padding-inline: var(--space-5);
+}
+
+.skip-link {
+  position: absolute;
+  top: -100px;
+  left: var(--space-4);
+  z-index: 100;
+  padding: var(--space-3) var(--space-5);
+  background: var(--accent);
+  color: var(--bg);
+  font-family: var(--font-mono);
+  font-size: var(--size-meta);
+  text-decoration: none;
+}
+
+.skip-link:focus {
+  top: var(--space-4);
+}
+
+/* Mono metadata text */
+.meta {
+  font-family: var(--font-mono);
+  font-size: var(--size-meta);
+  font-variant-numeric: tabular-nums slashed-zero;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.meta a {
+  color: inherit;
+}
+
+.meta a:hover {
+  color: var(--link);
+}
+
+/* Section label */
+.label {
+  font-family: var(--font-mono);
+  font-size: var(--size-meta);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+  display: block;
+  margin-bottom: var(--space-5);
+}
+
+/* Buttons (links styled as buttons) */
+.button {
+  display: inline-block;
+  padding: var(--space-3) var(--space-5);
+  border: 1px solid var(--ink);
+  font-family: var(--font-mono);
+  font-size: var(--size-meta);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--ink);
+  background: transparent;
+}
+
+.button:hover {
+  background: var(--surface);
+  color: var(--ink);
+}
+
+.button-primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--bg);
+}
+
+.button-primary:hover {
+  background: var(--link);
+  border-color: var(--link);
+  color: var(--bg);
+}
+
+/* Prose (long-form content) */
+.prose {
+  max-width: var(--measure);
+}
+
+.prose > * + * {
+  margin-top: var(--space-5);
+}
+
+.prose h2 {
+  margin-top: var(--space-8);
+  padding-top: var(--space-5);
+  border-top: 1px solid var(--rule);
+}
+
+.prose h3 {
+  margin-top: var(--space-6);
+}
+
+.prose ul,
+.prose ol {
+  padding-left: 1.25em;
+}
+
+.prose li + li {
+  margin-top: var(--space-2);
+}
+
+.prose figure {
+  margin-block: var(--space-6);
+}
+
+.prose figcaption {
+  font-family: var(--font-mono);
+  font-size: var(--size-meta);
+  color: var(--muted);
+  margin-top: var(--space-3);
+}
+
+.prose img {
+  border: 1px solid var(--rule);
+}
+
+/* Data tables */
+table {
+  border-collapse: collapse;
+  width: 100%;
+  max-width: var(--measure);
+  font-size: var(--size-small);
+}
+
+th {
+  text-align: left;
+  font-family: var(--font-mono);
+  font-size: var(--size-meta);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+  font-weight: 500;
+}
+
+th,
+td {
+  padding: var(--space-3) var(--space-5) var(--space-3) 0;
+  border-bottom: 1px solid var(--rule);
+  vertical-align: top;
+}
+
+/* Motion discipline: transitions only when motion is welcome */
+@media (prefers-reduced-motion: no-preference) {
+  a,
+  .button {
+    transition: color 150ms ease, background-color 150ms ease, border-color 150ms ease;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+@media print {
+  header.site-header nav,
+  .theme-toggle,
+  footer.site-footer .footer-links {
+    display: none;
+  }
+}

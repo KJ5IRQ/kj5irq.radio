@@ -1,0 +1,87 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import StatusTag from './StatusTag.astro';
+
+interface Props {
+  project: CollectionEntry<'projects'>;
+}
+
+const { project } = Astro.props;
+const { title, summary, status, stack, started, updated, repo, links } = project.data;
+const fmt = (d: Date) => d.toISOString().slice(0, 10);
+---
+
+<header class="cs-header">
+  <p class="label">Project</p>
+  <h1>{title}</h1>
+  <p class="cs-summary">{summary}</p>
+  <dl class="cs-meta">
+    <div>
+      <dt>Status</dt>
+      <dd><StatusTag status={status} /></dd>
+    </div>
+    {started && (
+      <div>
+        <dt>Started</dt>
+        <dd class="meta">{fmt(started)}</dd>
+      </div>
+    )}
+    <div>
+      <dt>Updated</dt>
+      <dd class="meta">{fmt(updated)}</dd>
+    </div>
+    {stack && (
+      <div>
+        <dt>Stack</dt>
+        <dd class="meta">{stack.join(' / ')}</dd>
+      </div>
+    )}
+    {repo && (
+      <div>
+        <dt>Code</dt>
+        <dd class="meta"><a href={repo} rel="noopener">Repo ↗</a></dd>
+      </div>
+    )}
+    {links?.map((l) => (
+      <div>
+        <dt>More</dt>
+        <dd class="meta"><a href={l.url} rel="noopener">{l.label} ↗</a></dd>
+      </div>
+    ))}
+  </dl>
+</header>
+
+<style>
+  .cs-header {
+    padding-block: var(--space-8) var(--space-6);
+    border-bottom: 1px solid var(--rule);
+    margin-bottom: var(--space-7);
+  }
+
+  .cs-summary {
+    font-size: var(--size-h3);
+    color: var(--muted);
+    margin-top: var(--space-4);
+    line-height: 1.4;
+  }
+
+  .cs-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-6);
+    margin-top: var(--space-6);
+  }
+
+  .cs-meta dt {
+    font-family: var(--font-mono);
+    font-size: var(--size-meta);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    margin-bottom: var(--space-2);
+  }
+
+  .cs-meta dd {
+    margin: 0;
+  }
+</style>

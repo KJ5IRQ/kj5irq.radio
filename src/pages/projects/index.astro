@@ -1,0 +1,72 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ProjectEntry from '../../components/ProjectEntry.astro';
+import { site, clusterLabels } from '../../data/site';
+
+const all = (await getCollection('projects')).sort((a, b) => a.data.order - b.data.order);
+const current = all.filter((p) => p.data.status !== 'archived');
+const archived = all.filter((p) => p.data.status === 'archived');
+
+const clusters = [...new Set(current.map((p) => p.data.cluster))];
+---
+
+<BaseLayout
+  title={`Projects · ${site.name}`}
+  description="Tools Joshua Ford builds and runs: AllStarLink node automation, local AI tooling, a homelab, and small bots that earn their keep."
+>
+  <header class="page-head">
+    <p class="label">Projects</p>
+    <h1>The bench</h1>
+    <p class="page-dek">
+      Everything here is something I actually run. Statuses and dates are real.
+    </p>
+  </header>
+
+  {
+    clusters.map((cluster) => (
+      <section class="cluster" aria-label={clusterLabels[cluster]}>
+        <h2 class="meta cluster-heading">{clusterLabels[cluster]}</h2>
+        {current
+          .filter((p) => p.data.cluster === cluster)
+          .map((project) => (
+            <ProjectEntry project={project} />
+          ))}
+      </section>
+    ))
+  }
+
+  {
+    archived.length > 0 && (
+      <section class="cluster" aria-label="Archive">
+        <h2 class="meta cluster-heading">Archive</h2>
+        {archived.map((project) => (
+          <ProjectEntry project={project} />
+        ))}
+      </section>
+    )
+  }
+</BaseLayout>
+
+<style>
+  .page-head {
+    padding-block: var(--space-8) var(--space-7);
+  }
+
+  .page-dek {
+    margin-top: var(--space-4);
+    color: var(--muted);
+    font-size: var(--size-h3);
+    line-height: 1.4;
+  }
+
+  .cluster {
+    margin-bottom: var(--space-7);
+  }
+
+  .cluster-heading {
+    color: var(--accent);
+    letter-spacing: 0.12em;
+    margin-bottom: var(--space-2);
+  }
+</style>

@@ -1,0 +1,84 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import StationFacts from '../components/StationFacts.astro';
+import { site } from '../data/site';
+---
+
+<BaseLayout
+  title={`${site.callsign} · ${site.name}, amateur radio`}
+  description="KJ5IRQ is Joshua Ford's amateur radio station in Texas: AllStarLink, EchoLink, and the tooling that automates the node."
+>
+  <article>
+    <header class="radio-head">
+      <p class="label">The station</p>
+      <h1 class="callsign-display">{site.callsign}</h1>
+      <p class="page-dek">Amateur radio station of Joshua Ford, Texas.</p>
+    </header>
+
+    <section class="radio-section">
+      <h2 class="meta section-heading">Station facts</h2>
+      <StationFacts />
+    </section>
+
+    <section class="radio-section prose">
+      <h2 class="meta section-heading">For the non-hams</h2>
+      <p>
+        Amateur radio is a licensed hobby where people build and operate their own communication
+        systems: voice, data, and everything in between, no carrier or account required. It is the
+        original decentralized network, and it still works when nothing else does.
+      </p>
+      <p>
+        My corner of it leans toward the networked modes. AllStarLink connects radio nodes over
+        the internet, which means my node is both a radio and a Linux service. That overlap is
+        where most of my projects come from.
+      </p>
+    </section>
+
+    <section class="radio-section prose">
+      <h2 class="meta section-heading">The node</h2>
+      <p>
+        I run an AllStarLink node, and because it is also a computer, it has grown a REST API, an
+        MCP server for AI agents, and a browser control panel. The full story is in
+        <a href="/projects/allstar-toolchain/">the AllStar node toolchain</a> write-up.
+      </p>
+      <p>
+        Looking for me on the air or want node details? Check
+        <a href={site.qrz} rel="noopener">QRZ</a> or just
+        <a href={`mailto:${site.email}`}>email me</a>.
+      </p>
+    </section>
+
+    <p class="meta sign-off">73 de {site.callsign}</p>
+  </article>
+</BaseLayout>
+
+<style>
+  .radio-head {
+    padding-block: var(--space-8) var(--space-6);
+  }
+
+  .callsign-display {
+    font-size: var(--size-display);
+    letter-spacing: 0.04em;
+  }
+
+  .page-dek {
+    margin-top: var(--space-4);
+    color: var(--muted);
+    font-size: var(--size-h3);
+  }
+
+  .radio-section {
+    padding-block: var(--space-6);
+  }
+
+  .section-heading {
+    color: var(--accent);
+    letter-spacing: 0.12em;
+    margin-bottom: var(--space-5);
+  }
+
+  .sign-off {
+    padding-block: var(--space-7);
+  }
+</style>

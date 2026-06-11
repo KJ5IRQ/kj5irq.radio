@@ -1,0 +1,77 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import StatusTag from './StatusTag.astro';
+
+interface Props {
+  project: CollectionEntry<'projects'>;
+}
+
+const { project } = Astro.props;
+const { title, summary, whyItMatters, status, stack, updated, repo, caseStudy } = project.data;
+const href = caseStudy ? `/projects/${project.id}/` : repo;
+const updatedLabel = updated.toISOString().slice(0, 10);
+---
+
+<article class="entry">
+  <div class="entry-head">
+    <h3>
+      {href ? <a href={href}>{title} <span aria-hidden="true">→</span></a> : title}
+    </h3>
+    <StatusTag status={status} />
+  </div>
+  <p class="entry-summary">{summary}</p>
+  <p class="entry-why">{whyItMatters}</p>
+  <p class="meta">
+    {stack && <span>{stack.join(' / ')}</span>}
+    <span>Updated <time datetime={updatedLabel}>{updatedLabel}</time></span>
+    {repo && (
+      <span>
+        <a href={repo} rel="noopener">Repo ↗</a>
+      </span>
+    )}
+  </p>
+</article>
+
+<style>
+  .entry {
+    border-top: 1px solid var(--rule);
+    padding-block: var(--space-6);
+  }
+
+  .entry-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-4);
+    flex-wrap: wrap;
+    margin-bottom: var(--space-3);
+  }
+
+  .entry-head h3 a {
+    text-decoration: none;
+    color: var(--ink);
+  }
+
+  .entry-head h3 a:hover {
+    color: var(--link);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.15em;
+  }
+
+  .entry-summary {
+    margin-bottom: var(--space-2);
+  }
+
+  .entry-why {
+    color: var(--muted);
+    font-style: italic;
+    margin-bottom: var(--space-4);
+  }
+
+  .meta {
+    display: flex;
+    gap: var(--space-5);
+    flex-wrap: wrap;
+  }
+</style>

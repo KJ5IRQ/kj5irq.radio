@@ -1,0 +1,53 @@
+---
+import { site } from '../data/site';
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="wrap">
+    <p class="footer-email">
+      <a href={`mailto:${site.email}`}>{site.email}</a>
+    </p>
+    <ul class="footer-links">
+      <li><a href={site.github} rel="me noopener">GitHub</a></li>
+      <li><a href={site.linkedin} rel="me noopener">LinkedIn</a></li>
+      <li><a href={site.qrz} rel="me noopener">QRZ</a></li>
+      <li><a href="/colophon/">Colophon</a></li>
+    </ul>
+    <p class="meta">73 de {site.callsign} · {site.location} · {year}</p>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    border-top: 1px solid var(--rule);
+    margin-top: var(--space-9);
+    padding-block: var(--space-8);
+  }
+
+  .footer-email {
+    font-size: var(--size-h3);
+    margin-bottom: var(--space-5);
+  }
+
+  .footer-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-5);
+    list-style: none;
+    padding: 0;
+    margin-bottom: var(--space-6);
+  }
+
+  .footer-links a {
+    font-family: var(--font-mono);
+    font-size: var(--size-meta);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .footer-links a:hover {
+    color: var(--link);
+  }
+</style>
