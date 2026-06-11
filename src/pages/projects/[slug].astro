@@ -1,0 +1,35 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import CaseStudyHeader from '../../components/CaseStudyHeader.astro';
+import ArchiveBanner from '../../components/ArchiveBanner.astro';
+import { site } from '../../data/site';
+
+export async function getStaticPaths() {
+  const projects = await getCollection('projects', ({ data }) => data.caseStudy);
+  return projects.map((project) => ({
+    params: { slug: project.id },
+    props: { project },
+  }));
+}
+
+const { project } = Astro.props;
+const { Content } = await render(project);
+---
+
+<BaseLayout title={`${project.data.title} · ${site.name}`} description={project.data.summary}>
+  <article>
+    <CaseStudyHeader project={project} />
+    {project.data.status === 'archived' && <ArchiveBanner />}
+    <div class="prose">
+      <Content />
+    </div>
+    <p class="back-link"><a href="/projects/">← All projects</a></p>
+  </article>
+</BaseLayout>
+
+<style>
+  .back-link {
+    margin-block: var(--space-8);
+  }
+</style>

@@ -1,0 +1,44 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { site } from '../data/site';
+---
+
+<BaseLayout
+  title={`Colophon · ${site.name}`}
+  description="How kj5irq.radio is built: Astro, two fonts, one accent color, no tracking."
+>
+  <article class="prose colophon">
+    <header>
+      <p class="label">Colophon</p>
+      <h1>How this site is built</h1>
+    </header>
+
+    <p>
+      Static pages built with <a href="https://astro.build" rel="noopener">Astro</a>, written in
+      Markdown, hosted on GitHub Pages behind Cloudflare DNS. The source is public in
+      <a href="https://github.com/KJ5IRQ/kj5irq.radio" rel="noopener">the repo</a>.
+    </p>
+    <p>
+      Type is Source Serif 4 for words and IBM Plex Mono for data, both self-hosted. The green is
+      Ford Field Green, and it is the only accent color allowed in the building.
+    </p>
+    <p>
+      No analytics, no cookies, no third-party scripts, no tracking of any kind. The only
+      JavaScript on the site is the theme toggle.
+    </p>
+    <p>
+      Statuses and dates on project pages are real and maintained by hand. If something says
+      active, it is running; if it says archived, it retired honestly.
+    </p>
+  </article>
+</BaseLayout>
+
+<style>
+  .colophon header {
+    padding-block: var(--space-8) var(--space-2);
+  }
+
+  .colophon {
+    padding-bottom: var(--space-8);
+  }
+</style>

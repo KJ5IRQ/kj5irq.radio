@@ -1,0 +1,33 @@
+---
+interface Props {
+  status: 'active' | 'stable' | 'experimental' | 'archived';
+}
+const { status } = Astro.props;
+---
+
+<span class:list={['status-tag', status]}>{status}</span>
+
+<style>
+  .status-tag {
+    font-family: var(--font-mono);
+    font-size: var(--size-meta);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    border: 1px solid currentColor;
+    padding: 0.1rem var(--space-3);
+    white-space: nowrap;
+  }
+
+  .active,
+  .stable {
+    color: var(--accent);
+  }
+
+  .experimental {
+    color: var(--status-experimental);
+  }
+
+  .archived {
+    color: var(--muted);
+  }
+</style>

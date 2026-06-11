@@ -1,0 +1,139 @@
+---
+import { getCollection } from 'astro:content';
+import { Image } from 'astro:assets';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ProjectEntry from '../components/ProjectEntry.astro';
+import { site } from '../data/site';
+import headshot from '../assets/headshot.jpg';
+
+const featured = (await getCollection('projects', ({ data }) => data.featured)).sort(
+  (a, b) => a.data.order - b.data.order
+);
+const buildDate = new Date().toISOString().slice(0, 10);
+---
+
+<BaseLayout>
+  <section class="hero">
+    <h1>Systems that integrate, not just coexist.</h1>
+    <p class="dek">
+      I'm Joshua Ford, a systems administrator in Texas. I run an ERP platform for work, and at
+      home I build tools that let software, radios, and AI agents actually reach each other.
+    </p>
+    <div class="hero-actions">
+      <a class="button button-primary" href={`mailto:${site.email}`}>Email me</a>
+      <a class="button" href="/projects/">See the projects</a>
+    </div>
+    <p class="meta hero-meta">TX · {site.callsign} · Updated {buildDate}</p>
+  </section>
+
+  <section class="home-section" aria-labelledby="featured-heading">
+    <p class="label" id="featured-heading">On the bench</p>
+    {featured.map((project) => <ProjectEntry project={project} />)}
+    <p class="more-link"><a href="/projects/">All projects →</a></p>
+  </section>
+
+  <section class="home-section operator" aria-labelledby="operator-heading">
+    <p class="label" id="operator-heading">The operator</p>
+    <div class="operator-grid">
+      <div>
+        <p>
+          I started in warehouse operations and ended up running the ERP. The habit stuck: learn
+          the system end to end, then automate the boring parts. These days that habit gets
+          applied to radios, servers, and AI agents too.
+        </p>
+        <p>Based in Texas. Usually tinkering with something.</p>
+        <p class="more-link"><a href="/about/">More about me →</a></p>
+      </div>
+      <Image
+        src={headshot}
+        alt="Joshua Ford"
+        width={320}
+        widths={[320, 640]}
+        sizes="(max-width: 700px) 40vw, 220px"
+        class="operator-photo"
+      />
+    </div>
+  </section>
+
+  <section class="home-section station-strip" aria-labelledby="station-heading">
+    <p class="label" id="station-heading">The station</p>
+    <p>
+      <span class="meta callsign-inline">{site.callsign}</span> is my amateur radio callsign. The
+      node, the tooling, and what any of that means: <a href="/radio/">the radio page</a>.
+    </p>
+  </section>
+</BaseLayout>
+
+<style>
+  .hero {
+    padding-block: var(--space-9) var(--space-8);
+  }
+
+  .hero h1 {
+    font-size: var(--size-display);
+    max-width: 18ch;
+  }
+
+  .dek {
+    margin-top: var(--space-6);
+    font-size: var(--size-h3);
+    line-height: 1.5;
+    color: var(--muted);
+    max-width: 48ch;
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: var(--space-4);
+    flex-wrap: wrap;
+    margin-top: var(--space-7);
+  }
+
+  .hero-meta {
+    margin-top: var(--space-6);
+  }
+
+  .home-section {
+    padding-block: var(--space-8);
+  }
+
+  .more-link {
+    margin-top: var(--space-5);
+  }
+
+  .operator-grid {
+    display: grid;
+    grid-template-columns: minmax(0, var(--measure)) auto;
+    gap: var(--space-7);
+    align-items: start;
+  }
+
+  .operator-grid p + p {
+    margin-top: var(--space-4);
+  }
+
+  .operator-photo {
+    border: 1px solid var(--rule);
+    width: 220px;
+    height: auto;
+  }
+
+  .station-strip {
+    border-top: 1px solid var(--rule);
+  }
+
+  .callsign-inline {
+    color: var(--accent);
+    font-size: var(--size-body);
+  }
+
+  @media (max-width: 700px) {
+    .operator-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .operator-photo {
+      width: 160px;
+    }
+  }
+</style>

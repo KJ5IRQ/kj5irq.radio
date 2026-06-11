@@ -1,0 +1,25 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { site } from '../data/site';
+---
+
+<BaseLayout title={`Nothing heard · ${site.name}`} description="Page not found." noindex>
+  <section class="nf">
+    <p class="label">404</p>
+    <h1>Nothing heard.</h1>
+    <p class="nf-dek">No copy at this address. The frequency is quiet.</p>
+    <p><a class="button" href="/">Back to the homepage</a></p>
+  </section>
+</BaseLayout>
+
+<style>
+  .nf {
+    padding-block: var(--space-9);
+  }
+
+  .nf-dek {
+    margin-block: var(--space-5) var(--space-7);
+    color: var(--muted);
+    font-size: var(--size-h3);
+  }
+</style>

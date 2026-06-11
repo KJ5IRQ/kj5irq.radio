@@ -1,0 +1,101 @@
+---
+import { Image } from 'astro:assets';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { site } from '../data/site';
+import headshot from '../assets/headshot.jpg';
+---
+
+<BaseLayout
+  title={`About · ${site.name}`}
+  description="Joshua Ford: NetSuite administrator, amateur radio operator (KJ5IRQ), and persistent tinkerer in Texas."
+>
+  <article class="about">
+    <header>
+      <p class="label">About</p>
+      <h1>The operator</h1>
+    </header>
+
+    <div class="about-grid">
+      <div class="prose">
+        <p>
+          I'm Joshua Ford, a NetSuite administrator and amateur radio operator ({site.callsign})
+          in Texas. I like systems that are understandable, and I build the missing pieces when
+          they aren't. Usually tinkering with something.
+        </p>
+
+        <h2>The arc</h2>
+        <p>
+          I started in warehouse operations, learned the systems that ran the place, and kept
+          following them upstream until I owned the ERP. Today I run NetSuite for a Texas ISP at
+          the director level: workflow design, integration plumbing, and automation that has to
+          survive real users.
+        </p>
+        <p>
+          The same habit runs the rest of my life. My radio node has a REST API and an MCP server
+          because I wanted to script it. My homelab exists so experiments break at home instead of
+          anywhere that matters. The pattern is always the same: learn the system end to end, then
+          automate the boring parts.
+        </p>
+
+        <h2>What I work with</h2>
+        <ul>
+          <li>NetSuite administration, workflows, and integrations</li>
+          <li>Python, FastAPI, and small services that do one job well</li>
+          <li>Model Context Protocol and practical, local-first AI tooling</li>
+          <li>AllStarLink, EchoLink, and amateur radio infrastructure</li>
+          <li>Proxmox, Linux, and home automation</li>
+        </ul>
+
+        <h2>Reaching me</h2>
+        <p>
+          Email is best: <a href={`mailto:${site.email}`}>{site.email}</a>. The code lives on
+          <a href={site.github} rel="noopener">GitHub</a>, the resume version of me is on
+          <a href={site.linkedin} rel="noopener">LinkedIn</a>, and the callsign checks out on
+          <a href={site.qrz} rel="noopener">QRZ</a>.
+        </p>
+      </div>
+      <Image
+        src={headshot}
+        alt="Joshua Ford"
+        width={400}
+        widths={[400, 800]}
+        sizes="(max-width: 800px) 60vw, 280px"
+        class="about-photo"
+      />
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .about header {
+    padding-block: var(--space-8) var(--space-6);
+  }
+
+  .about-grid {
+    display: grid;
+    grid-template-columns: minmax(0, var(--measure)) auto;
+    gap: var(--space-8);
+    align-items: start;
+    padding-bottom: var(--space-8);
+  }
+
+  .about-photo {
+    border: 1px solid var(--rule);
+    width: 280px;
+    height: auto;
+    position: sticky;
+    top: var(--space-6);
+  }
+
+  @media (max-width: 800px) {
+    .about-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .about-photo {
+      width: 200px;
+      position: static;
+      order: -1;
+    }
+  }
+</style>

@@ -1,0 +1,19 @@
+{
+  "name": "kj5irq.radio",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build && node scripts/privacy-grep.mjs && node scripts/check-links.mjs",
+    "check": "astro check",
+    "preview": "astro preview",
+    "sync": "node scripts/vault-sync.mjs"
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "^3.4.0",
+    "@fontsource-variable/source-serif-4": "^5.2.0",
+    "@fontsource/ibm-plex-mono": "^5.2.0",
+    "astro": "^5.8.0"
+  }
+}

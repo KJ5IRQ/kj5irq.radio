@@ -1,0 +1,36 @@
+---
+import { site } from '../data/site';
+---
+
+<table class="station-facts">
+  <caption class="visually-hidden">Station facts</caption>
+  <tbody>
+    <tr>
+      <th scope="row">Callsign</th>
+      <td class="meta">{site.callsign}</td>
+    </tr>
+    <tr>
+      <th scope="row">Location</th>
+      <td class="meta">{site.location}, United States</td>
+    </tr>
+    <tr>
+      <th scope="row">Modes</th>
+      <td class="meta">AllStarLink · EchoLink</td>
+    </tr>
+    <tr>
+      <th scope="row">Lookup</th>
+      <td class="meta"><a href={site.qrz} rel="noopener">QRZ.com/db/{site.callsign} ↗</a></td>
+    </tr>
+  </tbody>
+</table>
+
+<style>
+  .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+</style>
