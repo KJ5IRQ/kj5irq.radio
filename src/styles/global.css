@@ -11,6 +11,22 @@ html {
   color-scheme: light dark;
 }
 
+/* Tartan ribbon across the top of every page */
+body::before {
+  content: '';
+  display: block;
+  height: 6px;
+  background: repeating-linear-gradient(
+    90deg,
+    var(--tartan-navy) 0 26px,
+    var(--tartan-green) 26px 34px,
+    var(--tartan-navy) 34px 42px,
+    var(--tartan-red) 42px 50px,
+    var(--tartan-gold) 50px 54px,
+    var(--tartan-red) 54px 62px
+  );
+}
+
 body {
   font-family: var(--font-serif);
   font-size: var(--size-body);

@@ -1,15 +1,24 @@
-/* Design tokens. Light is the default theme; dark mirrors it.
-   One accent: Ford Field Green. */
+/* Design tokens. WORLD CUP 2026 SEASONAL KIT.
+   Saltire navy and gold, tartan ribbon, MacDuff red for the experimental tag.
+   Dark (match night) is the default for the season; light is the away kit.
+   The everyday palette (paper + Ford Field Green) is preserved in git history
+   at tag v1.0.0 and returns after the final. */
 
 :root {
-  --bg: #faf9f6;
-  --surface: #f2f1ec;
-  --ink: #1c1b18;
-  --muted: #5c5a53;
-  --rule: #dddbd2;
-  --accent: #4f6a3a;
-  --link: #3d5230;
-  --status-experimental: #8a6d1f;
+  /* Away kit: silver paper with navy ink and gold trim */
+  --bg: #f3f2ec;
+  --surface: #e9e8e0;
+  --ink: #131c2e;
+  --muted: #4c566b;
+  --rule: #d3d2c8;
+  --accent: #7a5f17;
+  --link: #1d3461;
+  --status-experimental: #a32638;
+  --saltire: rgba(29, 52, 97, 0.07);
+  --tartan-navy: #1d3461;
+  --tartan-green: #4f6a3a;
+  --tartan-red: #a32638;
+  --tartan-gold: #c9a23a;
 
   --font-serif: 'Source Serif 4 Variable', Georgia, 'Times New Roman', serif;
   --font-mono: 'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
@@ -38,25 +47,14 @@
 }
 
 [data-theme='dark'] {
-  --bg: #141413;
-  --surface: #1c1c1a;
-  --ink: #e9e7e0;
-  --muted: #a3a199;
-  --rule: #2c2b28;
-  --accent: #789c5e;
-  --link: #8fae76;
-  --status-experimental: #c9a23a;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme='light']) {
-    --bg: #141413;
-    --surface: #1c1c1a;
-    --ink: #e9e7e0;
-    --muted: #a3a199;
-    --rule: #2c2b28;
-    --accent: #789c5e;
-    --link: #8fae76;
-    --status-experimental: #c9a23a;
-  }
+  /* Home kit: match-night navy with gold */
+  --bg: #0b1626;
+  --surface: #122036;
+  --ink: #e8e9ec;
+  --muted: #9aa3b2;
+  --rule: #223450;
+  --accent: #c9a23a;
+  --link: #d4b65a;
+  --status-experimental: #e06a7c;
+  --saltire: rgba(232, 233, 236, 0.05);
 }
