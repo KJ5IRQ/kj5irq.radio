@@ -50,14 +50,19 @@
 }
 
 [data-theme='dark'] {
-  /* Home kit: match-night navy with gold */
-  --bg: #0b1626;
-  --surface: #122036;
+  /* Home kit: Team Scotland navy with gold */
+  --bg: #0a1a2f;
+  --surface: #112640;
   --ink: #e8e9ec;
-  --muted: #9aa3b2;
-  --rule: #223450;
+  --muted: #9aa9bd;
+  --rule: #1f3a5c;
   --accent: #c9a23a;
   --link: #d4b65a;
   --status-experimental: #e06a7c;
   --saltire: rgba(232, 233, 236, 0.05);
+}
+
+:root {
+  /* Official saltire blue, Pantone 300 */
+  --scotland-blue: #0065bf;
 }
