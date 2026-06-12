@@ -21,15 +21,18 @@
   --tartan-gold: #c9a23a;
 
   --font-serif: 'Source Serif 4 Variable', Georgia, 'Times New Roman', serif;
+  --font-display: 'Anton', 'Arial Narrow', sans-serif;
   --font-mono: 'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
 
   --size-meta: 0.8125rem;
   --size-small: 0.9375rem;
   --size-body: 1.0625rem;
   --size-h3: 1.375rem;
-  --size-h2: 1.75rem;
-  --size-h1: clamp(2.25rem, 5.5vw, 3.75rem);
-  --size-display: clamp(2.5rem, 7vw, 4.5rem);
+  --size-h2: 2rem;
+  --size-h1: clamp(2.75rem, 7vw, 5rem);
+  --size-display: clamp(3.5rem, 10vw, 7.5rem);
+
+  --gold-grad: linear-gradient(170deg, #e3c566 0%, #c9a23a 45%, #9c7a22 100%);
 
   --space-1: 0.25rem;
   --space-2: 0.5rem;
@@ -47,14 +50,19 @@
 }
 
 [data-theme='dark'] {
-  /* Home kit: match-night navy with gold */
-  --bg: #0b1626;
-  --surface: #122036;
+  /* Home kit: Team Scotland navy with gold */
+  --bg: #0a1a2f;
+  --surface: #112640;
   --ink: #e8e9ec;
-  --muted: #9aa3b2;
-  --rule: #223450;
+  --muted: #9aa9bd;
+  --rule: #1f3a5c;
   --accent: #c9a23a;
   --link: #d4b65a;
   --status-experimental: #e06a7c;
   --saltire: rgba(232, 233, 236, 0.05);
+}
+
+:root {
+  /* Official saltire blue, Pantone 300 */
+  --scotland-blue: #0065bf;
 }

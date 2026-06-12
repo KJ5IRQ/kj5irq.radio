@@ -1,10 +1,16 @@
 ---
 import { site } from '../data/site';
+import Thistle from './Thistle.astro';
 const year = new Date().getFullYear();
 ---
 
-<footer class="site-footer">
+<footer class="site-footer saltire-bg">
   <div class="wrap">
+    <div class="wc-footer">
+      <Thistle size={40} />
+      <p class="wc-cry">One nation. One dream.</p>
+      <p class="meta wc-clan">Clan MacDuff · <span lang="la">Deus juvat</span></p>
+    </div>
     <p class="footer-email">
       <a href={`mailto:${site.email}`}>{site.email}</a>
     </p>
@@ -20,9 +26,30 @@ const year = new Date().getFullYear();
 
 <style>
   .site-footer {
-    border-top: 1px solid var(--rule);
+    border-top: 2px solid var(--accent);
     margin-top: var(--space-9);
     padding-block: var(--space-8);
+    background-color: var(--surface);
+  }
+
+  .wc-footer {
+    text-align: center;
+    margin-bottom: var(--space-8);
+    padding-bottom: var(--space-7);
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .wc-cry {
+    font-family: var(--font-display);
+    font-size: clamp(1.5rem, 4vw, 2.5rem);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-top: var(--space-3);
+  }
+
+  .wc-clan {
+    margin-top: var(--space-3);
   }
 
   .footer-email {
