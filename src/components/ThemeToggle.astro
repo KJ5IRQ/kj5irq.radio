@@ -35,25 +35,13 @@
   :global([data-theme='dark']) .icon-moon {
     display: block;
   }
-
-  @media (prefers-color-scheme: dark) {
-    :global(:root:not([data-theme='light'])) .icon-sun {
-      display: none;
-    }
-
-    :global(:root:not([data-theme='light'])) .icon-moon {
-      display: block;
-    }
-  }
 </style>
 
 <script>
   const button = document.getElementById('theme-toggle');
 
   function isDark(): boolean {
-    const set = document.documentElement.dataset.theme;
-    if (set) return set === 'dark';
-    return window.matchMedia('(prefers-color-scheme: dark)').matches;
+    return document.documentElement.dataset.theme !== 'light';
   }
 
   function sync() {
