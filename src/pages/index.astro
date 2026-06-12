@@ -1,19 +1,21 @@
 ---
 import { getCollection } from 'astro:content';
-import { Image } from 'astro:assets';
+import { Image, getImage } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import ProjectEntry from '../components/ProjectEntry.astro';
 import { site } from '../data/site';
 import headshot from '../assets/headshot.jpg';
+import heroBg from '../assets/hero-bg.jpg';
 
 const featured = (await getCollection('projects', ({ data }) => data.featured)).sort(
   (a, b) => a.data.order - b.data.order
 );
 const buildDate = new Date().toISOString().slice(0, 10);
+const heroImage = await getImage({ src: heroBg, format: 'webp', width: 1920, quality: 72 });
 ---
 
 <BaseLayout>
-  <section class="hero saltire-bg gold-dust">
+  <section class="hero" style={`background-image: linear-gradient(90deg, rgba(10, 26, 47, 0.94) 0%, rgba(10, 26, 47, 0.72) 40%, rgba(10, 26, 47, 0.12) 100%), url(${heroImage.src});`}>
     <p class="kicker">World Cup 2026 · Tartan Army</p>
     <h1>Systems that integrate,<br />not just coexist.</h1>
     <p class="dek">
@@ -71,7 +73,8 @@ const buildDate = new Date().toISOString().slice(0, 10);
     margin-inline: calc(-1 * var(--space-5));
     padding-inline: var(--space-5);
     background-color: var(--surface);
-    background-blend-mode: normal;
+    background-size: cover;
+    background-position: center right;
     border-bottom: 2px solid var(--accent);
   }
 
