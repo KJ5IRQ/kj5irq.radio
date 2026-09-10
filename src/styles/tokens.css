@@ -1,16 +1,16 @@
 /* Design tokens. Everyday kit.
-   Dark is the default. Ford Field Green is the only accent.
-   Two typefaces: Source Serif 4 for words, IBM Plex Mono for data. */
+   Dark is the default. Black and white only.
+   --accent is wired for a later splash of color; today it is ink. */
 
 :root {
-  --bg: #f3f1ea;
-  --surface: #e7e4da;
-  --ink: #1a1c18;
-  --muted: #5c6158;
-  --rule: #d2cec4;
-  --accent: #3f6b3a;
-  --link: #2c5428;
-  --status-experimental: #8a4b2a;
+  --bg: #ffffff;
+  --surface: #f4f4f4;
+  --ink: #111111;
+  --muted: #5c5c5c;
+  --rule: #e2e2e2;
+  --accent: #111111;
+  --link: #111111;
+  --status-experimental: #5c5c5c;
 
   --font-serif: 'Source Serif 4 Variable', Georgia, 'Times New Roman', serif;
   --font-mono: 'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
@@ -39,12 +39,12 @@
 }
 
 [data-theme='dark'] {
-  --bg: #121410;
-  --surface: #1b1e18;
-  --ink: #e8e6df;
-  --muted: #9aa094;
-  --rule: #2e322a;
-  --accent: #8fbf80;
-  --link: #a4c998;
-  --status-experimental: #d08960;
+  --bg: #000000;
+  --surface: #141414;
+  --ink: #f4f4f4;
+  --muted: #8a8a8a;
+  --rule: #2a2a2a;
+  --accent: #f4f4f4;
+  --link: #f4f4f4;
+  --status-experimental: #8a8a8a;
 }

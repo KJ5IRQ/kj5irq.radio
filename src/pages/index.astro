@@ -13,32 +13,35 @@ const second = all.find((p) => p.id === 'hermes-kb');
 ---
 
 <BaseLayout>
-  <section class="hero">
-    <p class="kicker">{site.callsign} · {site.location}</p>
-    <h1>I run systems. Some of them talk back.</h1>
-    <p class="dek">
-      I run NetSuite for a multi-company rural ISP. At home I put real interfaces on radios and
-      agents, and I operate all of it.
-    </p>
-    <div class="hero-actions">
-      <a class="button button-primary" href={`mailto:${site.email}`}>Email me</a>
-      <a class="button" href="/work/">See the work</a>
+  <section class="masthead">
+    <div class="intro">
+      <p class="kicker">{site.callsign} · {site.location}</p>
+      <h1>I run systems. Some of them talk back.</h1>
+      <p class="dek">
+        NetSuite for a multi-company rural ISP. Real interfaces on radios and agents at home. I
+        operate all of it.
+      </p>
+      <div class="hero-actions">
+        <a class="button button-primary" href={`mailto:${site.email}`}>Email me</a>
+        <a class="button" href="/work/">See the work</a>
+      </div>
+      <p class="meta now-line">
+        <a href="/now/">Now</a>
+        · {now.updated} · {now.line}
+      </p>
     </div>
-    <p class="meta now-line">
-      <a href="/now/">Now</a>
-      · {now.updated} · {now.line}
-    </p>
+    {
+      flagship && (
+        <div class="proof" aria-labelledby="flagship-heading">
+          <p class="label" id="flagship-heading">
+            Proof
+          </p>
+          <ProjectEntry project={flagship} />
+          {second && <ProjectEntry project={second} />}
+        </div>
+      )
+    }
   </section>
-
-  {
-    flagship && (
-      <section class="home-section" aria-labelledby="flagship-heading">
-        <p class="label" id="flagship-heading">Proof</p>
-        <ProjectEntry project={flagship} />
-        {second && <ProjectEntry project={second} />}
-      </section>
-    )
-  }
 
   <section class="home-section operator" aria-labelledby="operator-heading">
     <p class="label" id="operator-heading">The operator</p>
@@ -75,43 +78,60 @@ const second = all.find((p) => p.id === 'hermes-kb');
 </BaseLayout>
 
 <style>
-  .hero {
-    padding-block: var(--space-9) var(--space-8);
+  .masthead {
+    display: grid;
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+    gap: var(--space-6) var(--space-7);
+    align-items: start;
+    padding-block: var(--space-5) var(--space-6);
     border-bottom: 1px solid var(--rule);
   }
 
-  .hero .kicker {
-    margin-bottom: var(--space-6);
+  .intro .kicker {
+    margin-bottom: var(--space-3);
   }
 
-  .hero h1 {
-    font-size: var(--size-display);
+  .masthead h1 {
+    font-size: clamp(1.75rem, 3.4vw, 2.5rem);
     max-width: 16ch;
+    line-height: 1.15;
   }
 
   .dek {
-    margin-top: var(--space-6);
-    font-size: var(--size-h3);
-    line-height: 1.5;
-    color: var(--ink);
-    max-width: 48ch;
+    margin-top: var(--space-3);
+    font-size: var(--size-body);
+    line-height: 1.45;
+    max-width: 42ch;
   }
 
   .hero-actions {
     display: flex;
-    gap: var(--space-4);
+    gap: var(--space-3);
     flex-wrap: wrap;
-    margin-top: var(--space-7);
+    margin-top: var(--space-5);
   }
 
   .now-line {
-    margin-top: var(--space-6);
+    margin-top: var(--space-4);
     text-transform: none;
     letter-spacing: 0.02em;
   }
 
+  .proof .label {
+    margin-bottom: var(--space-2);
+  }
+
+  .proof :global(.entry) {
+    padding-block: var(--space-4);
+  }
+
+  .proof :global(.entry:first-of-type) {
+    border-top: 0;
+    padding-top: 0;
+  }
+
   .home-section {
-    padding-block: var(--space-8);
+    padding-block: var(--space-7);
   }
 
   .more-link {
@@ -140,8 +160,16 @@ const second = all.find((p) => p.id === 'hermes-kb');
   }
 
   .callsign-inline {
-    color: var(--accent);
+    color: var(--ink);
     font-size: var(--size-body);
+  }
+
+  @media (max-width: 800px) {
+    .masthead {
+      grid-template-columns: 1fr;
+      padding-block: var(--space-5);
+      gap: var(--space-5);
+    }
   }
 
   @media (max-width: 700px) {

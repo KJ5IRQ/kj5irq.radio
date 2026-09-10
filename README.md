@@ -42,7 +42,7 @@ Rollback: revert the offending commit on `main`; the action redeploys the previo
 ## House rules
 
 - No analytics, no cookies, no third-party scripts.
-- One accent color (Ford Field Green). Two typefaces, self-hosted.
+- Black and white. Two typefaces, self-hosted. Color is a later decision, not a default.
 - Client JavaScript budget: the theme toggle and nothing else without a written reason.
 - No em dashes in site copy.
 - No seasonal kits. Dark is the default.
