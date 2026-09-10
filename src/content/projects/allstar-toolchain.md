@@ -16,7 +16,7 @@ links:
 stack: ["Python", "FastAPI", "MCP", "JavaScript"]
 featured: true
 caseStudy: true
-order: 1
+order: 2
 ---
 
 ## What this is

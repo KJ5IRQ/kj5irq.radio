@@ -7,7 +7,7 @@ import headshot from '../assets/headshot.jpg';
 
 <BaseLayout
   title={`About · ${site.name}`}
-  description="Joshua Ford: NetSuite administrator, amateur radio operator (KJ5IRQ), and persistent tinkerer in Texas."
+  description="Joshua Ford: Director of NetSuite Administration, amateur radio operator (KJ5IRQ), and the person who puts APIs on both."
 >
   <article class="about">
     <header>
@@ -18,46 +18,61 @@ import headshot from '../assets/headshot.jpg';
     <div class="about-grid">
       <div class="prose">
         <p>
-          I'm Joshua Ford, a NetSuite administrator and amateur radio operator ({site.callsign})
-          in Texas. I like systems that are understandable, and I build the missing pieces when
-          they aren't. Usually tinkering with something.
+          I'm Joshua Ford. By day I am Director of NetSuite Administration for a multi-company
+          rural ISP. At home I am {site.callsign}. The through-line is the same: I run systems,
+          and I build the missing interface when the one I was given is dumb.
         </p>
 
         <h2>The arc</h2>
         <p>
-          I started in warehouse operations, learned the systems that ran the place, and kept
-          following them upstream until I owned the ERP. Today I run NetSuite for a multi-company
-          rural ISP at the director level: workflow design, integration plumbing, and automation
-          that has to survive real users.
+          I started in warehouse operations, learned the systems that ran the floor, and kept
+          following them upstream. National warehouse manager, then inventory and fixed assets,
+          then the ERP itself. I helped select NetSuite, stood it up from nothing, and I am still
+          the sole administrator.
         </p>
         <p>
-          The same habit runs the rest of my life. My radio node has a REST API and an MCP server
-          because I wanted to script it. My homelab exists so experiments break at home instead of
-          anywhere that matters. The pattern is always the same: learn the system end to end, then
-          automate the boring parts.
+          That is not a title with a team under it doing the work. I write the SuiteScript, run
+          the integrations, train the people who had never used an ERP, and take the ugly findings
+          to finance leadership myself.
+        </p>
+
+        <h2>What I actually do</h2>
+        <ul>
+          <li>
+            NetSuite OneWorld across multiple subsidiaries: WMS, Smart Count, SCM, FAM,
+            intercompany, consolidated reporting
+          </li>
+          <li>SuiteScript 1.0 and 2.x, SuiteQL, SuiteFlow, saved searches, custom records</li>
+          <li>Procure-to-pay, order-to-cash, record-to-report, period close</li>
+          <li>AP automation, FP&A, TMS, REST and SOAP integrations, sandbox-before-production</li>
+          <li>
+            An MCP server on the live ERP so language models can query SuiteQL without getting the
+            keys
+          </li>
+          <li>Roles, least privilege, training, and governance that survive real users</li>
+        </ul>
+
+        <h2>Same habit, off the clock</h2>
+        <p>
+          My radio node has a REST API and an MCP server because SSH and DTMF were a dumb control
+          plane. My homelab exists so experiments break at home. I present on AI for ham operators
+          on <a href="/talks/">Absolute Tech</a>. The pattern does not change with the domain.
         </p>
 
         <h2>What I work with</h2>
         <ul>
-          <li>NetSuite administration, workflows, and integrations</li>
-          <li>Python, FastAPI, and small services that do one job well</li>
-          <li>Model Context Protocol and practical, local-first AI tooling</li>
-          <li>AllStarLink, EchoLink, and amateur radio infrastructure</li>
-          <li>Proxmox, Linux, and home automation</li>
+          <li>NetSuite OneWorld, SuiteScript, SuiteQL, SuiteFlow, WMS</li>
+          <li>Python, FastAPI, JavaScript, SuiteQL, PostgreSQL, Docker, Linux, Git</li>
+          <li>Model Context Protocol, local-first AI, Claude / OpenAI / Ollama</li>
+          <li>AllStarLink, EchoLink, amateur radio infrastructure</li>
+          <li>Proxmox and home automation</li>
         </ul>
-
-        <h2>Talks</h2>
-        <p>
-          I present on AI for <a href="https://www.absolutetech.org/" rel="noopener">Absolute Tech</a>,
-          a weekly ham-radio technology net. Dates and any recordings are on
-          <a href="/talks/">the talks page</a>.
-        </p>
 
         <h2>Reaching me</h2>
         <p>
-          Email is best: <a href={`mailto:${site.email}`}>{site.email}</a>. The code lives on
-          <a href={site.github} rel="noopener">GitHub</a>, the resume version of me is on
-          <a href={site.linkedin} rel="noopener">LinkedIn</a>, and the callsign checks out on
+          Email is best: <a href={`mailto:${site.email}`}>{site.email}</a>. The resume version of
+          me is on <a href={site.linkedin} rel="noopener">LinkedIn</a>. The code lives on
+          <a href={site.github} rel="noopener">GitHub</a>. The callsign checks out on
           <a href={site.qrz} rel="noopener">QRZ</a>.
         </p>
       </div>

@@ -11,7 +11,7 @@ repo: "https://github.com/KJ5IRQ/hermes-kb"
 stack: ["Python", "SQLite FTS5"]
 featured: true
 caseStudy: true
-order: 2
+order: 3
 ---
 
 ## What this is
