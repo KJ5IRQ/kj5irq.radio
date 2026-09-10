@@ -4,7 +4,6 @@ import { Image } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import ProjectEntry from '../components/ProjectEntry.astro';
 import { site } from '../data/site';
-import now from '../data/now.json';
 import headshot from '../assets/headshot.jpg';
 
 const featured = (await getCollection('projects'))
@@ -19,22 +18,13 @@ const featured = (await getCollection('projects'))
       <p class="kicker">{site.callsign} · {site.location}</p>
       <h1>I run systems. Some of them talk back.</h1>
       <p class="dek">
-        Director of NetSuite Administration for a multi-company rural ISP. Sole admin of a
-        OneWorld environment I helped select, stood up, and still operate. At home I put the same
-        kind of interface on radios and agents.
-      </p>
-      <p class="meta skills">
-        OneWorld · SuiteScript · SuiteQL · WMS · MCP · Python
+        Director of NetSuite Administration. I run a OneWorld environment I helped select, stood
+        up, and still operate. At home I put the same kind of interface on radios and agents.
       </p>
       <div class="hero-actions">
         <a class="button button-primary" href={`mailto:${site.email}`}>Email me</a>
         <a class="button" href="/work/">See the work</a>
-        <a class="button" href={site.linkedin} rel="noopener">LinkedIn</a>
       </div>
-      <p class="meta now-line">
-        <a href="/now/">Now</a>
-        · {now.updated} · {now.line}
-      </p>
     </div>
     {
       featured.length > 0 && (
@@ -55,9 +45,8 @@ const featured = (await getCollection('projects'))
     <div class="operator-grid">
       <div>
         <p>
-          I started on a warehouse floor, stood up sites, and kept following the system upstream
-          until I owned the ERP. Same habit at home: learn it end to end, then automate the boring
-          parts.
+          I started on a warehouse floor and kept following the system upstream until I owned the
+          ERP. Same habit at home: learn it end to end, then automate the boring parts.
         </p>
         <p>
           Based in Texas. Usually tinkering with something. I explain the AI side of it on
@@ -112,23 +101,11 @@ const featured = (await getCollection('projects'))
     max-width: 42ch;
   }
 
-  .skills {
-    margin-top: var(--space-4);
-    text-transform: none;
-    letter-spacing: 0.04em;
-  }
-
   .hero-actions {
     display: flex;
     gap: var(--space-3);
     flex-wrap: wrap;
     margin-top: var(--space-5);
-  }
-
-  .now-line {
-    margin-top: var(--space-4);
-    text-transform: none;
-    letter-spacing: 0.02em;
   }
 
   .proof .label {

@@ -4,9 +4,9 @@ export const site = {
   location: 'Texas',
   email: 'kj5irq@gmail.com',
   url: 'https://kj5irq.radio',
-  defaultTitle: 'Joshua Ford · NetSuite operator (KJ5IRQ)',
+  defaultTitle: 'Joshua Ford · systems operator (KJ5IRQ)',
   defaultDescription:
-    'Joshua Ford runs NetSuite OneWorld for a multi-company rural ISP, and builds the missing interfaces between ERPs, radios, and local AI.',
+    'Joshua Ford (KJ5IRQ) operates systems in Texas: business platforms, radios, and the interfaces between them.',
   github: 'https://github.com/kj5irq',
   linkedin: 'https://www.linkedin.com/in/kj5irq',
   qrz: 'https://www.qrz.com/db/KJ5IRQ',

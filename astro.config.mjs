@@ -9,7 +9,6 @@ export default defineConfig({
       filter: (page) => !page.includes('/dev/'),
     }),
   ],
-  prefetch: true,
   redirects: {
     '/projects/': '/work/',
     '/projects/allstar-toolchain/': '/work/allstar-toolchain/',
@@ -17,5 +16,6 @@ export default defineConfig({
     '/projects/homelab/': '/work/homelab/',
     '/projects/wxbot/': '/work/wxbot/',
     '/projects/openclaw-skill-asl3/': '/work/',
+    '/now/': '/',
   },
 });

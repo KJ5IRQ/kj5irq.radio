@@ -51,9 +51,10 @@ const personJsonLd = JSON.stringify({
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
-    <meta property="og:image" content={new URL('/logo.png', site.url).href} />
+    <meta property="og:image" content={new URL('/og.png', site.url).href} />
     <meta property="og:site_name" content={site.defaultTitle} />
-    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content={new URL('/og.png', site.url).href} />
     <script type="application/ld+json" set:html={personJsonLd} />
   </head>
   <body>
