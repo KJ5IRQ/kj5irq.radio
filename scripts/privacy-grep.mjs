@@ -9,17 +9,18 @@ const patterns = [
   { name: 'RFC1918 IP (192.168.x.x)', re: /\b192\.168\.\d{1,3}\.\d{1,3}\b/ },
   { name: 'RFC1918 IP (10.x.x.x)', re: /\b10\.\d{1,3}\.\d{1,3}\.\d{1,3}\b/ },
   { name: 'RFC1918 IP (172.16-31.x.x)', re: /\b172\.(1[6-9]|2\d|3[01])\.\d{1,3}\.\d{1,3}\b/ },
-  { name: 'ZIP code 76067', re: /76067(?!\/?")/ },
+  { name: 'ZIP code 76067', re: /76067/ },
   { name: 'Employer name', re: /nextlink/i },
-  { name: 'Parent company', re: /AMG Technologies/i },
+  { name: 'Parent company', re: /AMG Technolog/i },
+  { name: 'City', re: /mineral\s*wells/i },
+  { name: 'Grid square', re: /EM02wt/i },
+  { name: 'Node id', re: /637050/ },
+  { name: 'Old X handle', re: /BuryMeInTexas/i },
   { name: 'Vault codename', re: /pensieve/i },
   { name: 'Private project name', re: /H\.A\.G\./ },
   { name: 'Key assignment', re: /(api[_-]?key|secret|token)\s*[:=]\s*['"][A-Za-z0-9_\-]{16,}/i },
   { name: 'Local filesystem path', re: /(\/home\/[a-z0-9_]+\/|C:\\Users\\)/i },
 ];
-
-// The WxBot repo URL legitimately contains the ZIP; allow exactly that URL.
-const allow = [/github\.com\/KJ5IRQ\/WxBot_76067/];
 
 function* walk(dir) {
   for (const name of readdirSync(dir)) {
@@ -35,7 +36,7 @@ for (const file of walk(DIST)) {
   const lines = text.split('\n');
   for (const { name, re } of patterns) {
     lines.forEach((line, i) => {
-      if (re.test(line) && !allow.some((a) => a.test(line))) {
+      if (re.test(line)) {
         failures++;
         console.error(`PRIVACY: ${name} in ${relative(DIST, file)}:${i + 1}`);
       }

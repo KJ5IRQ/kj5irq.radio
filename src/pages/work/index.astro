@@ -2,38 +2,40 @@
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import ProjectEntry from '../../components/ProjectEntry.astro';
-import { site, clusterLabels } from '../../data/site';
+import { site } from '../../data/site';
 
 const all = (await getCollection('projects')).sort((a, b) => a.data.order - b.data.order);
-const current = all.filter((p) => p.data.status !== 'archived');
+const flagship = all.filter((p) => p.data.featured && p.data.status !== 'archived');
+const rest = all.filter((p) => !p.data.featured && p.data.status !== 'archived');
 const archived = all.filter((p) => p.data.status === 'archived');
-
-const clusters = [...new Set(current.map((p) => p.data.cluster))];
 ---
 
 <BaseLayout
-  title={`Projects · ${site.name}`}
-  description="Tools Joshua Ford builds and runs: AllStarLink node automation, local AI tooling, a homelab, and small bots that earn their keep."
+  title={`Work · ${site.name}`}
+  description="What Joshua Ford actually runs: an AllStarLink node toolchain, local AI docs you can search offline, and a few smaller tools."
 >
   <header class="page-head">
-    <p class="label">Projects</p>
-    <h1>The bench</h1>
+    <p class="label">Work</p>
+    <h1>What I actually run</h1>
     <p class="page-dek">
-      Everything here is something I actually run. Statuses and dates are real.
+      Ranked by how much it proves. Statuses and dates are real.
     </p>
   </header>
 
+  <section class="cluster" aria-label="Flagship">
+    <h2 class="meta cluster-heading">Flagship</h2>
+    {flagship.map((project) => <ProjectEntry project={project} />)}
+  </section>
+
   {
-    clusters.map((cluster) => (
-      <section class="cluster" aria-label={clusterLabels[cluster]}>
-        <h2 class="meta cluster-heading">{clusterLabels[cluster]}</h2>
-        {current
-          .filter((p) => p.data.cluster === cluster)
-          .map((project) => (
-            <ProjectEntry project={project} />
-          ))}
+    rest.length > 0 && (
+      <section class="cluster" aria-label="Also running">
+        <h2 class="meta cluster-heading">Also running</h2>
+        {rest.map((project) => (
+          <ProjectEntry project={project} />
+        ))}
       </section>
-    ))
+    )
   }
 
   {

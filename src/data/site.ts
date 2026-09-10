@@ -4,9 +4,9 @@ export const site = {
   location: 'Texas',
   email: 'kj5irq@gmail.com',
   url: 'https://kj5irq.radio',
-  defaultTitle: 'Joshua Ford · systems, radio, automation (KJ5IRQ)',
+  defaultTitle: 'Joshua Ford · systems operator (KJ5IRQ)',
   defaultDescription:
-    'Joshua Ford (KJ5IRQ) builds and runs systems in Texas: ERP platforms, an AllStarLink node with its own API and MCP server, a homelab, and practical AI tooling.',
+    'Joshua Ford (KJ5IRQ) runs systems in Texas: an ERP platform by day, radios and local AI tooling at home, with the missing interfaces between them.',
   github: 'https://github.com/kj5irq',
   linkedin: 'https://www.linkedin.com/in/kj5irq',
   qrz: 'https://www.qrz.com/db/KJ5IRQ',

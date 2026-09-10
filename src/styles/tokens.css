@@ -1,27 +1,18 @@
-/* Design tokens. WORLD CUP 2026 SEASONAL KIT.
-   Saltire navy and gold, tartan ribbon, MacDuff red for the experimental tag.
-   Dark (match night) is the default for the season; light is the away kit.
-   The everyday palette (paper + Ford Field Green) is preserved in git history
-   at tag v1.0.0 and returns after the final. */
+/* Design tokens. Everyday kit.
+   Dark is the default. Ford Field Green is the only accent.
+   Two typefaces: Source Serif 4 for words, IBM Plex Mono for data. */
 
 :root {
-  /* Away kit: silver paper with navy ink and gold trim */
-  --bg: #f3f2ec;
-  --surface: #e9e8e0;
-  --ink: #131c2e;
-  --muted: #4c566b;
-  --rule: #d3d2c8;
-  --accent: #7a5f17;
-  --link: #1d3461;
-  --status-experimental: #a32638;
-  --saltire: rgba(29, 52, 97, 0.07);
-  --tartan-navy: #1d3461;
-  --tartan-green: #4f6a3a;
-  --tartan-red: #a32638;
-  --tartan-gold: #c9a23a;
+  --bg: #f3f1ea;
+  --surface: #e7e4da;
+  --ink: #1a1c18;
+  --muted: #5c6158;
+  --rule: #d2cec4;
+  --accent: #3f6b3a;
+  --link: #2c5428;
+  --status-experimental: #8a4b2a;
 
   --font-serif: 'Source Serif 4 Variable', Georgia, 'Times New Roman', serif;
-  --font-display: 'Anton', 'Arial Narrow', sans-serif;
   --font-mono: 'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
 
   --size-meta: 0.8125rem;
@@ -29,10 +20,8 @@
   --size-body: 1.0625rem;
   --size-h3: 1.375rem;
   --size-h2: 2rem;
-  --size-h1: clamp(2.75rem, 7vw, 5rem);
-  --size-display: clamp(3.5rem, 10vw, 7.5rem);
-
-  --gold-grad: linear-gradient(170deg, #e3c566 0%, #c9a23a 45%, #9c7a22 100%);
+  --size-h1: clamp(2.5rem, 6vw, 4.25rem);
+  --size-display: clamp(2.75rem, 7vw, 5rem);
 
   --space-1: 0.25rem;
   --space-2: 0.5rem;
@@ -50,19 +39,12 @@
 }
 
 [data-theme='dark'] {
-  /* Home kit: Team Scotland navy with gold */
-  --bg: #0a1a2f;
-  --surface: #112640;
-  --ink: #e8e9ec;
-  --muted: #9aa9bd;
-  --rule: #1f3a5c;
-  --accent: #c9a23a;
-  --link: #d4b65a;
-  --status-experimental: #e06a7c;
-  --saltire: rgba(232, 233, 236, 0.05);
-}
-
-:root {
-  /* Official saltire blue, Pantone 300 */
-  --scotland-blue: #0065bf;
+  --bg: #121410;
+  --surface: #1b1e18;
+  --ink: #e8e6df;
+  --muted: #9aa094;
+  --rule: #2e322a;
+  --accent: #8fbf80;
+  --link: #a4c998;
+  --status-experimental: #d08960;
 }

@@ -1,0 +1,41 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { site } from '../data/site';
+import now from '../data/now.json';
+---
+
+<BaseLayout
+  title={`Now · ${site.name}`}
+  description={`What Joshua Ford is doing as of ${now.updated}.`}
+>
+  <article class="prose now-page">
+    <header>
+      <p class="label">Now</p>
+      <h1>This month</h1>
+      <p class="meta now-date">
+        Updated <time datetime={now.updated}>{now.updated}</time>
+      </p>
+    </header>
+    <p>{now.line}</p>
+    <p>
+      This page is a heartbeat, not a blog. If the date is stale, the build fails. Email is still
+      the way to reach me: <a href={`mailto:${site.email}`}>{site.email}</a>.
+    </p>
+  </article>
+</BaseLayout>
+
+<style>
+  .now-page header {
+    padding-block: var(--space-8) var(--space-2);
+  }
+
+  .now-date {
+    margin-top: var(--space-4);
+    text-transform: none;
+    letter-spacing: 0.02em;
+  }
+
+  .now-page {
+    padding-bottom: var(--space-8);
+  }
+</style>

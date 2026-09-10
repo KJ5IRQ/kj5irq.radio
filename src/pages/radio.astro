@@ -6,10 +6,10 @@ import { site } from '../data/site';
 
 <BaseLayout
   title={`${site.callsign} · ${site.name}, amateur radio`}
-  description="KJ5IRQ is Joshua Ford's amateur radio station in Texas: AllStarLink, EchoLink, and the tooling that automates the node."
+  description="KJ5IRQ is Joshua Ford's amateur radio station in Texas: AllStarLink, EchoLink, and the tooling that treats the node like any other service."
 >
   <article>
-    <header class="radio-head saltire-bg gold-dust">
+    <header class="radio-head">
       <p class="label">The station</p>
       <h1 class="callsign-display">{site.callsign}</h1>
       <p class="page-dek">Amateur radio station of Joshua Ford, Texas.</p>
@@ -30,7 +30,7 @@ import { site } from '../data/site';
       <p>
         My corner of it leans toward the networked modes. AllStarLink connects radio nodes over
         the internet, which means my node is both a radio and a Linux service. That overlap is
-        where most of my projects come from.
+        where most of my work comes from.
       </p>
     </section>
 
@@ -38,12 +38,13 @@ import { site } from '../data/site';
       <h2 class="meta section-heading">The node</h2>
       <p>
         I run an AllStarLink node, and because it is also a computer, it has grown a REST API, an
-        MCP server for AI agents, and a browser control panel. The full story is in
-        <a href="/projects/allstar-toolchain/">the AllStar node toolchain</a> write-up.
+        MCP server for AI agents, and a browser control panel. Nothing on that stack is meant to
+        face the public internet. The full story is in
+        <a href="/work/allstar-toolchain/">the AllStar node toolchain</a> write-up.
       </p>
       <p>
-        Looking for me on the air or want node details? Check
-        <a href={site.qrz} rel="noopener">QRZ</a> or just
+        Looking for me on the air? Check
+        <a href={site.qrz} rel="noopener">QRZ</a> or
         <a href={`mailto:${site.email}`}>email me</a>.
       </p>
     </section>
@@ -59,8 +60,7 @@ import { site } from '../data/site';
 
   .callsign-display {
     font-size: var(--size-display);
-    letter-spacing: 0.06em;
-    text-shadow: 0 3px 0 rgba(0, 0, 0, 0.35);
+    letter-spacing: 0.04em;
   }
 
   .page-dek {

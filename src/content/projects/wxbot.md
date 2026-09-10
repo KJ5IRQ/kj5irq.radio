@@ -7,9 +7,8 @@ cluster: "utilities"
 updated: 2026-04-21
 publish: true
 privacyReviewed: true
-repo: "https://github.com/KJ5IRQ/WxBot_76067"
 stack: ["Python", "Discord", "NWS API"]
-featured: true
+featured: false
 caseStudy: true
 order: 3
 ---
@@ -32,8 +31,4 @@ Discord only, United States only (it is NWS data), and it reports rather than al
 
 ## Status and next
 
-Running. Next: proactive severe weather alerts for saved locations.
-
-## Links
-
-- [WxBot on GitHub](https://github.com/KJ5IRQ/WxBot_76067)
+Running. The public repo name currently leaks a ZIP code, so it is not linked here until that is fixed.

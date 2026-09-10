@@ -1,7 +1,7 @@
 ---
 title: "AllStar node toolchain"
 summary: "A REST API, an MCP server, and a browser panel for my AllStarLink node."
-whyItMatters: "Software and AI agents can monitor and control the radio like any other service."
+whyItMatters: "SSH and DTMF were a dumb control plane. Now the node has an API and a guardrail."
 status: "active"
 cluster: "radio"
 updated: 2026-06-04
@@ -63,7 +63,7 @@ The API is the only piece that talks to Asterisk. The MCP server and the panel a
 
 ## Limitations
 
-This targets ASL3 with Asterisk 22 on a Raspberry Pi class machine. It is built for the local network: keys and rate limits are there, but it is not hardened for the public internet and should not be exposed to it. The panel is early, currently in the 0.6.x range.
+This targets ASL3 with Asterisk 22 on a Raspberry Pi class machine. It is built for the local network: keys and rate limits are there, but it is not hardened for the public internet and should not be exposed to it. Agents do not get PTT. The panel is early, currently in the 0.6.x range.
 
 ## Status and next
 
