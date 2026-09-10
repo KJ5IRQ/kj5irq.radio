@@ -3,7 +3,8 @@ import ThemeToggle from './ThemeToggle.astro';
 import { site } from '../data/site';
 
 const nav = [
-  { label: 'Projects', href: '/projects/' },
+  { label: 'Work', href: '/work/' },
+  { label: 'Talks', href: '/talks/' },
   { label: 'Radio', href: '/radio/' },
   { label: 'About', href: '/about/' },
 ];
@@ -40,7 +41,7 @@ const current = Astro.url.pathname;
     display: flex;
     align-items: baseline;
     gap: var(--space-4);
-    padding-block: var(--space-5);
+    padding-block: var(--space-3);
     flex-wrap: wrap;
   }
 
@@ -52,7 +53,7 @@ const current = Astro.url.pathname;
   }
 
   .callsign-chip {
-    color: var(--accent);
+    color: var(--ink);
   }
 
   nav {
@@ -77,11 +78,11 @@ const current = Astro.url.pathname;
   }
 
   nav a:hover {
-    color: var(--link);
+    color: var(--ink);
   }
 
   nav a[aria-current='page'] {
     color: var(--ink);
-    border-bottom: 2px solid var(--accent);
+    border-bottom: 1px solid var(--ink);
   }
 </style>

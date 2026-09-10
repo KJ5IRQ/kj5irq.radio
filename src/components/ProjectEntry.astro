@@ -8,7 +8,7 @@ interface Props {
 
 const { project } = Astro.props;
 const { title, summary, whyItMatters, status, stack, updated, repo, caseStudy } = project.data;
-const href = caseStudy ? `/projects/${project.id}/` : repo;
+const href = caseStudy ? `/work/${project.id}/` : repo;
 const updatedLabel = updated.toISOString().slice(0, 10);
 ---
 

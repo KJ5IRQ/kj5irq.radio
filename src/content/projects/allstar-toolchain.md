@@ -1,7 +1,7 @@
 ---
 title: "AllStar node toolchain"
 summary: "A REST API, an MCP server, and a browser panel for my AllStarLink node."
-whyItMatters: "Software and AI agents can monitor and control the radio like any other service."
+whyItMatters: "SSH and DTMF were a dumb control plane. Now the node has an API and a guardrail."
 status: "active"
 cluster: "radio"
 updated: 2026-06-04
@@ -16,7 +16,7 @@ links:
 stack: ["Python", "FastAPI", "MCP", "JavaScript"]
 featured: true
 caseStudy: true
-order: 1
+order: 2
 ---
 
 ## What this is
@@ -26,6 +26,8 @@ Three small projects that together give an AllStarLink node a modern control sur
 - **asl3-api** wraps the Asterisk Manager Interface in a FastAPI REST service. Connect and disconnect nodes, send DTMF, run macros, and watch live node events over HTTP.
 - **asl3-mcp** sits on top of that API and speaks Model Context Protocol, so an AI agent can operate the node with typed tools instead of shell access.
 - **asl-node-panel** is a Chrome side panel for humans: live status, favorites, weekly connect schedules, and one-tap commands.
+
+Agents get typed tools, not a microphone. They can run bounded station functions: status, canned identification, connect and disconnect with an explicit confirmation flag. They cannot originate arbitrary speech, inject microphone audio, or freeform-key the transmitter.
 
 ## Why I built it
 
@@ -57,7 +59,7 @@ The API is the only piece that talks to Asterisk. The MCP server and the panel a
 - Live node state with sub-2-second event streaming over Server-Sent Events
 - A cached directory of roughly 40,000 AllStarLink nodes for instant lookups
 - API-key auth, per-endpoint rate limiting, and an audit log of every command
-- Agent tools split by risk tier: read-only checks are free, voice announcements are low risk, connect and disconnect require an explicit confirmation flag, and disconnect-all is treated as the loaded gun it is
+- Agent tools split by risk tier: read-only checks are free, canned station announcements are low risk, connect and disconnect require confirmation, and disconnect-all is treated as the loaded gun it is
 - An active-QSO guard that blocks control actions while a conversation is in progress, so no agent ever drops a contact mid-sentence
 - Weekly schedules, DTMF macros, and a screen-reader mode in the panel
 

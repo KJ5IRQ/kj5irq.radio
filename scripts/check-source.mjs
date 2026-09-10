@@ -1,11 +1,22 @@
-// Privacy gate: scans the built output for patterns that must never ship.
-// Runs after `astro build`; exits nonzero on any hit.
+// Source-copy gate. Scans site source (not this file, not dist) for
+// forbidden public terms and em dashes. Runs before astro build.
 import { readdirSync, readFileSync, statSync } from 'node:fs';
 import { join, relative } from 'node:path';
 
-const DIST = new URL('../dist', import.meta.url).pathname;
+const ROOT = new URL('..', import.meta.url).pathname;
 
-const patterns = [
+const SKIP_DIRS = new Set([
+  'node_modules',
+  'dist',
+  '.git',
+  '.astro',
+  'scripts',
+  'docs',
+]);
+
+const TEXT = /\.(astro|md|ts|js|css|json|txt|html|yml|yaml)$/;
+
+const privacy = [
   { name: 'RFC1918 IP (192.168.x.x)', re: /\b192\.168\.\d{1,3}\.\d{1,3}\b/ },
   { name: 'RFC1918 IP (10.x.x.x)', re: /\b10\.\d{1,3}\.\d{1,3}\.\d{1,3}\b/ },
   { name: 'RFC1918 IP (172.16-31.x.x)', re: /\b172\.(1[6-9]|2\d|3[01])\.\d{1,3}\.\d{1,3}\b/ },
@@ -25,30 +36,39 @@ const patterns = [
   { name: 'Local filesystem path', re: /(\/home\/[a-z0-9_]+\/|C:\\Users\\)/i },
 ];
 
+const emdash = { name: 'em dash', re: /[\u2013\u2014]/ };
+
 function* walk(dir) {
   for (const name of readdirSync(dir)) {
+    if (name === '.' || name === '..') continue;
     const path = join(dir, name);
-    if (statSync(path).isDirectory()) yield* walk(path);
-    else if (/\.(html|xml|txt|json|js|css)$/.test(name)) yield path;
+    const st = statSync(path);
+    if (st.isDirectory()) {
+      if (SKIP_DIRS.has(name)) continue;
+      yield* walk(path);
+    } else if (TEXT.test(name)) {
+      yield path;
+    }
   }
 }
 
 let failures = 0;
-for (const file of walk(DIST)) {
+for (const file of walk(ROOT)) {
+  const rel = relative(ROOT, file);
   const text = readFileSync(file, 'utf8');
   const lines = text.split('\n');
-  for (const { name, re } of patterns) {
+  for (const { name, re } of [...privacy, emdash]) {
     lines.forEach((line, i) => {
       if (re.test(line)) {
         failures++;
-        console.error(`PRIVACY: ${name} in ${relative(DIST, file)}:${i + 1}`);
+        console.error(`SOURCE: ${name} in ${rel}:${i + 1}`);
       }
     });
   }
 }
 
 if (failures > 0) {
-  console.error(`\nprivacy-grep: ${failures} hit(s). Build rejected.`);
+  console.error(`\ncheck-source: ${failures} hit(s). Build rejected.`);
   process.exit(1);
 }
-console.log('privacy-grep: clean.');
+console.log('check-source: clean.');

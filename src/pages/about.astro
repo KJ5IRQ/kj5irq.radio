@@ -7,7 +7,7 @@ import headshot from '../assets/headshot.jpg';
 
 <BaseLayout
   title={`About · ${site.name}`}
-  description="Joshua Ford: NetSuite administrator, amateur radio operator (KJ5IRQ), and persistent tinkerer in Texas."
+  description="Joshua Ford: systems operator in Texas. Director of NetSuite Administration by day, KJ5IRQ at home."
 >
   <article class="about">
     <header>
@@ -18,39 +18,34 @@ import headshot from '../assets/headshot.jpg';
     <div class="about-grid">
       <div class="prose">
         <p>
-          I'm Joshua Ford, a NetSuite administrator and amateur radio operator ({site.callsign})
-          in Texas. I like systems that are understandable, and I build the missing pieces when
-          they aren't. Usually tinkering with something.
+          I'm Joshua Ford, a systems operator in Texas. By day I am Director of NetSuite
+          Administration. At home I am {site.callsign}. I run systems, and I build the missing
+          interface when the one I was given is dumb.
         </p>
 
         <h2>The arc</h2>
         <p>
-          I started in warehouse operations, learned the systems that ran the place, and kept
-          following them upstream until I owned the ERP. Today I run NetSuite for a Texas ISP at
-          the director level: workflow design, integration plumbing, and automation that has to
-          survive real users.
+          I started in warehouse operations, learned the systems that ran the floor, and kept
+          following them upstream through inventory and assets until I owned the ERP. I helped
+          select NetSuite, stood it up from nothing, and I still run it.
         </p>
         <p>
-          The same habit runs the rest of my life. My radio node has a REST API and an MCP server
-          because I wanted to script it. My homelab exists so experiments break at home instead of
-          anywhere that matters. The pattern is always the same: learn the system end to end, then
-          automate the boring parts.
+          The same habit runs the rest of my life. The radio node has an API because SSH and DTMF
+          were a dumb control plane. The homelab exists so experiments break at home instead of
+          anywhere that matters.
         </p>
 
-        <h2>What I work with</h2>
-        <ul>
-          <li>NetSuite administration, workflows, and integrations</li>
-          <li>Python, FastAPI, and small services that do one job well</li>
-          <li>Model Context Protocol and practical, local-first AI tooling</li>
-          <li>AllStarLink, EchoLink, and amateur radio infrastructure</li>
-          <li>Proxmox, Linux, and home automation</li>
-        </ul>
+        <h2>Talks</h2>
+        <p>
+          I present on AI for ham operators. Dates and recordings live on
+          <a href="/talks/">the talks page</a>.
+        </p>
 
         <h2>Reaching me</h2>
         <p>
-          Email is best: <a href={`mailto:${site.email}`}>{site.email}</a>. The code lives on
-          <a href={site.github} rel="noopener">GitHub</a>, the resume version of me is on
-          <a href={site.linkedin} rel="noopener">LinkedIn</a>, and the callsign checks out on
+          Email is best: <a href={`mailto:${site.email}`}>{site.email}</a>. The resume version of
+          me is on <a href={site.linkedin} rel="noopener">LinkedIn</a>. The code lives on
+          <a href={site.github} rel="noopener">GitHub</a>. The callsign checks out on
           <a href={site.qrz} rel="noopener">QRZ</a>.
         </p>
       </div>

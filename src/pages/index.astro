@@ -1,38 +1,43 @@
 ---
 import { getCollection } from 'astro:content';
-import { Image, getImage } from 'astro:assets';
+import { Image } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import ProjectEntry from '../components/ProjectEntry.astro';
 import { site } from '../data/site';
 import headshot from '../assets/headshot.jpg';
-import heroBg from '../assets/hero-bg.jpg';
 
-const featured = (await getCollection('projects', ({ data }) => data.featured)).sort(
-  (a, b) => a.data.order - b.data.order
-);
-const buildDate = new Date().toISOString().slice(0, 10);
-const heroImage = await getImage({ src: heroBg, format: 'webp', width: 1920, quality: 72 });
+const featured = (await getCollection('projects'))
+  .filter((p) => p.data.featured && p.data.status !== 'archived')
+  .sort((a, b) => a.data.order - b.data.order)
+  .slice(0, 2);
 ---
 
 <BaseLayout>
-  <section class="hero" style={`background-image: linear-gradient(90deg, rgba(10, 26, 47, 0.94) 0%, rgba(10, 26, 47, 0.72) 40%, rgba(10, 26, 47, 0.12) 100%), url(${heroImage.src});`}>
-    <p class="kicker">World Cup 2026 · Tartan Army</p>
-    <h1>Systems that integrate,<br />not just coexist.</h1>
-    <p class="dek">
-      I'm Joshua Ford, a systems administrator in Texas. I run an ERP platform for work, and at
-      home I build tools that let software, radios, and AI agents actually reach each other.
-    </p>
-    <div class="hero-actions">
-      <a class="button button-primary" href={`mailto:${site.email}`}>Email me</a>
-      <a class="button" href="/projects/">See the projects</a>
+  <section class="masthead">
+    <div class="intro">
+      <p class="kicker">{site.callsign} · {site.location}</p>
+      <h1>I run systems. Some of them talk back.</h1>
+      <p class="dek">
+        Director of NetSuite Administration. I run a OneWorld environment I helped select, stood
+        up, and still operate. At home I put the same kind of interface on radios and agents.
+      </p>
+      <div class="hero-actions">
+        <a class="button button-primary" href={`mailto:${site.email}`}>Email me</a>
+        <a class="button" href="/work/">See the work</a>
+      </div>
     </div>
-    <p class="meta hero-meta">TX · {site.callsign} · Updated {buildDate}</p>
-  </section>
-
-  <section class="home-section" aria-labelledby="featured-heading">
-    <p class="label" id="featured-heading">On the bench</p>
-    {featured.map((project) => <ProjectEntry project={project} />)}
-    <p class="more-link"><a href="/projects/">All projects →</a></p>
+    {
+      featured.length > 0 && (
+        <div class="proof" aria-labelledby="flagship-heading">
+          <p class="label" id="flagship-heading">
+            Proof
+          </p>
+          {featured.map((project) => (
+            <ProjectEntry project={project} />
+          ))}
+        </div>
+      )
+    }
   </section>
 
   <section class="home-section operator" aria-labelledby="operator-heading">
@@ -40,11 +45,13 @@ const heroImage = await getImage({ src: heroBg, format: 'webp', width: 1920, qua
     <div class="operator-grid">
       <div>
         <p>
-          I started in warehouse operations and ended up running the ERP. The habit stuck: learn
-          the system end to end, then automate the boring parts. These days that habit gets
-          applied to radios, servers, and AI agents too.
+          I started on a warehouse floor and kept following the system upstream until I owned the
+          ERP. Same habit at home: learn it end to end, then automate the boring parts.
         </p>
-        <p>Based in Texas. Usually tinkering with something.</p>
+        <p>
+          Based in Texas. Usually tinkering with something. I explain the AI side of it on
+          <a href="/talks/">Absolute Tech</a>.
+        </p>
         <p class="more-link"><a href="/about/">More about me →</a></p>
       </div>
       <Image
@@ -62,53 +69,60 @@ const heroImage = await getImage({ src: heroBg, format: 'webp', width: 1920, qua
     <p class="label" id="station-heading">The station</p>
     <p>
       <span class="meta callsign-inline">{site.callsign}</span> is my amateur radio callsign. The
-      node, the tooling, and what any of that means: <a href="/radio/">the radio page</a>.
+      node is also a Linux box. That overlap is <a href="/radio/">the radio page</a>.
     </p>
   </section>
 </BaseLayout>
 
 <style>
-  .hero {
-    padding-block: var(--space-9) var(--space-8);
-    margin-inline: calc(-1 * var(--space-5));
-    padding-inline: var(--space-5);
-    background-color: var(--surface);
-    background-size: cover;
-    background-position: center right;
-    border-bottom: 2px solid var(--accent);
+  .masthead {
+    display: grid;
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+    gap: var(--space-6) var(--space-7);
+    align-items: start;
+    padding-block: var(--space-5) var(--space-6);
+    border-bottom: 1px solid var(--rule);
   }
 
-  .hero .kicker {
-    margin-bottom: var(--space-6);
+  .intro .kicker {
+    margin-bottom: var(--space-3);
   }
 
-  .hero h1 {
-    font-size: var(--size-display);
-    max-width: 14ch;
-    text-shadow: 0 3px 0 rgba(0, 0, 0, 0.35);
+  .masthead h1 {
+    font-size: clamp(1.75rem, 3.4vw, 2.5rem);
+    max-width: 16ch;
+    line-height: 1.15;
   }
 
   .dek {
-    margin-top: var(--space-6);
-    font-size: var(--size-h3);
-    line-height: 1.5;
-    color: var(--ink);
-    max-width: 48ch;
+    margin-top: var(--space-3);
+    font-size: var(--size-body);
+    line-height: 1.45;
+    max-width: 42ch;
   }
 
   .hero-actions {
     display: flex;
-    gap: var(--space-4);
+    gap: var(--space-3);
     flex-wrap: wrap;
-    margin-top: var(--space-7);
+    margin-top: var(--space-5);
   }
 
-  .hero-meta {
-    margin-top: var(--space-6);
+  .proof .label {
+    margin-bottom: var(--space-2);
+  }
+
+  .proof :global(.entry) {
+    padding-block: var(--space-4);
+  }
+
+  .proof :global(.entry:first-of-type) {
+    border-top: 0;
+    padding-top: 0;
   }
 
   .home-section {
-    padding-block: var(--space-8);
+    padding-block: var(--space-7);
   }
 
   .more-link {
@@ -137,8 +151,16 @@ const heroImage = await getImage({ src: heroBg, format: 'webp', width: 1920, qua
   }
 
   .callsign-inline {
-    color: var(--accent);
+    color: var(--ink);
     font-size: var(--size-body);
+  }
+
+  @media (max-width: 800px) {
+    .masthead {
+      grid-template-columns: 1fr;
+      padding-block: var(--space-5);
+      gap: var(--space-5);
+    }
   }
 
   @media (max-width: 700px) {
