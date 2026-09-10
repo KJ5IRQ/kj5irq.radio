@@ -29,6 +29,8 @@ Work lives in `src/content/projects/*.md`. Frontmatter is typed and strict; ever
 
 The now line lives in `src/data/now.json`. Update it when something actually changes.
 
+Talks live in `src/data/talks.ts`. Title, date, and venue are required. Recording URLs are optional.
+
 Old `/projects/` URLs redirect to `/work/`.
 
 ## Deploy
