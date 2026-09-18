@@ -18,12 +18,10 @@ const { status } = Astro.props;
     white-space: nowrap;
   }
 
+  /* Outline only, never filled. The green is a sliver, not a block of colour. */
   .active,
   .stable {
-    color: #0b1626;
-    background: var(--gold-grad);
-    border-color: transparent;
-    font-weight: 500;
+    color: var(--accent);
   }
 
   .experimental {
@@ -31,6 +29,6 @@ const { status } = Astro.props;
   }
 
   .archived {
-    color: var(--muted);
+    color: var(--faint);
   }
 </style>
