@@ -8,15 +8,29 @@ interface Props {
 }
 
 const { project } = Astro.props;
-const { title, summary, whyItMatters, status, cluster, stack, updated, repo, caseStudy } = project.data;
+const { title, summary, whyItMatters, status, cluster, stack, updated, repo, caseStudy, image } =
+  project.data;
 const href = caseStudy ? `/projects/${project.id}/` : repo;
 const dateLabel = updated.toISOString().slice(0, 10);
 ---
 
 <article class="entry">
   <div class="entry-side">
-    <time class="entry-date" datetime={dateLabel}>{dateLabel}</time>
-    <span class="entry-kicker">{clusterLabels[cluster]}</span>
+    <p class="entry-stamp">
+      <time class="entry-date" datetime={dateLabel}>{dateLabel}</time>
+      <span class="entry-kicker">{clusterLabels[cluster]}</span>
+    </p>
+    {
+      image && (
+        <img
+          class="entry-thumb"
+          src={image.src}
+          alt={image.alt}
+          width={image.width}
+          height={image.height}
+        />
+      )
+    }
   </div>
   <div class="entry-body">
     <h3 class="entry-title">{href ? <a href={href}>{title}</a> : title}</h3>
@@ -33,7 +47,7 @@ const dateLabel = updated.toISOString().slice(0, 10);
 <style>
   /* The entry spine. Every kind of content renders through this, which is what
      lets one site hold projects, posts and notes without separate systems.
-     Below 760px the margin column collapses above the entry. */
+     Below 760px it all stacks into one column. */
   .entry {
     padding-block: var(--space-6);
     border-top: 1px solid var(--rule);
@@ -41,9 +55,16 @@ const dateLabel = updated.toISOString().slice(0, 10);
 
   .entry-side {
     display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    margin-bottom: var(--space-4);
+  }
+
+  .entry-stamp {
+    display: flex;
     align-items: baseline;
     gap: var(--space-4);
-    margin-bottom: var(--space-3);
+    margin: 0;
   }
 
   .entry-date {
@@ -60,6 +81,17 @@ const dateLabel = updated.toISOString().slice(0, 10);
     letter-spacing: 0.12em;
     text-transform: uppercase;
     color: var(--accent);
+  }
+
+  /* The picture sits in the margin column, under the date and the kicker. That
+     column holds two short lines and is otherwise empty, and the eye already
+     reads it as a sidebar. */
+  .entry-thumb {
+    display: block;
+    width: 100%;
+    max-width: 240px;
+    height: auto;
+    border: 1px solid var(--rule);
   }
 
   .entry-title {
@@ -107,15 +139,22 @@ const dateLabel = updated.toISOString().slice(0, 10);
     }
 
     .entry-side {
-      flex-direction: column;
       align-items: flex-end;
-      gap: var(--space-2);
+      gap: var(--space-5);
       margin-bottom: 0;
       padding-top: 0.5rem;
     }
 
-    .entry-body {
-      max-width: 100%;
+    .entry-stamp {
+      flex-direction: column;
+      align-items: flex-end;
+      gap: var(--space-2);
+    }
+
+    /* Fill the margin column so the picture aligns to the same right edge the
+       dates do, rather than floating inside it. */
+    .entry-thumb {
+      max-width: none;
     }
   }
 </style>

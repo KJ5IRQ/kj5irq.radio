@@ -19,6 +19,17 @@ const projects = defineCollection({
       privacyReviewed: z.literal(true),
       repo: z.string().url().optional(),
       links: z.array(z.object({ label: z.string(), url: z.string().url() })).optional(),
+      // A screenshot or photograph that runs alongside the entry on index pages.
+      // Width and height are required so the browser can reserve the space and
+      // the entry does not jump when the image lands.
+      image: z
+        .object({
+          src: z.string(),
+          alt: z.string(),
+          width: z.number(),
+          height: z.number(),
+        })
+        .optional(),
       stack: z.array(z.string()).max(5).optional(),
       featured: z.boolean().default(false),
       caseStudy: z.boolean().default(false),

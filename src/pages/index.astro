@@ -9,7 +9,11 @@ import { site } from '../data/site';
    device for employers, friends and strangers alike. */
 const entries = (await getCollection('projects', ({ data }) => data.publish))
   .filter((p) => p.data.status !== 'archived')
-  .sort((a, b) => b.data.updated.valueOf() - a.data.updated.valueOf());
+  // `order` is explicit editorial placement; everything left at the default
+  // falls back to most recently updated first.
+  .sort(
+    (a, b) => a.data.order - b.data.order || b.data.updated.valueOf() - a.data.updated.valueOf(),
+  );
 
 const buildDate = new Date().toISOString().slice(0, 10);
 ---
