@@ -15,4 +15,8 @@ export default defineConfig({
     }),
   ],
   prefetch: true,
+  // The dev toolbar floats over the bottom of the viewport, which is exactly
+  // where the footer mark sits during design review. It is a dev aid, not part
+  // of the site, and it only ever appears in dev mode.
+  devToolbar: { enabled: false },
 });

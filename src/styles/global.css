@@ -423,6 +423,26 @@ td {
   text-decoration: underline;
 }
 
+/* The mark, used as a signature rather than decoration: small, aligned with
+   the sign-off line, and inverted on the dark theme so it stays legible. */
+.footer-sig {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.footer-mark {
+  width: 40px;
+  height: 40px;
+  flex: none;
+  opacity: 0.9;
+}
+
+[data-theme='dark'] .footer-mark {
+  filter: invert(1);
+  opacity: 0.82;
+}
+
 /* Motion: transitions only when motion is welcome.
    ------------------------------------------------------------------ */
 
