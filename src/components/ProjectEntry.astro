@@ -127,8 +127,10 @@ const isLead = variant === 'lead';
     margin-bottom: var(--space-5);
   }
 
+  /* Lead's picture is the focus at the full measure; every other entry's runs
+     at half that, so the lead carries the weight and the rest stay a list. */
   .entry:not(.entry--lead) .entry-img {
-    max-width: 300px;
+    max-width: 230px;
   }
 
   /* The lead's text measure is its picture's width, so the two share one right
