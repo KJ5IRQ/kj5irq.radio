@@ -91,6 +91,9 @@ figure {
 
 figure img {
   border: 1px solid var(--rule);
+  /* Keep a tall screenshot from becoming a dark slab that dominates the page. */
+  max-height: 680px;
+  width: auto;
 }
 
 figcaption {
