@@ -34,7 +34,9 @@ const buildDate = new Date().toISOString().slice(0, 10);
 
   <section aria-labelledby="entries-heading">
     <h2 class="section-heading" id="entries-heading">Entries</h2>
-    {entries.map((project) => <ProjectEntry project={project} />)}
+    {entries.map((project, i) => (
+      <ProjectEntry project={project} variant={i === 0 ? 'lead' : 'standard'} />
+    ))}
     <p class="more-link"><a href="/projects/">All entries →</a></p>
   </section>
 </BaseLayout>

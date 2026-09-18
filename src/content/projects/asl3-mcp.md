@@ -10,10 +10,10 @@ privacyReviewed: true
 repo: "https://github.com/KJ5IRQ/asl3-mcp"
 stack: ["Python", "MCP", "FastAPI"]
 image:
-  src: "/images/asl-panel-screenshot.png"
+  src: "/images/asl-panel-lead.png"
   alt: "The ASL Node Panel: live node status, connected nodes, and one-tap controls."
   width: 460
-  height: 948
+  height: 430
 order: 1
 ---
 

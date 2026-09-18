@@ -5,25 +5,31 @@ import { clusterLabels } from '../data/site';
 
 interface Props {
   project: CollectionEntry<'projects'>;
+  /* 'lead' gives one entry the picture and more weight. The other entries stay
+     quiet, and that contrast is what makes the lead read as a lead rather than
+     as a picture that was dropped into a list. */
+  variant?: 'standard' | 'lead';
 }
 
-const { project } = Astro.props;
+const { project, variant = 'standard' } = Astro.props;
 const { title, summary, whyItMatters, status, cluster, stack, updated, repo, caseStudy, image } =
   project.data;
 const href = caseStudy ? `/projects/${project.id}/` : repo;
 const dateLabel = updated.toISOString().slice(0, 10);
+const isLead = variant === 'lead';
 ---
 
-<article class="entry">
+<article class:list={['entry', isLead && 'entry--lead']}>
   <div class="entry-side">
-    <p class="entry-stamp">
-      <time class="entry-date" datetime={dateLabel}>{dateLabel}</time>
-      <span class="entry-kicker">{clusterLabels[cluster]}</span>
-    </p>
+    <time class="entry-date" datetime={dateLabel}>{dateLabel}</time>
+    <span class="entry-kicker">{clusterLabels[cluster]}</span>
+  </div>
+  <div class="entry-body">
+    <h3 class="entry-title">{href ? <a href={href}>{title}</a> : title}</h3>
     {
-      image && (
+      isLead && image && (
         <img
-          class="entry-thumb"
+          class="entry-lead-img"
           src={image.src}
           alt={image.alt}
           width={image.width}
@@ -31,9 +37,6 @@ const dateLabel = updated.toISOString().slice(0, 10);
         />
       )
     }
-  </div>
-  <div class="entry-body">
-    <h3 class="entry-title">{href ? <a href={href}>{title}</a> : title}</h3>
     <p class="entry-standfirst">{summary}</p>
     <p class="entry-note">{whyItMatters}</p>
     <p class="meta entry-meta">
@@ -47,7 +50,7 @@ const dateLabel = updated.toISOString().slice(0, 10);
 <style>
   /* The entry spine. Every kind of content renders through this, which is what
      lets one site hold projects, posts and notes without separate systems.
-     Below 760px it all stacks into one column. */
+     Below 760px the margin column collapses above the entry. */
   .entry {
     padding-block: var(--space-6);
     border-top: 1px solid var(--rule);
@@ -55,16 +58,9 @@ const dateLabel = updated.toISOString().slice(0, 10);
 
   .entry-side {
     display: flex;
-    flex-direction: column;
-    gap: var(--space-3);
-    margin-bottom: var(--space-4);
-  }
-
-  .entry-stamp {
-    display: flex;
     align-items: baseline;
     gap: var(--space-4);
-    margin: 0;
+    margin-bottom: var(--space-3);
   }
 
   .entry-date {
@@ -81,17 +77,6 @@ const dateLabel = updated.toISOString().slice(0, 10);
     letter-spacing: 0.12em;
     text-transform: uppercase;
     color: var(--accent);
-  }
-
-  /* The picture sits in the margin column, under the date and the kicker. That
-     column holds two short lines and is otherwise empty, and the eye already
-     reads it as a sidebar. */
-  .entry-thumb {
-    display: block;
-    width: 100%;
-    max-width: 240px;
-    height: auto;
-    border: 1px solid var(--rule);
   }
 
   .entry-title {
@@ -130,6 +115,25 @@ const dateLabel = updated.toISOString().slice(0, 10);
     flex-wrap: wrap;
   }
 
+  /* The lead picture sits under its headline at natural size, so it is never
+     upscaled into mush. It is the only picture on the page, and that is the
+     point: one entry is the lead, the rest are a list. */
+  .entry-lead-img {
+    display: block;
+    width: 100%;
+    max-width: 460px;
+    height: auto;
+    border: 1px solid var(--rule);
+    margin-bottom: var(--space-5);
+  }
+
+  /* The lead's text measure is its picture's width, so the two share one right
+     edge instead of the picture hanging past the last line of the summary. */
+  .entry--lead .entry-standfirst,
+  .entry--lead .entry-note {
+    max-width: 460px;
+  }
+
   @media (min-width: 760px) {
     .entry {
       display: grid;
@@ -139,22 +143,24 @@ const dateLabel = updated.toISOString().slice(0, 10);
     }
 
     .entry-side {
+      flex-direction: column;
       align-items: flex-end;
-      gap: var(--space-5);
+      gap: var(--space-2);
       margin-bottom: 0;
       padding-top: 0.5rem;
     }
 
-    .entry-stamp {
-      flex-direction: column;
-      align-items: flex-end;
-      gap: var(--space-2);
+    .entry-body {
+      max-width: 100%;
     }
 
-    /* Fill the margin column so the picture aligns to the same right edge the
-       dates do, rather than floating inside it. */
-    .entry-thumb {
-      max-width: none;
+    .entry--lead {
+      padding-block: var(--space-8);
+    }
+
+    .entry--lead .entry-title {
+      font-size: var(--size-h2);
+      letter-spacing: -0.01em;
     }
   }
 </style>
