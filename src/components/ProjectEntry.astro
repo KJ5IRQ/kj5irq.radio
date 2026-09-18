@@ -5,32 +5,25 @@ import { clusterLabels } from '../data/site';
 
 interface Props {
   project: CollectionEntry<'projects'>;
-  /* 'lead' gives one entry the picture at full measure and more weight. The
-     other entries put their picture at the left of the card with the text
-     beside it, so the lead still reads as the lead. */
-  variant?: 'standard' | 'lead';
 }
 
-const { project, variant = 'standard' } = Astro.props;
+const { project } = Astro.props;
 const { title, summary, whyItMatters, status, cluster, stack, updated, repo, caseStudy, image } =
   project.data;
 const href = caseStudy ? `/projects/${project.id}/` : repo;
 const dateLabel = updated.toISOString().slice(0, 10);
-const isLead = variant === 'lead';
-/* Non-lead pictures sit beside the text, at the left of the card. */
-const sideImage = Boolean(image) && !isLead;
 ---
 
-<article class:list={['entry', isLead && 'entry--lead']}>
+<article class="entry">
   <div class="entry-side">
     <time class="entry-date" datetime={dateLabel}>{dateLabel}</time>
     <span class="entry-kicker">{clusterLabels[cluster]}</span>
   </div>
-  <div class:list={['entry-body', sideImage && 'entry-body--media']}>
+  <div class:list={['entry-body', image && 'entry-body--media']}>
     {
-      sideImage && image && (
+      image && (
         <img
-          class="entry-img entry-img--side"
+          class="entry-img"
           src={image.src}
           alt={image.alt}
           width={image.width}
@@ -40,17 +33,6 @@ const sideImage = Boolean(image) && !isLead;
     }
     <div class="entry-text">
       <h3 class="entry-title">{href ? <a href={href}>{title}</a> : title}</h3>
-      {
-        isLead && image && (
-          <img
-            class="entry-img entry-img--focus"
-            src={image.src}
-            alt={image.alt}
-            width={image.width}
-            height={image.height}
-          />
-        )
-      }
       <p class="entry-standfirst">{summary}</p>
       <p class="entry-note">{whyItMatters}</p>
       <p class="meta entry-meta">
@@ -65,7 +47,11 @@ const sideImage = Boolean(image) && !isLead;
 <style>
   /* The entry spine. Every kind of content renders through this, which is what
      lets one site hold projects, posts and notes without separate systems.
-     Below 760px the margin column collapses above the entry. */
+     Below 760px the margin column collapses above the entry.
+
+     One shape for every entry: date and kicker in the margin, then a card with
+     the picture at the left and the text beside it. No entry is special-cased,
+     because the exception was not worth the inconsistency. */
   .entry {
     padding-block: var(--space-6);
     border-top: 1px solid var(--rule);
@@ -137,23 +123,10 @@ const sideImage = Boolean(image) && !isLead;
   .entry-img {
     display: block;
     width: 100%;
-    max-width: 460px;
+    max-width: 230px;
     height: auto;
     border: 1px solid var(--rule);
     margin-bottom: var(--space-4);
-  }
-
-  /* The smaller pictures run half the focus measure and sit at the left of the
-     card, with the headline and the text beside them. */
-  .entry-img--side {
-    max-width: 230px;
-  }
-
-  /* The lead's text measure is its picture's width, so the two share one right
-     edge instead of the picture hanging past the last line of the summary. */
-  .entry--lead .entry-standfirst,
-  .entry--lead .entry-note {
-    max-width: 460px;
   }
 
   @media (min-width: 760px) {
@@ -184,29 +157,20 @@ const sideImage = Boolean(image) && !isLead;
     }
 
     /* The column beside a picture is narrower than a full measure, so the meta
-       row tightens rather than orphaning its last link onto its own line. */
+       row tightens to keep its links on one line. */
     .entry-body--media .entry-meta {
-      gap: var(--space-4);
+      gap: var(--space-3);
     }
 
     .entry-body--media .entry-text {
       flex: 1 1 auto;
     }
 
-    .entry-img--side {
+    .entry-body--media .entry-img {
       flex: none;
       width: 230px;
       max-width: none;
       margin-bottom: 0;
-    }
-
-    .entry--lead {
-      padding-block: var(--space-8);
-    }
-
-    .entry--lead .entry-title {
-      font-size: var(--size-h2);
-      letter-spacing: -0.01em;
     }
   }
 </style>

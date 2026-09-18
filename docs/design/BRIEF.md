@@ -55,6 +55,14 @@ Derived from measurement of the references Josh named, not from prior plans.
 - Multiple-column text is permitted on wide screens for article bodies; never below ~900px.
 - Category labels as quiet filters, not as navigation furniture.
 
+### Entry cards
+
+Every entry on an index renders as the same card: date and kicker in the margin column, then the picture at the left at **230px** with the headline, summary, note and meta beside it. No entry is special-cased.
+
+A larger lead entry was tried twice and dropped both times. With a big picture and no other pictures it read as a lone object dropped into a list of text; with all five pictured it read as five equal blocks and the lead stopped leading. Josh's call was uniform cards with the picture always at the left.
+
+230px is half the 460px measure, and it is also the widest a card picture can be while leaving the text column enough room to keep the meta row on one line.
+
 ### The station mark
 
 The skull-and-tower mark is used **where it can actually be read**, and type carries the small sizes. This was measured, not assumed: at 32px the drawing's strokes antialias to pale grey, and bolding them at four tested weights collapses the tower and the teeth into a blob. The asset cannot read at 16–32px at all.
