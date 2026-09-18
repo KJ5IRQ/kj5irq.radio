@@ -55,6 +55,21 @@ Derived from measurement of the references Josh named, not from prior plans.
 - Multiple-column text is permitted on wide screens for article bodies; never below ~900px.
 - Category labels as quiet filters, not as navigation furniture.
 
+### The station mark
+
+The skull-and-tower mark is used **where it can actually be read**, and type carries the small sizes. This was measured, not assumed: at 32px the drawing's strokes antialias to pale grey, and bolding them at four tested weights collapses the tower and the teeth into a blob. The asset cannot read at 16–32px at all.
+
+| Placement | What goes there | Why |
+|---|---|---|
+| Favicon (32px, 180px) | A capital `K` in Source Serif 4 on cream | Type stays sharp where the drawing does not |
+| Footer | The mark at 40px beside the sign-off line | A signature, sitting with the line it signs |
+| `/radio/` | The mark at 112px in a station plate | The page is about the station, so the mark is information, not ornament |
+| Social preview | A rendered 1200x630 card: mark, name, tagline | The textless mark alone previewed as a nameless skull |
+
+**Never** the badge variant with `KJ5IRQ` and *Mementō Morī* baked into the image. Baked-in text cannot be selected, read aloud, themed, or corrected. That file is a profile image for Google, QRZ and Discord, not a site asset.
+
+Assets are generated from the ink bounding box of `public/logo.png`. That canvas is 67% empty width, so a naive resize draws a 21px skull inside a 32px box. `logo.png` remains the master and is referenced by no page. Icon set is 8 KB total.
+
 ### Measured evidence behind these choices
 
 | Reference | What was measured |
@@ -104,7 +119,7 @@ The failure mode of an editorial design is **empty shelves**: a beautiful magazi
 
 ## 7. Decisions still open
 
-1. **Does the green stay** as the single accent, or go strict monochrome? (LEQB supports keeping it; the references are otherwise achromatic.)
+1. ~~**Does the green stay** as the single accent, or go strict monochrome?~~ **Resolved 2026-09-18: the green stays.** Josh confirmed it. The references are otherwise achromatic; LEQB is the precedent for exactly one accent.
 2. **Capture pass** for the projects without imagery.
 3. **D2 from the June plan is still unresolved:** whether writing publishes under his real name. The design does not depend on the answer, which is exactly why the entry spine is the right call.
 
