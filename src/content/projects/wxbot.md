@@ -8,6 +8,11 @@ updated: 2026-04-21
 publish: true
 privacyReviewed: true
 repo: "https://github.com/KJ5IRQ/wxbot"
+image:
+  src: "/images/wxbot-plate.png"
+  alt: "A real forecast message from the bot, formatted from live National Weather Service data."
+  width: 460
+  height: 430
 stack: ["Python", "Discord", "NWS API"]
 featured: true
 caseStudy: true

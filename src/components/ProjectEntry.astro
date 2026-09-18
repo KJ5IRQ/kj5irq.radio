@@ -27,9 +27,9 @@ const isLead = variant === 'lead';
   <div class="entry-body">
     <h3 class="entry-title">{href ? <a href={href}>{title}</a> : title}</h3>
     {
-      isLead && image && (
+      image && (
         <img
-          class="entry-lead-img"
+          class="entry-img"
           src={image.src}
           alt={image.alt}
           width={image.width}
@@ -115,16 +115,20 @@ const isLead = variant === 'lead';
     flex-wrap: wrap;
   }
 
-  /* The lead picture sits under its headline at natural size, so it is never
-     upscaled into mush. It is the only picture on the page, and that is the
-     point: one entry is the lead, the rest are a list. */
-  .entry-lead-img {
+  /* Every entry can carry a picture under its headline. The lead's runs the full
+     measure; the others are inset, so the lead still reads as the lead instead
+     of five equal blocks. */
+  .entry-img {
     display: block;
     width: 100%;
     max-width: 460px;
     height: auto;
     border: 1px solid var(--rule);
     margin-bottom: var(--space-5);
+  }
+
+  .entry:not(.entry--lead) .entry-img {
+    max-width: 300px;
   }
 
   /* The lead's text measure is its picture's width, so the two share one right

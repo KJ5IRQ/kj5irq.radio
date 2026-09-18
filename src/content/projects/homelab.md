@@ -7,6 +7,11 @@ cluster: "homelab"
 updated: 2026-06-01
 publish: true
 privacyReviewed: true
+image:
+  src: "/images/homelab-plate.png"
+  alt: "A diagram of three hosts: an AI workstation, a services host, and a radio host."
+  width: 460
+  height: 430
 stack: ["Proxmox", "Linux"]
 featured: false
 caseStudy: true

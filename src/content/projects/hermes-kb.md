@@ -8,6 +8,11 @@ updated: 2026-05-28
 publish: true
 privacyReviewed: true
 repo: "https://github.com/KJ5IRQ/hermes-kb"
+image:
+  src: "/images/hermes-kb-plate.png"
+  alt: "A search against the local knowledge base: three results drawn from 200 indexed pages of Hermes docs."
+  width: 460
+  height: 430
 stack: ["Python", "SQLite FTS5"]
 featured: true
 caseStudy: true
