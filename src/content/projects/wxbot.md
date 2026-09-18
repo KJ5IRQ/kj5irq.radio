@@ -7,7 +7,7 @@ cluster: "utilities"
 updated: 2026-04-21
 publish: true
 privacyReviewed: true
-repo: "https://github.com/KJ5IRQ/WxBot_76067"
+repo: "https://github.com/KJ5IRQ/wxbot"
 stack: ["Python", "Discord", "NWS API"]
 featured: true
 caseStudy: true
@@ -36,4 +36,4 @@ Running. Next: proactive severe weather alerts for saved locations.
 
 ## Links
 
-- [WxBot on GitHub](https://github.com/KJ5IRQ/WxBot_76067)
+- [WxBot on GitHub](https://github.com/KJ5IRQ/wxbot)

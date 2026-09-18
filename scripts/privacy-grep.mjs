@@ -18,8 +18,10 @@ const patterns = [
   { name: 'Local filesystem path', re: /(\/home\/[a-z0-9_]+\/|C:\\Users\\)/i },
 ];
 
-// The WxBot repo URL legitimately contains the ZIP; allow exactly that URL.
-const allow = [/github\.com\/KJ5IRQ\/WxBot_76067/];
+// No exceptions. The WxBot repo was renamed from WxBot_76067 to wxbot so its URL
+// no longer carries the ZIP. Keep this list empty unless a legitimate exception is
+// deliberately approved; the previous single entry was the hole this closes.
+const allow = [];
 
 function* walk(dir) {
   for (const name of readdirSync(dir)) {
