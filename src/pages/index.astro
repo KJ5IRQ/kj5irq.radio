@@ -1,153 +1,73 @@
 ---
 import { getCollection } from 'astro:content';
-import { Image, getImage } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import ProjectEntry from '../components/ProjectEntry.astro';
 import { site } from '../data/site';
-import headshot from '../assets/headshot.jpg';
-import heroBg from '../assets/hero-bg.jpg';
 
-const featured = (await getCollection('projects', ({ data }) => data.featured)).sort(
-  (a, b) => a.data.order - b.data.order
-);
+/* The front door. A masthead, then the work itself, newest first. No hero
+   animation, no featured-card grid: a contents page is the better routing
+   device for employers, friends and strangers alike. */
+const entries = (await getCollection('projects', ({ data }) => data.publish))
+  .filter((p) => p.data.status !== 'archived')
+  .sort((a, b) => b.data.updated.valueOf() - a.data.updated.valueOf());
+
 const buildDate = new Date().toISOString().slice(0, 10);
-const heroImage = await getImage({ src: heroBg, format: 'webp', width: 1920, quality: 72 });
 ---
 
 <BaseLayout>
-  <section class="hero" style={`background-image: linear-gradient(90deg, rgba(10, 26, 47, 0.94) 0%, rgba(10, 26, 47, 0.72) 40%, rgba(10, 26, 47, 0.12) 100%), url(${heroImage.src});`}>
-    <p class="kicker">World Cup 2026 · Tartan Army</p>
-    <h1>Systems that integrate,<br />not just coexist.</h1>
-    <p class="dek">
-      I'm Joshua Ford, a systems administrator in Texas. I run an ERP platform for work, and at
-      home I build tools that let software, radios, and AI agents actually reach each other.
+  <section class="masthead">
+    <h1 class="masthead-name">{site.name}</h1>
+    <p class="masthead-line">
+      Systems operator in Texas. I run an ERP platform for work, and I build the missing
+      interfaces between business platforms, radios, and AI agents.
     </p>
-    <div class="hero-actions">
+    <p class="meta masthead-meta">TX · {site.callsign} · Updated {buildDate}</p>
+    <p class="masthead-actions">
       <a class="button button-primary" href={`mailto:${site.email}`}>Email me</a>
-      <a class="button" href="/projects/">See the projects</a>
-    </div>
-    <p class="meta hero-meta">TX · {site.callsign} · Updated {buildDate}</p>
-  </section>
-
-  <section class="home-section" aria-labelledby="featured-heading">
-    <p class="label" id="featured-heading">On the bench</p>
-    {featured.map((project) => <ProjectEntry project={project} />)}
-    <p class="more-link"><a href="/projects/">All projects →</a></p>
-  </section>
-
-  <section class="home-section operator" aria-labelledby="operator-heading">
-    <p class="label" id="operator-heading">The operator</p>
-    <div class="operator-grid">
-      <div>
-        <p>
-          I started in warehouse operations and ended up running the ERP. The habit stuck: learn
-          the system end to end, then automate the boring parts. These days that habit gets
-          applied to radios, servers, and AI agents too.
-        </p>
-        <p>Based in Texas. Usually tinkering with something.</p>
-        <p class="more-link"><a href="/about/">More about me →</a></p>
-      </div>
-      <Image
-        src={headshot}
-        alt="Joshua Ford"
-        width={320}
-        widths={[320, 640]}
-        sizes="(max-width: 700px) 40vw, 220px"
-        class="operator-photo"
-      />
-    </div>
-  </section>
-
-  <section class="home-section station-strip" aria-labelledby="station-heading">
-    <p class="label" id="station-heading">The station</p>
-    <p>
-      <span class="meta callsign-inline">{site.callsign}</span> is my amateur radio callsign. The
-      node, the tooling, and what any of that means: <a href="/radio/">the radio page</a>.
+      <a class="button" href="/about/">About</a>
     </p>
+  </section>
+
+  <section aria-labelledby="entries-heading">
+    <h2 class="section-heading" id="entries-heading">Entries</h2>
+    {entries.map((project) => <ProjectEntry project={project} />)}
+    <p class="more-link"><a href="/projects/">All entries →</a></p>
   </section>
 </BaseLayout>
 
 <style>
-  .hero {
+  .masthead {
     padding-block: var(--space-9) var(--space-8);
-    margin-inline: calc(-1 * var(--space-5));
-    padding-inline: var(--space-5);
-    background-color: var(--surface);
-    background-size: cover;
-    background-position: center right;
-    border-bottom: 2px solid var(--accent);
+    border-bottom: 1px solid var(--rule-strong);
+    margin-bottom: var(--space-7);
   }
 
-  .hero .kicker {
-    margin-bottom: var(--space-6);
+  .masthead-name {
+    font-size: var(--size-masthead);
+    letter-spacing: -0.02em;
   }
 
-  .hero h1 {
-    font-size: var(--size-display);
-    max-width: 14ch;
-    text-shadow: 0 3px 0 rgba(0, 0, 0, 0.35);
-  }
-
-  .dek {
-    margin-top: var(--space-6);
+  .masthead-line {
+    margin-top: var(--space-5);
+    max-width: 52ch;
     font-size: var(--size-h3);
     line-height: 1.5;
     color: var(--ink);
-    max-width: 48ch;
   }
 
-  .hero-actions {
-    display: flex;
-    gap: var(--space-4);
-    flex-wrap: wrap;
-    margin-top: var(--space-7);
-  }
-
-  .hero-meta {
-    margin-top: var(--space-6);
-  }
-
-  .home-section {
-    padding-block: var(--space-8);
-  }
-
-  .more-link {
+  .masthead-meta {
     margin-top: var(--space-5);
   }
 
-  .operator-grid {
-    display: grid;
-    grid-template-columns: minmax(0, var(--measure)) auto;
-    gap: var(--space-7);
-    align-items: start;
+  .masthead-actions {
+    display: flex;
+    gap: var(--space-4);
+    flex-wrap: wrap;
+    margin-top: var(--space-6);
+    max-width: none;
   }
 
-  .operator-grid p + p {
-    margin-top: var(--space-4);
-  }
-
-  .operator-photo {
-    border: 1px solid var(--rule);
-    width: 220px;
-    height: auto;
-  }
-
-  .station-strip {
-    border-top: 1px solid var(--rule);
-  }
-
-  .callsign-inline {
-    color: var(--accent);
-    font-size: var(--size-body);
-  }
-
-  @media (max-width: 700px) {
-    .operator-grid {
-      grid-template-columns: 1fr;
-    }
-
-    .operator-photo {
-      width: 160px;
-    }
+  .more-link {
+    margin-top: var(--space-6);
   }
 </style>

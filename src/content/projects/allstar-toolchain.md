@@ -27,6 +27,19 @@ Three small projects that together give an AllStarLink node a modern control sur
 - **asl3-mcp** sits on top of that API and speaks Model Context Protocol, so an AI agent can operate the node with typed tools instead of shell access.
 - **asl-node-panel** is a Chrome side panel for humans: live status, favorites, weekly connect schedules, and one-tap commands.
 
+<figure>
+  <img
+    src="/images/asl-panel-screenshot.png"
+    alt="The ASL Node Panel showing node 637858, five keys today, six connected nodes, and a list of live connections"
+    width="460"
+    height="948"
+  />
+  <figcaption>
+    The Chrome side panel, live against my node. Current connections, weekly keys, and one-tap
+    connect and monitor.
+  </figcaption>
+</figure>
+
 ## Why I built it
 
 AllStarLink already networks radios over the internet, which is half the magic. But day-to-day control of a node still meant SSH sessions and DTMF sequences. I wanted my node to be as scriptable as everything else I run, and once it had a real API, giving an agent safe access to it was the obvious next step.

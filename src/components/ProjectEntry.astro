@@ -1,77 +1,121 @@
 ---
 import type { CollectionEntry } from 'astro:content';
 import StatusTag from './StatusTag.astro';
+import { clusterLabels } from '../data/site';
 
 interface Props {
   project: CollectionEntry<'projects'>;
 }
 
 const { project } = Astro.props;
-const { title, summary, whyItMatters, status, stack, updated, repo, caseStudy } = project.data;
+const { title, summary, whyItMatters, status, cluster, stack, updated, repo, caseStudy } = project.data;
 const href = caseStudy ? `/projects/${project.id}/` : repo;
-const updatedLabel = updated.toISOString().slice(0, 10);
+const dateLabel = updated.toISOString().slice(0, 10);
 ---
 
 <article class="entry">
-  <div class="entry-head">
-    <h3>
-      {href ? <a href={href}>{title} <span aria-hidden="true">→</span></a> : title}
-    </h3>
-    <StatusTag status={status} />
+  <div class="entry-side">
+    <time class="entry-date" datetime={dateLabel}>{dateLabel}</time>
+    <span class="entry-kicker">{clusterLabels[cluster]}</span>
   </div>
-  <p class="entry-summary">{summary}</p>
-  <p class="entry-why">{whyItMatters}</p>
-  <p class="meta">
-    {stack && <span>{stack.join(' / ')}</span>}
-    <span>Updated <time datetime={updatedLabel}>{updatedLabel}</time></span>
-    {repo && (
-      <span>
-        <a href={repo} rel="noopener">Repo ↗</a>
-      </span>
-    )}
-  </p>
+  <div class="entry-body">
+    <h3 class="entry-title">{href ? <a href={href}>{title}</a> : title}</h3>
+    <p class="entry-standfirst">{summary}</p>
+    <p class="entry-note">{whyItMatters}</p>
+    <p class="meta entry-meta">
+      <StatusTag status={status} />
+      {stack && <span>{stack.join(' / ')}</span>}
+      {repo && <a href={repo} rel="noopener">Repo ↗</a>}
+    </p>
+  </div>
 </article>
 
 <style>
+  /* The entry spine. Every kind of content renders through this, which is what
+     lets one site hold projects, posts and notes without separate systems.
+     Below 760px the margin column collapses above the entry. */
   .entry {
-    border-top: 1px solid var(--rule);
     padding-block: var(--space-6);
+    border-top: 1px solid var(--rule);
   }
 
-  .entry-head {
+  .entry-side {
     display: flex;
     align-items: baseline;
-    justify-content: space-between;
     gap: var(--space-4);
-    flex-wrap: wrap;
     margin-bottom: var(--space-3);
   }
 
-  .entry-head h3 a {
+  .entry-date {
+    font-family: var(--font-mono);
+    font-size: var(--size-meta);
+    font-variant-numeric: tabular-nums slashed-zero;
+    letter-spacing: 0.04em;
+    color: var(--muted);
+  }
+
+  .entry-kicker {
+    font-family: var(--font-mono);
+    font-size: var(--size-meta);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+
+  .entry-title {
+    font-size: 1.5rem;
+    margin-bottom: var(--space-3);
+  }
+
+  .entry-title a {
     text-decoration: none;
     color: var(--ink);
   }
 
-  .entry-head h3 a:hover {
-    color: var(--link);
+  .entry-title a:hover {
+    color: var(--accent);
     text-decoration: underline;
     text-decoration-thickness: 1px;
     text-underline-offset: 0.15em;
   }
 
-  .entry-summary {
-    margin-bottom: var(--space-2);
+  .entry-standfirst {
+    max-width: 58ch;
+    margin-bottom: var(--space-3);
   }
 
-  .entry-why {
+  .entry-note {
+    max-width: 58ch;
     color: var(--muted);
     font-style: italic;
     margin-bottom: var(--space-4);
   }
 
-  .meta {
+  .entry-meta {
     display: flex;
+    align-items: center;
     gap: var(--space-5);
     flex-wrap: wrap;
+  }
+
+  @media (min-width: 760px) {
+    .entry {
+      display: grid;
+      grid-template-columns: var(--margin-col) minmax(0, 1fr);
+      gap: var(--space-7);
+      padding-block: var(--space-7);
+    }
+
+    .entry-side {
+      flex-direction: column;
+      align-items: flex-end;
+      gap: var(--space-2);
+      margin-bottom: 0;
+      padding-top: 0.5rem;
+    }
+
+    .entry-body {
+      max-width: 62ch;
+    }
   }
 </style>

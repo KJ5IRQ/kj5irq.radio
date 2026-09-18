@@ -1,49 +1,51 @@
 ---
 import type { CollectionEntry } from 'astro:content';
 import StatusTag from './StatusTag.astro';
+import { clusterLabels } from '../data/site';
 
 interface Props {
   project: CollectionEntry<'projects'>;
 }
 
 const { project } = Astro.props;
-const { title, summary, status, stack, started, updated, repo, links } = project.data;
+const { title, summary, status, cluster, stack, started, updated, repo, links } = project.data;
 const fmt = (d: Date) => d.toISOString().slice(0, 10);
 ---
 
-<header class="cs-header">
-  <p class="label">Project</p>
-  <h1>{title}</h1>
-  <p class="cs-summary">{summary}</p>
-  <dl class="cs-meta">
-    <div>
+<header class="entry-header">
+  <p class="kicker">{clusterLabels[cluster]} · Project</p>
+  <h1 class="entry-title">{title}</h1>
+  <p class="standfirst">{summary}</p>
+
+  <dl class="facts">
+    <div class="fact">
       <dt>Status</dt>
       <dd><StatusTag status={status} /></dd>
     </div>
     {started && (
-      <div>
+      <div class="fact">
         <dt>Started</dt>
         <dd class="meta">{fmt(started)}</dd>
       </div>
     )}
-    <div>
+    <div class="fact">
       <dt>Updated</dt>
       <dd class="meta">{fmt(updated)}</dd>
     </div>
     {stack && (
-      <div>
+      <div class="fact">
         <dt>Stack</dt>
         <dd class="meta">{stack.join(' / ')}</dd>
       </div>
     )}
     {repo && (
-      <div>
+      <div class="fact">
         <dt>Code</dt>
         <dd class="meta"><a href={repo} rel="noopener">Repo ↗</a></dd>
       </div>
     )}
     {links?.map((l) => (
-      <div>
+      <div class="fact">
         <dt>More</dt>
         <dd class="meta"><a href={l.url} rel="noopener">{l.label} ↗</a></dd>
       </div>
@@ -52,36 +54,45 @@ const fmt = (d: Date) => d.toISOString().slice(0, 10);
 </header>
 
 <style>
-  .cs-header {
+  /* Article opener, editorial: kicker, title, standfirst, then the facts as a
+     hairline row rather than a sidebar. */
+  .entry-header {
     padding-block: var(--space-8) var(--space-6);
-    border-bottom: 1px solid var(--rule);
-    margin-bottom: var(--space-7);
   }
 
-  .cs-summary {
+  .entry-title {
+    font-size: var(--size-h1);
+    letter-spacing: -0.02em;
+    max-width: 26ch;
+  }
+
+  .standfirst {
+    margin-top: var(--space-5);
+    max-width: 52ch;
     font-size: var(--size-h3);
+    line-height: 1.5;
     color: var(--muted);
-    margin-top: var(--space-4);
-    line-height: 1.4;
   }
 
-  .cs-meta {
+  .facts {
     display: flex;
     flex-wrap: wrap;
-    gap: var(--space-6);
-    margin-top: var(--space-6);
+    gap: var(--space-6) var(--space-7);
+    margin-top: var(--space-7);
+    padding-top: var(--space-5);
+    border-top: 1px solid var(--rule-strong);
   }
 
-  .cs-meta dt {
+  .fact dt {
     font-family: var(--font-mono);
     font-size: var(--size-meta);
+    letter-spacing: 0.12em;
     text-transform: uppercase;
-    letter-spacing: 0.08em;
     color: var(--muted);
     margin-bottom: var(--space-2);
   }
 
-  .cs-meta dd {
+  .fact dd {
     margin: 0;
   }
 </style>
