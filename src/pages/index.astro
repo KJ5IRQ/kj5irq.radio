@@ -522,9 +522,10 @@ const observedLabel = weather ? clockTime(new Date(weather.observedAt)) : null;
   }
 
   .sections .section-details > summary {
-    display: flex;
-    align-items: baseline;
-    gap: var(--space-2);
+    /* inline-block, not flex: the sibling links are inline-blocks with the same
+       padding, and matching their layout model is what lines the parent's text
+       up with them. As a flex container the summary sat 3px high. */
+    display: inline-block;
     font-family: var(--mono);
     font-size: var(--mono-sm);
     letter-spacing: 0.14em;
@@ -532,6 +533,10 @@ const observedLabel = weather ? clockTime(new Date(weather.observedAt)) : null;
     color: var(--muted);
     cursor: pointer;
     list-style: none;
+    /* The same padding the sibling links carry, both for the WCAG 2.2 target
+       size and because without it the parent's text sits above the rest of the
+       row. */
+    padding-block: var(--space-2);
   }
 
   .sections .section-details > summary::-webkit-details-marker {
@@ -541,6 +546,7 @@ const observedLabel = weather ? clockTime(new Date(weather.observedAt)) : null;
   .sections .section-details > summary::before {
     content: '>';
     color: var(--faint);
+    margin-right: var(--space-1);
   }
 
   .sections .section-details[open] > summary::before {
@@ -572,7 +578,9 @@ const observedLabel = weather ? clockTime(new Date(weather.observedAt)) : null;
 
   .sections .section-sub li {
     display: flex;
-    align-items: baseline;
+    /* center, not baseline: the child links carry vertical padding for the
+       target size, so baseline alignment pushes the ">" marker off the text. */
+    align-items: center;
     gap: var(--space-2);
   }
 
@@ -590,6 +598,10 @@ const observedLabel = weather ? clockTime(new Date(weather.observedAt)) : null;
     text-transform: uppercase;
     color: var(--faint);
     text-decoration: none;
+    /* The same WCAG 2.2 target size rule the top level follows: keep the
+       target 24px tall even though the type is a step smaller. */
+    display: inline-block;
+    padding-block: var(--space-1);
   }
 
   .sections .section-sub a:hover {
