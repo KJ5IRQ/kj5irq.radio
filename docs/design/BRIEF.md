@@ -39,7 +39,7 @@ Derived from measurement of the references Josh named, not from prior plans.
 | Accent | Ford Field Green, in slivers only: kickers, rules, link hover, status. One accent, easy to abuse. |
 | Body type | Serif, 18–19px, line-height 1.6–1.75. Reading-first. |
 | Headings | Modest: h1 30–48px. **Not** 80px display type. |
-| Labels | Mono or small-caps kickers, datelines, numbering. |
+| Labels | Mono or small-caps kickers, datelines, numbering. Settled 2026-09-18: **Courier Prime** on the front page, ahead of IBM Plex Mono, which stays on the v2 pages until v3 reaches them. |
 | Structure | Visible hairline grid; rules as the primary separator. |
 | Images | First-class and expected. Full-bleed or 1px-ruled with a mono caption. |
 | Motion | Effectively none. Underline and arrow transitions only, inside `prefers-reduced-motion`. |
@@ -70,6 +70,7 @@ The skull-and-tower mark is used **where it can actually be read**, and type car
 | Placement | What goes there | Why |
 |---|---|---|
 | Favicon (32px, 180px) | A capital `K` in Source Serif 4 on cream | Type stays sharp where the drawing does not |
+| Front page nameplate | The mark at 88–144px, bottom-right of the nameplate block, above the heavy rule | The one large, quiet space on the page, and the mark belongs to the publication's identity, not to an entry |
 | Footer | The mark at 40px beside the sign-off line | A signature, sitting with the line it signs |
 | `/radio/` | The mark at 112px in a station plate | The page is about the station, so the mark is information, not ornament |
 | Social preview | A rendered 1200x630 card: mark, name, tagline | The textless mark alone previewed as a nameless skull |

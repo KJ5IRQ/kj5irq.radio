@@ -44,12 +44,7 @@ const hrefFor = (p: (typeof published)[number]) =>
    link so the state is shareable and survives a reload; the query is applied to
    the page by the inline script below. Delete this block, the <aside>, and that
    script before anything merges to main. */
-const state: Record<string, string> = {
-  rules: 'hand',
-  texture: 'off',
-  lead: 'picture',
-  type: 'plex',
-};
+const state: Record<string, string> = { rules: 'hand', texture: 'off', lead: 'picture' };
 const linkFor = (key: string, value: string) => {
   const q = new URLSearchParams(state);
   q.set(key, value);
@@ -59,7 +54,6 @@ const switches: { key: string; values: string[] }[] = [
   { key: 'rules', values: ['hand', 'straight'] },
   { key: 'texture', values: ['off', 'on'] },
   { key: 'lead', values: ['picture', 'text'] },
-  { key: 'type', values: ['plex', 'courier', 'elite', 'cutive'] },
 ];
 
 const nameplateLine =
@@ -73,9 +67,11 @@ const nameplateLine =
    no coordinates, no town, no station id. The reader sees what the weather is
    doing, not where he is.
 
-   The reading is a snapshot, so it carries the time it was observed rather than
-   pretending to be live. The clock is genuinely live, because the reader's
-   browser already knows the time. */
+   The reading is a snapshot, refreshed every time the site rebuilds, which the
+   deploy workflow now does every 30 minutes. No observation time is printed:
+   the line is what the weather is doing, kept current by rebuilding, and every
+   other date on the page is a real one rather than a timestamp nobody asked
+   for. */
 interface Weather {
   available: boolean;
   station: string;
@@ -117,18 +113,10 @@ const wind =
 const weatherLine = weather
   ? [`${weather.temperatureF}°F`, weather.description, wind].filter(Boolean).join(' · ')
   : null;
-
-const observedLabel = weather ? clockTime(new Date(weather.observedAt)) : null;
 ---
 
 <BaseLayout chrome={false} sheet="broadsheet">
-  <div
-    class="front"
-    data-rules={state.rules}
-    data-texture={state.texture}
-    data-lead={state.lead}
-    data-type={state.type}
-  >
+  <div class="front" data-rules={state.rules} data-texture={state.texture} data-lead={state.lead}>
     <aside class="review" aria-label="Review controls">
       <span class="review-tag">Review</span>
       {
@@ -160,8 +148,7 @@ const observedLabel = weather ? clockTime(new Date(weather.observedAt)) : null;
       {
         weatherLine && (
           <span class="dateline-item">
-            <span class="dateline-qth">QTH</span> {weatherLine}{' '}
-            <span class="dateline-asof">as of {observedLabel}</span>
+            <span class="dateline-qth">QTH</span> {weatherLine}
           </span>
         )
       }
@@ -169,8 +156,11 @@ const observedLabel = weather ? clockTime(new Date(weather.observedAt)) : null;
     <HandRule variant="hair" />
 
     <header class="nameplate">
-      <h1 class="nameplate-name">{site.name}</h1>
-      <p class="nameplate-line">{nameplateLine}</p>
+      <div class="nameplate-text">
+        <h1 class="nameplate-name">{site.name}</h1>
+        <p class="nameplate-line">{nameplateLine}</p>
+      </div>
+      <img class="nameplate-mark" src="/mark-224.png" alt="" width="224" height="224" />
     </header>
     <HandRule variant="heavy" />
 
@@ -346,7 +336,7 @@ const observedLabel = weather ? clockTime(new Date(weather.observedAt)) : null;
     var front = document.querySelector('.front');
     if (!front) return;
     var q = new URLSearchParams(location.search);
-    ['rules', 'texture', 'lead', 'type'].forEach(function (key) {
+    ['rules', 'texture', 'lead'].forEach(function (key) {
       var value = q.get(key);
       if (value) front.setAttribute('data-' + key, value);
     });
@@ -385,43 +375,20 @@ const observedLabel = weather ? clockTime(new Date(weather.observedAt)) : null;
      because the contrast between a 44px headline and an 11px dateline is a
      large part of what makes a page read as set rather than generated. */
   .front {
-    /* The small-face slot. Every piece of small type on this page reads from
-       --mono, so a typewriter face swaps in one place rather than in fifteen.
-
-       The sizes are per face because Courier and Cutive are optically smaller
-       than Plex at the same pixel size; a straight family swap would set the
-       dateline a size down without anyone deciding to.
+    /* The small face is Courier Prime. A Courier-class face is optically smaller
+       and lighter than the utility mono this page started with, so these three
+       steps sit a size up from the old numbers rather than swapping the family
+       under the old sizes.
 
        The doodle texture, off by default. Mid grey so one file works on both
        themes; see public/doodle.svg. */
-    --mono: var(--font-mono);
-    --mono-sm: 0.6875rem;
-    --mono-md: 0.75rem;
-    --mono-lg: 0.875rem;
-
-    background-repeat: repeat;
-    background-position: 0 0;
-  }
-
-  .front[data-type='courier'] {
     --mono: 'Courier Prime', 'Courier New', monospace;
     --mono-sm: 0.75rem;
     --mono-md: 0.8125rem;
     --mono-lg: 0.9375rem;
-  }
 
-  .front[data-type='elite'] {
-    --mono: 'Special Elite', 'Courier New', monospace;
-    --mono-sm: 0.6875rem;
-    --mono-md: 0.75rem;
-    --mono-lg: 0.875rem;
-  }
-
-  .front[data-type='cutive'] {
-    --mono: 'Cutive Mono', 'Courier New', monospace;
-    --mono-sm: 0.8125rem;
-    --mono-md: 0.875rem;
-    --mono-lg: 1rem;
+    background-repeat: repeat;
+    background-position: 0 0;
   }
 
   /* Kickers, mono meta rows and status tags come from shared components, so
@@ -518,17 +485,6 @@ const observedLabel = weather ? clockTime(new Date(weather.observedAt)) : null;
     color: var(--accent);
   }
 
-  /* The observation time stays on one line: "PM CDT" split across two lines on
-     a phone reads like a mistake. The separator dot goes away when the time
-     wraps to its own line rather than leading it. */
-  .dateline-asof {
-    white-space: nowrap;
-  }
-
-  .dateline-asof::before {
-    content: '· ';
-  }
-
   @media (max-width: 719px) {
     .dateline {
       flex-direction: column;
@@ -538,7 +494,32 @@ const observedLabel = weather ? clockTime(new Date(weather.observedAt)) : null;
   }
 
   .nameplate {
+    display: grid;
+    gap: var(--space-5);
     padding-block: var(--space-6) var(--space-5);
+  }
+
+  /* The station mark, at the size the drawing can actually be read at. It is
+     decorative here: the name is already in the heading, so it carries no alt
+     text and no link. */
+  .nameplate-mark {
+    width: clamp(88px, 12vw, 144px);
+    height: auto;
+    justify-self: end;
+    opacity: 0.9;
+  }
+
+  :global([data-theme='dark']) .nameplate-mark {
+    filter: invert(1);
+    opacity: 0.82;
+  }
+
+  @media (min-width: 720px) {
+    .nameplate {
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: end;
+      gap: var(--space-7);
+    }
   }
 
   .nameplate-name {

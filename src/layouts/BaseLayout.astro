@@ -2,13 +2,9 @@
 import '@fontsource-variable/source-serif-4';
 import '@fontsource/ibm-plex-mono/400.css';
 import '@fontsource/ibm-plex-mono/500.css';
-/* Typewriter candidates for the small-face slot, being tried on the front page.
-   Only the face in use downloads: a @font-face declared and never matched costs
-   nothing at read time, so keeping the candidates here is free until one is
-   chosen and the others are removed. */
+/* The front page sets its small type in Courier Prime. IBM Plex Mono stays for
+   the rest of the site until v3 reaches those pages. */
 import '@fontsource/courier-prime/latin-400.css';
-import '@fontsource/cutive-mono/latin-400.css';
-import '@fontsource/special-elite/latin-400.css';
 import '../styles/global.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
