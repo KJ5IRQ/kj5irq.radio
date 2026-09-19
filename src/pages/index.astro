@@ -517,30 +517,20 @@ const weatherLine = weather
     display: none;
   }
 
-  /* The marker is a drawn typewriter arrow rather than a bare letter: a
-     vertical bar with the head at its foot, so the expanded state reads as a
-     small down arrow. Both states occupy the same box, so the label does not
-     move when the menu opens. */
+  /* The marker is the standard arrow pair: right when the menu is shut, down
+     when it is open. Both sit in the same fixed-width box so the label does not
+     move when it opens. */
   .sections .section-details > summary::before {
-    content: '>';
-    display: inline-flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    width: 0.9em;
-    height: 1.35em;
-    font-size: 0.7em;
-    line-height: 1;
+    content: '→'; /* &rarr; */
+    display: inline-block;
+    width: 1em;
+    text-align: center;
     color: var(--faint);
     margin-right: var(--space-1);
-    vertical-align: middle;
   }
 
   .sections .section-details[open] > summary::before {
-    /* The escape is a newline; the space after it terminates the escape and is
-       consumed, so this renders as a bar above a v with nothing between them. */
-    content: '|\A v';
-    white-space: pre;
+    content: '↓'; /* &darr; */
   }
 
   .sections .section-details > summary:hover,
