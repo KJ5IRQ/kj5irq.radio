@@ -47,7 +47,7 @@ Three small projects that together give an AllStarLink node a modern control sur
 
 ## Why I built it
 
-AllStarLink already networks radios over the internet, which is half the magic. But day-to-day control of a node still meant SSH sessions and DTMF sequences. I wanted my node to be as scriptable as everything else I run, and once it had a real API, giving an agent safe access to it was the obvious next step.
+AllStarLink already networks radios over the internet. But day-to-day control of a node still meant SSH sessions and DTMF sequences. I wanted my node to be as scriptable as everything else I run, and once it had a real API, giving an agent safe access to it was the obvious next step.
 
 ## How it works
 
@@ -85,7 +85,7 @@ This targets ASL3 with Asterisk 22 on a Raspberry Pi class machine. It is built 
 
 ## Status and next
 
-All three pieces are active and in regular use on my own node. The MCP server replaced an earlier bespoke agent skill, which is now archived; standards beat one-off integrations.
+All three pieces are active and in regular use on my own node. The MCP server replaced an earlier bespoke agent skill, which is now archived.
 
 ## Links
 

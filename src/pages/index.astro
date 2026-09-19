@@ -121,18 +121,18 @@ const weatherLine = weather
 
     <nav class="sections" aria-label="Sections">
       <ul>
-        <li><a href="/projects/">Entries</a></li>
-        {hasWriting && <li><a href="/writing/">Writing</a></li>}
+        <li><a href="/projects/">Chronicles</a></li>
+        {hasWriting && <li><a href="/writing/">Marginalia</a></li>}
         <li class="section-group">
           <details class="section-details">
-            <summary>Radio</summary>
+            <summary>Aerial</summary>
             <ul class="section-sub">
               <li><a href="/radio/">The station</a></li>
-              <li><a href="/talks/">Talks</a></li>
+              <li><a href="/talks/">Recorded nets</a></li>
             </ul>
           </details>
         </li>
-        <li><a href="/about/">About</a></li>
+        <li><a href="/about/">Persona</a></li>
         <li><a href="/colophon/">Colophon</a></li>
       </ul>
       <ThemeToggle />
@@ -285,8 +285,8 @@ const weatherLine = weather
 
     <section class="station">
       <p class="station-line">
-        <span class="station-call">{site.callsign}</span> AllStarLink node, an API and an agent that
-        can key the radio. <a href="/radio/">The station →</a>
+        <span class="station-call">{site.callsign}</span> AllStarLink node, an API, and an agent that
+        has to ask me before it touches the node. <a href="/radio/">The station →</a>
       </p>
     </section>
   </div>

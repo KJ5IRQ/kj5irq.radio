@@ -38,4 +38,4 @@ Deliberately undocumented in public. What runs here, how it is laid out, and how
 
 ## Status and next
 
-Active and quietly doing its job. The interesting work it hosts shows up as its own projects on this site when it is ready.
+Active. The interesting work it hosts shows up as its own projects on this site when it is ready.

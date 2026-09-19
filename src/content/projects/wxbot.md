@@ -1,7 +1,7 @@
 ---
 title: "WxBot"
 summary: "A Discord weather bot for my corner of Texas, fed by the National Weather Service."
-whyItMatters: "Texas weather changes its mind a lot. Now it announces itself where people already are."
+whyItMatters: "Texas weather changes by the hour. Now it says so in the channel people are already in."
 status: "active"
 cluster: "utilities"
 updated: 2026-04-21

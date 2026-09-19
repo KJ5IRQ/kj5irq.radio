@@ -1,7 +1,7 @@
 ---
 title: "openclaw-skill-asl3"
 summary: "An agent skill for AllStar node control. Superseded by the MCP server."
-whyItMatters: "Standards beat bespoke integrations. This one retired with honor."
+whyItMatters: "A platform-specific integration is a dead end once a standard exists."
 status: "archived"
 cluster: "radio"
 updated: 2026-05-09
