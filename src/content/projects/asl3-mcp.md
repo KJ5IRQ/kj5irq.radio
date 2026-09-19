@@ -11,9 +11,9 @@ repo: "https://github.com/KJ5IRQ/asl3-mcp"
 stack: ["Python", "MCP", "FastAPI"]
 image:
   src: "/images/asl-panel-lead.png"
-  alt: "The ASL Node Panel: live node status, connected nodes, and one-tap controls."
-  width: 460
-  height: 430
+  alt: "The ASL Node Panel: node 637050, callsign KJ5IRQ, five keys today, six connected nodes."
+  width: 344
+  height: 258
 order: 2
 ---
 

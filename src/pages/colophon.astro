@@ -33,6 +33,27 @@ import { site } from '../data/site';
       Statuses and dates on project pages are real and maintained by hand. If something says
       active, it is running; if it says archived, it retired honestly.
     </p>
+
+    <h2>Why the sections are named this</h2>
+    <p>
+      None of these is a synonym. Each is the word its trade uses for the thing the section is: a
+      ledger is a record, an aerial is an antenna, a bookplate says whose book it is, and a
+      colophon says how a book was made.
+    </p>
+    <dl class="names">
+      <dt>Ledger</dt>
+      <dd>What I run and what state it is in, kept current by hand.</dd>
+      <dt>Aerial</dt>
+      <dd>The antenna, and the station behind it. The part that actually radiates.</dd>
+      <dt>Recorded nets</dt>
+      <dd>Under Aerial. Appearances on other people's nets, with the dates and the recordings.</dd>
+      <dt>Bookplate</dt>
+      <dd>The printed mark inside a cover that says whose book this is. Here, mine.</dd>
+      <dt>Marginalia</dt>
+      <dd>Notes in the margins. The section appears once there is something in it.</dd>
+      <dt>Colophon</dt>
+      <dd>This page. Where a book explains how it was made.</dd>
+    </dl>
   </article>
 </BaseLayout>
 
@@ -43,5 +64,38 @@ import { site } from '../data/site';
 
   .colophon {
     padding-bottom: var(--space-8);
+  }
+
+  .names {
+    display: grid;
+    grid-template-columns: max-content minmax(0, 1fr);
+    gap: var(--space-3) var(--space-6);
+    margin-top: var(--space-5);
+  }
+
+  .names dt {
+    font-family: var(--font-mono);
+    font-size: var(--size-meta);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+    padding-top: 3px;
+  }
+
+  .names dd {
+    color: var(--muted);
+  }
+
+  /* Two columns need room. Below that the name goes above its line, which is
+     how the rest of the site behaves on a phone. */
+  @media (max-width: 34rem) {
+    .names {
+      grid-template-columns: minmax(0, 1fr);
+      gap: var(--space-1);
+    }
+
+    .names dd {
+      margin-bottom: var(--space-3);
+    }
   }
 </style>

@@ -19,9 +19,9 @@ caseStudy: true
 order: 1
 image:
   src: "/images/asl-panel-nodes.png"
-  alt: "The node panel showing live connections to other AllStar nodes."
-  width: 460
-  height: 430
+  alt: "The panel's connected-nodes list: five live connections, each transceiving."
+  width: 442
+  height: 414
 ---
 
 ## What this is
@@ -35,9 +35,9 @@ Three small projects that together give an AllStarLink node a modern control sur
 <figure>
   <img
     src="/images/asl-panel-screenshot.png"
-    alt="The ASL Node Panel showing node 637858, five keys today, six connected nodes, and a list of live connections"
+    alt="The ASL Node Panel showing node 637050, five keys today, six connected nodes, and a list of live connections"
     width="460"
-    height="948"
+    height="924"
   />
   <figcaption>
     The Chrome side panel, live against my node. Current connections, weekly keys, and one-tap

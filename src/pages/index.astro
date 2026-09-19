@@ -430,11 +430,14 @@ const weatherLine = weather
     padding-block: var(--space-6) var(--space-5);
   }
 
-  /* The station mark, at the size the drawing can actually be read at. It is
-     decorative here: the name is already in the heading, so it carries no alt
-     text and no link. */
+  /* The station mark, at a size the asset can survive. Measured: the only
+     master on this machine is mark-224.png, and at the 144px this clamp used to
+     reach, a 2x display has to interpolate the drawing. 112px is exactly half
+     the asset, so it is pixel-exact on every display, and it stays inside the
+     88-144px range the brief measured. It is decorative here: the name is
+     already in the heading, so it carries no alt text and no link. */
   .nameplate-mark {
-    width: clamp(88px, 12vw, 144px);
+    width: clamp(88px, 10vw, 112px);
     height: auto;
     justify-self: end;
     opacity: 0.9;
@@ -629,6 +632,15 @@ const weatherLine = weather
   .lead-kicker,
   .column-kicker {
     max-width: none;
+  }
+
+  /* The lead puts its number on the sheet's right edge, for the reason above.
+     The tier-two cards carry the same two fields, so they get the same edge:
+     side by side they read as one phrase instead of a label and a folio. */
+  .column-kicker {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--space-4);
   }
 
   .lead-num,

@@ -125,7 +125,7 @@ Explicitly rejected. If a design includes these, the design is wrong:
 The failure mode of an editorial design is **empty shelves**: a beautiful magazine with nothing in it. Mitigations:
 
 - **The projects are the writing.** The AllStar toolchain, hermes-kb, WxBot and the homelab are already essays; they need datelines, standfirsts and figures rather than card metadata.
-- **Images already exist for the flagship.** `asl-node-panel` has `assets/panel-screenshot.png`, `assets/overview-screenshot.png`, and `assets/panel-demo.gif` committed publicly. Nothing to capture, nothing to redact. hermes-kb, WxBot and asl3-api have no imagery and need a capture pass later.
+- **Images already exist for the flagship.** `asl-node-panel` has `assets/panel-screenshot.png`, `assets/overview-screenshot.png`, and `assets/panel-demo.gif` committed publicly. **Corrected 2026-09-19 by inspecting them:** the three 1280x636 captures (overview, schedules, theme) are **not** publishable as they stand. They show `http://192.168.4.32:8073` in the panel subtitle and the settings Base URL, and the whole browser tab bar including personal tabs. The only clean source is the 460x960 portrait, and `public/images/asl-panel-screenshot.png` is its redacted copy (the connection line is blanked, the desktop taskbar band is trimmed). Cut figures from that file, not from the repo's 1280 captures, and do not re-introduce the IP. hermes-kb, WxBot and asl3-api have no imagery and need a capture pass later.
 - Writing slots into the same entry spine when it exists. Nothing needs rebuilding to accommodate it.
 
 ## 7. Decisions still open
