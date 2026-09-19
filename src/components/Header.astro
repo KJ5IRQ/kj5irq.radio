@@ -10,10 +10,10 @@ import { site } from '../data/site';
 const hasWriting = (await getCollection('writing', ({ data }) => data.publish)).length > 0;
 
 const nav = [
-  { label: 'Chronicles', href: '/projects/' },
+  { label: 'Ledger', href: '/projects/' },
   ...(hasWriting ? [{ label: 'Marginalia', href: '/writing/' }] : []),
   { label: 'Aerial', href: '/radio/' },
-  { label: 'Persona', href: '/about/' },
+  { label: 'Bookplate', href: '/about/' },
 ];
 const current = Astro.url.pathname;
 ---
