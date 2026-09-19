@@ -791,4 +791,40 @@ const weatherLine = weather
       text-align: right;
     }
   }
+
+  /* Narrow screens: the small type goes up a step, and the section strip stops
+     pretending it is one line.
+
+     Courier reads smaller than its pixel size, and a 12px Courier dateline is a
+     squint on a phone. The face was chosen for a sheet of paper; this is the one
+     place the page narrows to something held in a hand.
+
+     The strip was a single flex row, so when the section links wrapped, the
+     theme toggle stayed beside the first line and COLOPHON fell below it, which
+     read as a mistake rather than a layout. */
+  @media (max-width: 719px) {
+    .front {
+      --mono-sm: 0.8125rem;
+      --mono-md: 0.875rem;
+      --mono-lg: 1rem;
+    }
+
+    /* Four uppercase Courier labels plus the theme button do not fit 360px at
+       full tracking, and the strip is a flex row, so the overflow had to go
+       somewhere sensible: a tighter nav so it holds one line, and a toggle that
+       drops to the next line and stays right when it cannot. */
+    .sections {
+      flex-wrap: wrap;
+      gap: var(--space-3) var(--space-4);
+    }
+
+    .sections ul {
+      gap: var(--space-2) var(--space-4);
+    }
+
+    .sections a {
+      font-size: 0.75rem;
+      letter-spacing: 0.08em;
+    }
+  }
 </style>
