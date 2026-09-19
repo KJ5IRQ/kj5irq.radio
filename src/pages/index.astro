@@ -101,9 +101,7 @@ const weatherLine = weather
   <div class="front">
     <div class="dateline">
       <span class="dateline-item dateline-clock" id="qth-clock">{buildStamp}</span>
-      <span class="dateline-item">
-        {site.location} · {site.callsign} · {published.length} entries
-      </span>
+      <span class="dateline-item dateline-motto">Memento Mori</span>
       {
         weatherLine && (
           <span class="dateline-item">
@@ -357,6 +355,14 @@ const weatherLine = weather
 
   .dateline-clock {
     color: var(--ink);
+  }
+
+  /* The paper's line, in the middle of the dateline the way a motto sits under
+     a nameplate. Ink rather than rule grey, and a touch more tracking than the
+     items either side, so it reads as a statement instead of a third label. */
+  .dateline-motto {
+    color: var(--ink);
+    letter-spacing: 0.18em;
   }
 
   .dateline-qth {
