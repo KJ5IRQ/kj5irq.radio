@@ -1,6 +1,6 @@
 # kj5irq.radio — v2 Design Brief
 
-**Status:** governing brief for a from-scratch design pass. Nothing here is built yet.
+**Status:** the v2 editorial design was **rejected on sight** (Josh: *"looks like something that was bought off a builder for us 15 years ago"*). Sections 1-2 and the governance in section 4 still hold. The visual language in section 3 and the entry-card treatment are **superseded** by the v3 broadsheet direction, which is being built on branch `design/v3-broadsheet`; v2 stays on `design/v2-editorial` for comparison.
 **Written:** 2026-09-18. **Supersedes:** the aesthetic direction in `docs/website-redesign/` (the June 2026 plan).
 **Read this first** before designing, building, reviewing, or delegating any work on this site.
 
