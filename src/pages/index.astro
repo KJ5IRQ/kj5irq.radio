@@ -131,10 +131,13 @@ const observedLabel = weather ? clockTime(new Date(weather.observedAt)) : null;
         <li><a href="/projects/">Entries</a></li>
         {hasWriting && <li><a href="/writing/">Writing</a></li>}
         <li class="section-group">
-          <a href="/radio/">Radio</a>
-          <ul class="section-sub">
-            <li><a href="/talks/">Talks</a></li>
-          </ul>
+          <details class="section-details">
+            <summary>Radio</summary>
+            <ul class="section-sub">
+              <li><a href="/radio/">The station</a></li>
+              <li><a href="/talks/">Talks</a></li>
+            </ul>
+          </details>
         </li>
         <li><a href="/about/">About</a></li>
         <li><a href="/colophon/">Colophon</a></li>
@@ -492,7 +495,10 @@ const observedLabel = weather ? clockTime(new Date(weather.observedAt)) : null;
 
   .sections {
     display: flex;
-    align-items: center;
+    /* flex-start, not center: once a parent section is open it is two lines
+       tall, and centering makes every single-line item in the row float to its
+       own middle, so ENTRIES and ABOUT sit lower than RADIO's first line. */
+    align-items: flex-start;
     gap: var(--space-5);
     padding-block: var(--space-3);
   }
@@ -505,26 +511,85 @@ const observedLabel = weather ? clockTime(new Date(weather.observedAt)) : null;
     padding: 0;
   }
 
-  /* Talks sits under Radio rather than beside it, because it belongs to the
-     station instead of being a section of its own. No dropdown and no
-     JavaScript: the child is set beneath its parent, smaller and quieter.
-     A hover menu in a strip this narrow would be a worse answer than simply
-     showing the structure. */
+  /* A parent section opens its children with a typewriter arrow: ">" shut,
+     "v" open, set in the same mono face as the rest of the strip. The mechanism
+     is <details>, so the menu needs no JavaScript and still opens with scripts
+     off, and the arrows are CSS pseudo-elements rather than markup. */
   .sections .section-group {
     display: flex;
     flex-direction: column;
     justify-content: center;
   }
 
+  .sections .section-details > summary {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-2);
+    font-family: var(--mono);
+    font-size: var(--mono-sm);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    cursor: pointer;
+    list-style: none;
+  }
+
+  .sections .section-details > summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .sections .section-details > summary::before {
+    content: '>';
+    color: var(--faint);
+  }
+
+  .sections .section-details[open] > summary::before {
+    content: 'v';
+  }
+
+  .sections .section-details > summary:hover,
+  .sections .section-details[open] > summary {
+    color: var(--ink);
+  }
+
+  /* Hiding the closed state explicitly is not redundant: an author `display`
+     on a child of <details> overrides the browser's own hiding, which left the
+     child list laid out 53px tall while the menu was shut. */
+  .sections .section-details:not([open]) .section-sub {
+    display: none;
+  }
+
   .sections .section-sub {
-    gap: 0;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    gap: var(--space-1);
+    list-style: none;
+    padding: 0;
+    margin-top: var(--space-2);
     margin-left: var(--space-5);
   }
 
+  .sections .section-sub li {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-2);
+  }
+
+  .sections .section-sub li::before {
+    content: '>';
+    font-family: var(--mono);
+    font-size: calc(var(--mono-sm) - 0.0625rem);
+    color: var(--faint);
+  }
+
   .sections .section-sub a {
+    font-family: var(--mono);
     font-size: calc(var(--mono-sm) - 0.0625rem);
     letter-spacing: 0.1em;
+    text-transform: uppercase;
     color: var(--faint);
+    text-decoration: none;
   }
 
   .sections .section-sub a:hover {
@@ -941,18 +1006,11 @@ const observedLabel = weather ? clockTime(new Date(weather.observedAt)) : null;
       letter-spacing: 0.08em;
     }
 
-    /* Below 720px the sub-item tucks in beside its parent instead of under it.
-       A child parked beneath Radio forces a third line, and a lone TALKS
-       floating under the strip reads as a mistake for the same reason COLOPHON
-       stranded there before. The smaller size still carries the relationship. */
-    .sections .section-group {
-      flex-direction: row;
-      align-items: baseline;
-      gap: var(--space-2);
-    }
-
+    /* The strip stays compact on a phone now that a parent shows its children
+       only when opened, so the sub-item keeps a hanging indent instead of
+       tucking in beside its parent. */
     .sections .section-sub {
-      margin-left: 0;
+      margin-left: var(--space-3);
     }
   }
 </style>
