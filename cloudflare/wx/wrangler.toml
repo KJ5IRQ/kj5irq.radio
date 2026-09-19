@@ -1,0 +1,17 @@
+name = "kj5irq-wx"
+main = "worker.js"
+compatibility_date = "2026-09-01"
+
+# Served on the site's own domain, ahead of GitHub Pages, so a visitor's browser
+# never talks to anyone but kj5irq.radio. Every other path still goes to Pages.
+routes = [
+  { pattern = "kj5irq.radio/wx.json", zone_name = "kj5irq.radio" }
+]
+
+# Workers Logs, so a failed upstream is visible without guessing.
+[observability]
+enabled = true
+
+# No secrets belong in this file, and this Worker needs none: api.weather.gov is
+# keyless. Deploy with CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID in the
+# environment (see README.md).

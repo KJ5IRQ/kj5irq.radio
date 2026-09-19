@@ -99,7 +99,8 @@ Rebuilding those would cost days and produce nothing visible. They are already c
 
 **Kept as governance, not aesthetics** — these are Josh's own rules and are not open to design preference:
 
-- No analytics, no cookies, and no requests to anyone but this site from a visit. The site's own scripts are the theme toggle and the front page's dateline clock, and nothing else. Weather is read when the site is built, never from the reader's browser.
+- No analytics, no cookies, and no requests to anyone but this site from a visit. The site's own scripts are the theme toggle, the front page's dateline clock, and the front page's weather refresh: three small first-party scripts and nothing from anyone else. Weather is read when the site is built **and** refreshed on load from `/wx.json`, which this domain serves (a Cloudflare Worker caching the National Weather Service for five minutes). A visitor's browser still never talks to a third party, so doc 14's P8 keeps passing.
+- The site depends on exactly one runtime: that Worker. If it is removed, the page falls back to the build-time reading with no site change, which is deliberate.
 - **The platform is named, the employer is not.** Josh ruled on the June plan's D1 on 2026-09-19: the front page says "I run NetSuite at the director level", matching About, and neither the employer nor the parent company is named anywhere. `privacy-grep` still refuses both.
 - `privacy-grep` must stay clean and its `allow` list must stay empty.
 - Nothing publishes the ZIP, the employer or parent-company names, private codenames, internal hostnames, IPs, or local filesystem paths.

@@ -88,6 +88,10 @@ const wind =
 const weatherLine = weather
   ? [`${weather.temperatureF}°F`, weather.description, wind].filter(Boolean).join(' · ')
   : null;
+
+/* The observation time, restored with the live path: a number that refreshes on
+   its own still has to say when it was taken. */
+const observedLabel = weather ? clockTime(new Date(weather.observedAt)) : null;
 ---
 
 <BaseLayout chrome={false} sheet="broadsheet">
@@ -95,13 +99,17 @@ const weatherLine = weather
     <div class="dateline">
       <span class="dateline-item dateline-clock" id="qth-clock">{buildStamp}</span>
       <span class="dateline-item dateline-motto">Memento Mori</span>
-      {
-        weatherLine && (
-          <span class="dateline-item">
-            <span class="dateline-qth">QTH</span> {weatherLine}
-          </span>
-        )
-      }
+      {/* The build-time reading stands on its own and is what a visitor without
+          JavaScript, or a crawler, sees. The inline script below replaces it
+          from /wx.json, which is served by our own Worker on this domain, so a
+          visit still makes no request to anyone but this site. */}
+      <span class="dateline-item" id="qth-wx-item" hidden={!weatherLine}>
+        <span class="dateline-qth">QTH</span>
+        <span id="qth-wx">{weatherLine ?? ''}</span>
+        <span class="dateline-asof" id="qth-wx-asof">
+          {observedLabel ? `as of ${observedLabel}` : ''}
+        </span>
+      </span>
     </div>
     <HandRule variant="hair" />
 
@@ -304,6 +312,49 @@ const weatherLine = weather
   })();
 </script>
 
+<script is:inline>
+  /* Live weather. Fetches /wx.json, which our own Worker serves on this domain
+     with a five-minute cache in front of the National Weather Service, and
+     replaces the build-time numbers with current ones. Same-origin, so a visit
+     still requests nothing from anyone but this site.
+     Any failure at all leaves the build-time reading in place, which is why
+     this is safe to ship before the Worker exists. */
+  (function () {
+    var item = document.getElementById('qth-wx-item');
+    var value = document.getElementById('qth-wx');
+    var asof = document.getElementById('qth-wx-asof');
+    if (!item || !value || !asof) return;
+
+    var at = { timeZone: 'America/Chicago' };
+    var stamp = new Intl.DateTimeFormat(
+      'en-US',
+      Object.assign({ hour: 'numeric', minute: '2-digit', timeZoneName: 'short' }, at),
+    );
+
+    fetch('/wx.json', { cache: 'no-store' })
+      .then(function (response) {
+        if (!response.ok) throw new Error('wx.json ' + response.status);
+        return response.json();
+      })
+      .then(function (wx) {
+        if (!wx || wx.available !== true || typeof wx.temperatureF !== 'number') return;
+        var parts = [wx.temperatureF + '\u00b0F'];
+        if (wx.description) parts.push(wx.description);
+        if (wx.windMph !== null && wx.windMph !== undefined) {
+          parts.push((wx.windDirection ? wx.windDirection + ' ' : '') + wx.windMph + ' mph');
+        }
+        value.textContent = parts.join(' \u00b7 ');
+        var observed = new Date(wx.observedAt);
+        if (!isNaN(observed.getTime())) asof.textContent = 'as of ' + stamp.format(observed);
+        item.hidden = false;
+      })
+      .catch(function () {
+        /* Offline, blocked, or the Worker is not deployed yet: keep what we
+           built with rather than showing nothing. */
+      });
+  })();
+</script>
+
 <style>
   /* Front page only. The tokens are shared; nothing here changes another page.
      Metadata is deliberately smaller than the site default (11px and 10px)
@@ -359,6 +410,16 @@ const weatherLine = weather
 
   .dateline-qth {
     color: var(--accent);
+  }
+
+  /* The observation time stays on one line: "PM CDT" split across two lines on
+     a phone reads like a mistake. */
+  .dateline-asof {
+    white-space: nowrap;
+  }
+
+  .dateline-asof::before {
+    content: '· ';
   }
 
   @media (max-width: 719px) {
