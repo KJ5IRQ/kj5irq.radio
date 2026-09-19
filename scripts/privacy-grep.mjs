@@ -1,27 +1,14 @@
 // Privacy gate: scans the built output for patterns that must never ship.
 // Runs after `astro build`; exits nonzero on any hit.
+//
+// The pattern list lives in scripts/privacy-patterns.mjs because the vault sync
+// applies the same policy before a note ever reaches the repo. One list, both
+// gates, no drift.
 import { readdirSync, readFileSync, statSync } from 'node:fs';
 import { join, relative } from 'node:path';
+import { patterns, allow } from './privacy-patterns.mjs';
 
 const DIST = new URL('../dist', import.meta.url).pathname;
-
-const patterns = [
-  { name: 'RFC1918 IP (192.168.x.x)', re: /\b192\.168\.\d{1,3}\.\d{1,3}\b/ },
-  { name: 'RFC1918 IP (10.x.x.x)', re: /\b10\.\d{1,3}\.\d{1,3}\.\d{1,3}\b/ },
-  { name: 'RFC1918 IP (172.16-31.x.x)', re: /\b172\.(1[6-9]|2\d|3[01])\.\d{1,3}\.\d{1,3}\b/ },
-  { name: 'ZIP code 76067', re: /76067(?!\/?")/ },
-  { name: 'Employer name', re: /nextlink/i },
-  { name: 'Parent company', re: /AMG Technologies/i },
-  { name: 'Vault codename', re: /pensieve/i },
-  { name: 'Private project name', re: /H\.A\.G\./ },
-  { name: 'Key assignment', re: /(api[_-]?key|secret|token)\s*[:=]\s*['"][A-Za-z0-9_\-]{16,}/i },
-  { name: 'Local filesystem path', re: /(\/home\/[a-z0-9_]+\/|C:\\Users\\)/i },
-];
-
-// No exceptions. The WxBot repo was renamed from WxBot_76067 to wxbot so its URL
-// no longer carries the ZIP. Keep this list empty unless a legitimate exception is
-// deliberately approved; the previous single entry was the hole this closes.
-const allow = [];
 
 function* walk(dir) {
   for (const name of readdirSync(dir)) {

@@ -41,10 +41,13 @@ const kindLabel = (kind: string) => kindLabels[kind] ?? kind;
     <img class="blog-mark" src="/mark-80.png" alt="" width="80" height="80" />
     <div class="blog-id">
       <p class="label">Writing</p>
-      <h1 class="blog-title">The notebook</h1>
+      <h1 class="blog-title">My notebook</h1>
       <p class="page-dek">
         Essays and working notes, newest first. Notes are working material, not finished arguments,
         and anything satirical is labeled as satire.
+      </p>
+      <p class="feed-link">
+        <a href="/writing/rss.xml">RSS</a>
       </p>
     </div>
   </header>
@@ -111,6 +114,23 @@ const kindLabel = (kind: string) => kindLabels[kind] ?? kind;
     font-size: var(--size-h3);
     line-height: 1.4;
     max-width: var(--measure);
+  }
+
+  .feed-link {
+    margin-top: var(--space-4);
+    font-family: var(--font-mono);
+    font-size: var(--size-meta);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .feed-link a {
+    color: var(--faint);
+    text-decoration: none;
+  }
+
+  .feed-link a:hover {
+    color: var(--accent);
   }
 
   .empty-note {
