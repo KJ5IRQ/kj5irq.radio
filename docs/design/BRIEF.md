@@ -98,7 +98,7 @@ Rebuilding those would cost days and produce nothing visible. They are already c
 
 **Kept as governance, not aesthetics** — these are Josh's own rules and are not open to design preference:
 
-- No analytics, no cookies, no third-party scripts. The theme toggle is the entire JavaScript budget.
+- No analytics, no cookies, and no requests to anyone but this site from a visit. The site's own scripts are the theme toggle and the front page's dateline clock, and nothing else. Weather is read when the site is built, never from the reader's browser.
 - `privacy-grep` must stay clean and its `allow` list must stay empty.
 - Nothing publishes the ZIP, the employer or parent-company names, private codenames, internal hostnames, IPs, or local filesystem paths.
 - Screenshots are redacted **before** entering git.

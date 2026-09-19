@@ -34,7 +34,6 @@ const latest = published.reduce(
   (newest, p) => (p.data.updated > newest ? p.data.updated : newest),
   new Date(0),
 );
-const folio = String(published.length).padStart(2, '0');
 const ordinal = (i: number) => String(i + 1).padStart(2, '0');
 const hrefFor = (p: (typeof published)[number]) =>
   p.data.caseStudy ? `/projects/${p.id}/` : p.data.repo;
@@ -59,6 +58,61 @@ const switches: { key: string; values: string[] }[] = [
 
 const nameplateLine =
   'Systems operator in Texas. I run an ERP platform for work, and I build the missing interfaces between business platforms, radios, and AI agents.';
+
+/* The dateline: a live clock and the conditions at the QTH.
+
+   The weather numbers are real and theirs, read from a public airport weather
+   station at build time by scripts/fetch-weather.mjs. The station is one Josh's
+   own weather engine already resolves his home to, and it is not printed here:
+   no coordinates, no town, no station id. The reader sees what the weather is
+   doing, not where he is.
+
+   The reading is a snapshot, so it carries the time it was observed rather than
+   pretending to be live. The clock is genuinely live, because the reader's
+   browser already knows the time. */
+interface Weather {
+  available: boolean;
+  station: string;
+  observedAt: string;
+  description: string | null;
+  temperatureF: number;
+  windMph: number | null;
+  windDirection: string | null;
+  humidityPct: number | null;
+  fetchedAt: string;
+}
+
+/* Generated before the build and deliberately not in git. glob() returns an
+   empty object when the file is absent, so a fresh clone still builds. */
+const weatherFile = Object.values(
+  import.meta.glob<{ default: Weather }>('../data/qth-weather.json', { eager: true }),
+)[0];
+const weather = weatherFile?.default?.available ? weatherFile.default : null;
+
+const QTH_TZ = 'America/Chicago';
+const fmt = (options: Intl.DateTimeFormatOptions) =>
+  new Intl.DateTimeFormat('en-US', { timeZone: QTH_TZ, ...options });
+
+const clockTime = (date: Date) =>
+  fmt({ hour: 'numeric', minute: '2-digit', timeZoneName: 'short' }).format(date);
+
+const buildStamp = `${fmt({
+  weekday: 'short',
+  month: 'short',
+  day: 'numeric',
+  year: 'numeric',
+}).format(new Date())} · ${clockTime(new Date())}`;
+
+const wind =
+  weather && weather.windMph != null
+    ? `${weather.windDirection ? `${weather.windDirection} ` : ''}${weather.windMph} mph`
+    : null;
+
+const weatherLine = weather
+  ? [`${weather.temperatureF}°F`, weather.description, wind].filter(Boolean).join(' · ')
+  : null;
+
+const observedLabel = weather ? clockTime(new Date(weather.observedAt)) : null;
 ---
 
 <BaseLayout chrome={false} sheet="broadsheet">
@@ -87,9 +141,18 @@ const nameplateLine =
     </aside>
 
     <div class="dateline">
-      <span>Vol. I · No. {folio}</span>
-      <span>{site.location} · {site.callsign}</span>
-      <span>Newest entry {iso(latest)}</span>
+      <span class="dateline-item dateline-clock" id="qth-clock">{buildStamp}</span>
+      <span class="dateline-item">
+        {site.location} · {site.callsign} · {published.length} entries
+      </span>
+      {
+        weatherLine && (
+          <span class="dateline-item">
+            <span class="dateline-qth">QTH</span> {weatherLine}{' '}
+            <span class="dateline-asof">as of {observedLabel}</span>
+          </span>
+        )
+      }
     </div>
     <HandRule variant="hair" />
 
@@ -247,7 +310,10 @@ const nameplateLine =
           ))
         }
       </ul>
-      <p class="more"><a href="/projects/">Every entry →</a></p>
+      <p class="more">
+        <a href="/projects/">Every entry →</a>
+        <span class="more-note">newest {iso(latest)}</span>
+      </p>
     </section>
 
     <HandRule variant="hair" />
@@ -272,6 +338,32 @@ const nameplateLine =
       var value = q.get(key);
       if (value) front.setAttribute('data-' + key, value);
     });
+  })();
+</script>
+
+<script is:inline>
+  /* The dateline clock. It asks nobody for anything: the reader's own browser
+     already knows what time it is, so this formats the current instant in Texas
+     and keeps it current while the tab is open. The text rendered at build time
+     is what shows if scripts are off. */
+  (function () {
+    var el = document.getElementById('qth-clock');
+    if (!el) return;
+    var at = { timeZone: 'America/Chicago' };
+    var day = new Intl.DateTimeFormat(
+      'en-US',
+      Object.assign({ weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' }, at),
+    );
+    var time = new Intl.DateTimeFormat(
+      'en-US',
+      Object.assign({ hour: 'numeric', minute: '2-digit', timeZoneName: 'short' }, at),
+    );
+    function tick() {
+      var now = new Date();
+      el.textContent = day.format(now) + ' · ' + time.format(now);
+    }
+    tick();
+    setInterval(tick, 20000);
   })();
 </script>
 
@@ -348,7 +440,8 @@ const nameplateLine =
     color: var(--faint);
   }
 
-  /* Dateline: the strip of volume, place and date above the nameplate. */
+  /* Dateline: the live clock, where this is from, and the conditions at the
+     QTH. The clock is the only part of the page that changes on its own. */
   .dateline {
     display: flex;
     flex-wrap: wrap;
@@ -361,6 +454,33 @@ const nameplateLine =
     letter-spacing: 0.12em;
     text-transform: uppercase;
     color: var(--muted);
+  }
+
+  .dateline-clock {
+    color: var(--ink);
+  }
+
+  .dateline-qth {
+    color: var(--accent);
+  }
+
+  /* The observation time stays on one line: "PM CDT" split across two lines on
+     a phone reads like a mistake. The separator dot goes away when the time
+     wraps to its own line rather than leading it. */
+  .dateline-asof {
+    white-space: nowrap;
+  }
+
+  .dateline-asof::before {
+    content: '· ';
+  }
+
+  @media (max-width: 719px) {
+    .dateline {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: var(--space-2);
+    }
   }
 
   .nameplate {
@@ -693,6 +813,11 @@ const nameplateLine =
 
   .more a {
     text-decoration: none;
+  }
+
+  .more-note {
+    margin-left: var(--space-4);
+    color: var(--faint);
   }
 
   .station {

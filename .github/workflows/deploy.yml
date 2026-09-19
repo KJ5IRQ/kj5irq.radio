@@ -3,6 +3,13 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches: [main]
+  # The dateline carries the conditions at the QTH, read from NWS when the site
+  # is built. Without a regular rebuild that reading would sit there going stale,
+  # which is worse than not showing it. Rebuilding every 30 minutes costs
+  # nothing: the fetch needs no key, and the station id is a public airport
+  # weather station, not anything about Josh's address.
+  schedule:
+    - cron: '*/30 * * * *'
   workflow_dispatch:
 
 permissions:

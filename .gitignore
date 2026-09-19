@@ -3,3 +3,7 @@ dist/
 .astro/
 .env
 sync.config.json
+# Generated before every build by scripts/fetch-weather.mjs. Committing it would
+# commit a stale reading, and the front page must never show yesterday's weather
+# as if it were now.
+src/data/qth-weather.json

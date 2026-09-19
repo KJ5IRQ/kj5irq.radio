@@ -5,6 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "astro dev",
+    "predev": "node scripts/fetch-weather.mjs",
+    "prebuild": "node scripts/fetch-weather.mjs",
     "build": "astro build && node scripts/privacy-grep.mjs && node scripts/check-links.mjs",
     "check": "astro check",
     "preview": "astro preview",
