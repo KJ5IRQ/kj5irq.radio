@@ -92,10 +92,6 @@ const wind =
 const weatherLine = weather
   ? [`${weather.temperatureF}°F`, weather.description, wind].filter(Boolean).join(' · ')
   : null;
-
-/* The observation time, restored with the live path: a number that refreshes on
-   its own still has to say when it was taken. */
-const observedLabel = weather ? clockTime(new Date(weather.observedAt)) : null;
 ---
 
 <BaseLayout chrome={false} sheet="broadsheet">
@@ -110,9 +106,6 @@ const observedLabel = weather ? clockTime(new Date(weather.observedAt)) : null;
       <span class="dateline-item" id="qth-wx-item" hidden={!weatherLine}>
         <span class="dateline-qth">QTH</span>
         <span id="qth-wx">{weatherLine ?? ''}</span>
-        <span class="dateline-asof" id="qth-wx-asof">
-          {observedLabel ? `as of ${observedLabel}` : ''}
-        </span>
       </span>
     </div>
     <HandRule variant="hair" />
@@ -335,14 +328,7 @@ const observedLabel = weather ? clockTime(new Date(weather.observedAt)) : null;
   (function () {
     var item = document.getElementById('qth-wx-item');
     var value = document.getElementById('qth-wx');
-    var asof = document.getElementById('qth-wx-asof');
-    if (!item || !value || !asof) return;
-
-    var at = { timeZone: 'America/Chicago' };
-    var stamp = new Intl.DateTimeFormat(
-      'en-US',
-      Object.assign({ hour: 'numeric', minute: '2-digit', timeZoneName: 'short' }, at),
-    );
+    if (!item || !value) return;
 
     fetch(wxEndpoint, { cache: 'no-store' })
       .then(function (response) {
@@ -357,8 +343,6 @@ const observedLabel = weather ? clockTime(new Date(weather.observedAt)) : null;
           parts.push((wx.windDirection ? wx.windDirection + ' ' : '') + wx.windMph + ' mph');
         }
         value.textContent = parts.join(' \u00b7 ');
-        var observed = new Date(wx.observedAt);
-        if (!isNaN(observed.getTime())) asof.textContent = 'as of ' + stamp.format(observed);
         item.hidden = false;
       })
       .catch(function () {
@@ -423,16 +407,6 @@ const observedLabel = weather ? clockTime(new Date(weather.observedAt)) : null;
 
   .dateline-qth {
     color: var(--accent);
-  }
-
-  /* The observation time stays on one line: "PM CDT" split across two lines on
-     a phone reads like a mistake. */
-  .dateline-asof {
-    white-space: nowrap;
-  }
-
-  .dateline-asof::before {
-    content: '· ';
   }
 
   @media (max-width: 719px) {
