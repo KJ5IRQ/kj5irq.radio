@@ -5,7 +5,7 @@ import { site } from '../data/site';
 
 <BaseLayout
   title={`Colophon · ${site.name}`}
-  description="How kj5irq.radio is built: Astro, two fonts, one accent color, no tracking."
+  description="How kj5irq.radio is built: Astro, three self-hosted fonts, one accent color, no tracking."
 >
   <article class="prose colophon">
     <header>
@@ -19,13 +19,15 @@ import { site } from '../data/site';
       <a href="https://github.com/KJ5IRQ/kj5irq.radio" rel="noopener">the repo</a>.
     </p>
     <p>
-      Type is Source Serif 4 for words and IBM Plex Mono for data, both self-hosted. The site is
-      currently wearing its World Cup 2026 kit: saltire navy, gold, and a tartan ribbon that still
-      carries a stripe of the usual Ford Field Green. The everyday colors return after the final.
+      Type is Source Serif 4 for words, with IBM Plex Mono for data and Courier Prime for the
+      front page's small type, all self-hosted. The palette is cream paper, warm ink, and one
+      accent: Ford Field Green.
     </p>
     <p>
-      No analytics, no cookies, no third-party scripts, no tracking of any kind. The only
-      JavaScript on the site is the theme toggle.
+      No analytics, no cookies, no tracking of any kind, and no code loaded from anyone else.
+      Three things here run JavaScript: the dateline clock, the weather line, which reads our own
+      Worker on wx.kj5irq.radio, and the theme toggle. With scripts off the page still reads,
+      showing the weather as it stood when the site was built.
     </p>
     <p>
       Statuses and dates on project pages are real and maintained by hand. If something says

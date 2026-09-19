@@ -1,11 +1,11 @@
 ---
 title: "NetSuite OneWorld"
-summary: "A multi-subsidiary ERP I helped select, stood up, and still run."
+summary: "A multi-subsidiary ERP I learned, tamed, and still run."
 whyItMatters: "The job is not clicking through Setup. It is making the system survive real users."
 status: "active"
 cluster: "business-systems"
 started: 2022-10-01
-updated: 2026-09-10
+updated: 2026-09-19
 publish: true
 privacyReviewed: true
 stack: ["SuiteScript", "SuiteQL", "WMS", "MCP"]
@@ -16,7 +16,7 @@ order: 2
 
 ## What this is
 
-I run NetSuite OneWorld for a multi-company organization. I helped choose the platform, stood the modules up from nothing, and I still operate it: configuration, scripts, integrations, and the people who have to live in it.
+I run NetSuite OneWorld for a multi-company organization. I did not choose the platform. I learned it, tamed it, and stood it up, and I still operate it: configuration, scripts, integrations, and the people who have to live in it.
 
 ## Scope
 
