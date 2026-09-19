@@ -2,11 +2,23 @@ name = "kj5irq-wx"
 main = "worker.js"
 compatibility_date = "2026-09-01"
 
-# Served on the site's own domain, ahead of GitHub Pages, so a visitor's browser
-# never talks to anyone but kj5irq.radio. Every other path still goes to Pages.
-routes = [
-  { pattern = "kj5irq.radio/wx.json", zone_name = "kj5irq.radio" }
-]
+# Delivered as a Custom Domain on its own subdomain, NOT as a route on the apex.
+#
+# A Worker route only fires on a hostname that is proxied by Cloudflare (orange
+# cloud). kj5irq.radio is a DNS-only CNAME to kj5irq.github.io — measured with
+# dig, and confirmed by the absence of any cf-ray header on responses — so a
+# route on `kj5irq.radio/weather.json` would never see a request. Turning the
+# apex proxy on instead would put Cloudflare in front of the whole live site and
+# change how GitHub Pages issues and renews its certificate: a much bigger
+# change than this feature is worth.
+#
+# A Custom Domain leaves the apex untouched. Cloudflare creates the DNS record
+# and the certificate for the subdomain itself, and the Worker is the origin for
+# it. `wx.kj5irq.radio` must not already have a record, because a Custom Domain
+# cannot be created on a hostname that already has a CNAME — checked, it is free.
+[[routes]]
+pattern = "wx.kj5irq.radio"
+custom_domain = true
 
 # Workers Logs, so a failed upstream is visible without guessing.
 [observability]

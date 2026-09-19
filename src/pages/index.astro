@@ -312,11 +312,11 @@ const observedLabel = weather ? clockTime(new Date(weather.observedAt)) : null;
   })();
 </script>
 
-<script is:inline>
-  /* Live weather. Fetches /wx.json, which our own Worker serves on this domain
-     with a five-minute cache in front of the National Weather Service, and
-     replaces the build-time numbers with current ones. Same-origin, so a visit
-     still requests nothing from anyone but this site.
+<script is:inline define:vars={{ wxEndpoint: site.weatherEndpoint }}>
+  /* Live weather. Fetches the Worker on our own subdomain (wx.kj5irq.radio),
+     which caches the National Weather Service for five minutes, and replaces
+     the build-time numbers with current ones. Same registrable domain, so a
+     visit still requests nothing from a third party.
      Any failure at all leaves the build-time reading in place, which is why
      this is safe to ship before the Worker exists. */
   (function () {
@@ -331,7 +331,7 @@ const observedLabel = weather ? clockTime(new Date(weather.observedAt)) : null;
       Object.assign({ hour: 'numeric', minute: '2-digit', timeZoneName: 'short' }, at),
     );
 
-    fetch('/wx.json', { cache: 'no-store' })
+    fetch(wxEndpoint, { cache: 'no-store' })
       .then(function (response) {
         if (!response.ok) throw new Error('wx.json ' + response.status);
         return response.json();

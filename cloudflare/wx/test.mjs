@@ -71,7 +71,13 @@ function countingUpstream() {
   return () => calls;
 }
 
-const call = () => worker.fetch(new Request('https://kj5irq.radio/wx.json'));
+/* The Worker now answers on its own subdomain (a Custom Domain), so the tests
+ * build requests the same way the site does: cross-origin, with an Origin. */
+const BASE = 'https://wx.kj5irq.radio/weather.json';
+const call = (path = '/weather.json', origin = null) =>
+  worker.fetch(
+    new Request(`https://wx.kj5irq.radio${path}`, { headers: origin ? { Origin: origin } : undefined }),
+  );
 
 /* --- the cases ------------------------------------------------------------- */
 
@@ -140,23 +146,77 @@ stubCaches();
   });
 }
 
+console.log('worker: cross-origin (the site reads this subdomain from the apex)');
+stubCaches();
+{
+  await countingUpstream()();
+  const first = await call('/weather.json', 'https://kj5irq.radio');
+  const second = await call('/weather.json', 'http://localhost:8908');
+  const foreign = await call('/weather.json', 'https://not-josh.example');
+
+  await test('the site origin is allowed', () => {
+    assert.equal(first.headers.get('access-control-allow-origin'), 'https://kj5irq.radio');
+  });
+
+  /* The edge cache is shared between callers, so a CORS header baked in at store
+     time would be handed to whoever asked next. This is the regression test for
+     that: the hit must answer the second caller, not repeat the first. */
+  await test('a cache hit carries the CURRENT callers origin, not the stored one', () => {
+    assert.equal(first.headers.get('x-wx-cache'), 'miss');
+    assert.equal(second.headers.get('x-wx-cache'), 'hit');
+    assert.equal(second.headers.get('access-control-allow-origin'), 'http://localhost:8908');
+  });
+
+  await test('an origin that is not the site gets no allow header', () => {
+    assert.equal(foreign.headers.get('access-control-allow-origin'), null);
+  });
+
+  await test('a preflight is answered', async () => {
+    const response = await worker.fetch(
+      new Request(BASE, { method: 'OPTIONS', headers: { Origin: 'https://kj5irq.radio' } }),
+    );
+    assert.equal(response.status, 204);
+    assert.equal(response.headers.get('access-control-allow-methods'), 'GET, HEAD, OPTIONS');
+  });
+}
+
+console.log('worker: routing');
+stubCaches();
+{
+  await countingUpstream();
+  const wrong = await call('/anything-else');
+  const body = await wrong.json();
+
+  await test('a Custom Domain sends every path here, so the others 404', () => {
+    assert.equal(wrong.status, 404);
+    assert.equal(body.error, 'not found');
+    assert.equal(body.path, '/weather.json');
+  });
+
+  await test('a 404 does not poison the cache', async () => {
+    const cached = await globalThis.caches.default.match(new Request(BASE));
+    assert.equal(cached, undefined);
+  });
+}
+
 console.log('worker: stale cache, upstream down');
 stubCaches();
 {
   await countingUpstream()();
   const age = await call().then((r) => r.json());
   // Age the stored copy past the TTL by rewriting fetchedAt in the cache.
-  const store = await (async () => {
-    const s = globalThis.caches.default;
-    const key = new Request('https://kj5irq.radio/wx.json');
-    const existing = await (await s.match(key)).json();
-    const aged = { ...existing, fetchedAt: new Date(Date.now() - 3600_000).toISOString() };
-    await s.put(key, new Response(JSON.stringify(aged), { headers: { 'content-type': 'application/json' } }));
-    return aged;
-  })();
+  // The key has to be the one the Worker uses, or this ages a different entry
+  // and the test passes for the wrong reason.
+  const cache = globalThis.caches.default;
+  const key = new Request('https://wx.kj5irq.radio/weather.json');
+  const aged = { ...age, fetchedAt: new Date(Date.now() - 3600_000).toISOString() };
+  await cache.put(
+    key,
+    new Response(JSON.stringify(aged), { headers: { 'content-type': 'application/json' } }),
+  );
 
   failingUpstream();
-  const response = await call();
+  const response = await call('/weather.json', 'https://kj5irq.radio');
   const body = await response.json();
 
   await test('serves the last good reading rather than an error', () => {
@@ -169,6 +229,10 @@ stubCaches();
 
   await test('the stale reading still carries its observation time', () => {
     assert.ok(!Number.isNaN(Date.parse(body.observedAt)));
+  });
+
+  await test('a stale response still carries CORS', () => {
+    assert.equal(response.headers.get('access-control-allow-origin'), 'https://kj5irq.radio');
   });
 }
 
