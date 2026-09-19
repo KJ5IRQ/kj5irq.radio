@@ -16,7 +16,7 @@ links:
 stack: ["Python", "FastAPI", "MCP", "JavaScript"]
 featured: true
 caseStudy: true
-order: 2
+order: 1
 image:
   src: "/images/asl-panel-nodes.png"
   alt: "The node panel showing live connections to other AllStar nodes."

@@ -27,19 +27,12 @@ const columns = theRest.slice(0, 2);
 const briefs = theRest.slice(2);
 
 const iso = (d: Date) => d.toISOString().slice(0, 10);
-/* The date on a front page is the date of its newest content, not the date the
-   page was printed. Showing the build date here claimed the site was updated on
-   a day when nothing was. */
-const latest = published.reduce(
-  (newest, p) => (p.data.updated > newest ? p.data.updated : newest),
-  new Date(0),
-);
 const ordinal = (i: number) => String(i + 1).padStart(2, '0');
 const hrefFor = (p: (typeof published)[number]) =>
   p.data.caseStudy ? `/projects/${p.id}/` : p.data.repo;
 
 const nameplateLine =
-  'Systems operator in Texas. I run an ERP platform for work, and I build the missing interfaces between business platforms, radios, and AI agents.';
+  'Systems operator in Texas. I run NetSuite at the director level for work, and I build the missing interfaces between business platforms, radios, and AI agents.';
 
 /* The dateline: a live clock and the conditions at the QTH.
 
@@ -271,7 +264,6 @@ const weatherLine = weather
       </ul>
       <p class="more">
         <a href="/projects/">Every entry →</a>
-        <span class="more-note">newest {iso(latest)}</span>
       </p>
     </section>
 
@@ -474,6 +466,15 @@ const weatherLine = weather
     display: flex;
     justify-content: space-between;
     gap: var(--space-5);
+  }
+
+  /* The kicker row is a paragraph, so it inherits the 66-character measure cap,
+     which parked "ENTRY 01" at the end of the measure instead of at the sheet's
+     right margin. The number belongs on the same edge as the weather line above
+     it, so the cap comes off. */
+  .lead-kicker,
+  .column-kicker {
+    max-width: none;
   }
 
   .lead-num,
@@ -747,11 +748,6 @@ const weatherLine = weather
 
   .more a {
     text-decoration: none;
-  }
-
-  .more-note {
-    margin-left: var(--space-4);
-    color: var(--faint);
   }
 
   .station {

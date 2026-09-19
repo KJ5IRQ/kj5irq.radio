@@ -14,7 +14,7 @@ image:
   alt: "The ASL Node Panel: live node status, connected nodes, and one-tap controls."
   width: 460
   height: 430
-order: 1
+order: 2
 ---
 
 ## What this is
