@@ -38,24 +38,6 @@ const ordinal = (i: number) => String(i + 1).padStart(2, '0');
 const hrefFor = (p: (typeof published)[number]) =>
   p.data.caseStudy ? `/projects/${p.id}/` : p.data.repo;
 
-/* REVIEW HARNESS, branch only. Switches that answer the two things Josh asked
-   about (the hand-made layer, a doodle pattern) and the one placement question
-   the picture raises, without a round trip of prose. Each switch is a plain
-   link so the state is shareable and survives a reload; the query is applied to
-   the page by the inline script below. Delete this block, the <aside>, and that
-   script before anything merges to main. */
-const state: Record<string, string> = { rules: 'hand', texture: 'off', lead: 'picture' };
-const linkFor = (key: string, value: string) => {
-  const q = new URLSearchParams(state);
-  q.set(key, value);
-  return `/?${q.toString()}`;
-};
-const switches: { key: string; values: string[] }[] = [
-  { key: 'rules', values: ['hand', 'straight'] },
-  { key: 'texture', values: ['off', 'on'] },
-  { key: 'lead', values: ['picture', 'text'] },
-];
-
 const nameplateLine =
   'Systems operator in Texas. I run an ERP platform for work, and I build the missing interfaces between business platforms, radios, and AI agents.';
 
@@ -116,30 +98,7 @@ const weatherLine = weather
 ---
 
 <BaseLayout chrome={false} sheet="broadsheet">
-  <div class="front" data-rules={state.rules} data-texture={state.texture} data-lead={state.lead}>
-    <aside class="review" aria-label="Review controls">
-      <span class="review-tag">Review</span>
-      {
-        switches.map(({ key, values }) => (
-          <span class="review-group">
-            <span class="review-key">{key}</span>
-            {values.map((value, i) => (
-              <>
-                {i > 0 && <span class="review-sep">/</span>}
-                <a
-                  href={linkFor(key, value)}
-                  aria-current={state[key] === value ? 'true' : undefined}
-                >
-                  {value}
-                </a>
-              </>
-            ))}
-          </span>
-        ))
-      }
-      <span class="review-note">not part of the design</span>
-    </aside>
-
+  <div class="front">
     <div class="dateline">
       <span class="dateline-item dateline-clock" id="qth-clock">{buildStamp}</span>
       <span class="dateline-item">
@@ -330,20 +289,6 @@ const weatherLine = weather
 </BaseLayout>
 
 <script is:inline>
-  /* REVIEW HARNESS, branch only: apply the URL's switches to the page. Remove
-     with the <aside class="review"> block above. */
-  (function () {
-    var front = document.querySelector('.front');
-    if (!front) return;
-    var q = new URLSearchParams(location.search);
-    ['rules', 'texture', 'lead'].forEach(function (key) {
-      var value = q.get(key);
-      if (value) front.setAttribute('data-' + key, value);
-    });
-  })();
-</script>
-
-<script is:inline>
   /* The dateline clock. It asks nobody for anything: the reader's own browser
      already knows what time it is, so this formats the current instant in Texas
      and keeps it current while the tab is open. The text rendered at build time
@@ -378,17 +323,11 @@ const weatherLine = weather
     /* The small face is Courier Prime. A Courier-class face is optically smaller
        and lighter than the utility mono this page started with, so these three
        steps sit a size up from the old numbers rather than swapping the family
-       under the old sizes.
-
-       The doodle texture, off by default. Mid grey so one file works on both
-       themes; see public/doodle.svg. */
+       under the old sizes. */
     --mono: 'Courier Prime', 'Courier New', monospace;
     --mono-sm: 0.75rem;
     --mono-md: 0.8125rem;
     --mono-lg: 0.9375rem;
-
-    background-repeat: repeat;
-    background-position: 0 0;
   }
 
   /* Kickers, mono meta rows and status tags come from shared components, so
@@ -398,67 +337,6 @@ const weatherLine = weather
   .front :global(.status-tag) {
     font-family: var(--mono);
     font-size: var(--mono-md);
-  }
-
-  .front[data-texture='on'] {
-    background-image: url('/doodle.svg');
-    background-size: 240px 240px;
-  }
-
-  /* Review harness. Dashed so it cannot be mistaken for the design. */
-  .review {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: baseline;
-    gap: var(--space-4);
-    margin-block: var(--space-5) 0;
-    padding: var(--space-3) var(--space-4);
-    border: 1px dashed var(--rule-strong);
-    font-family: var(--mono);
-    font-size: var(--mono-sm);
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--muted);
-  }
-
-  .review-tag {
-    color: var(--ink);
-    font-weight: 500;
-  }
-
-  .review-group {
-    display: inline-flex;
-    align-items: baseline;
-    gap: var(--space-2);
-  }
-
-  .review-key {
-    color: var(--faint);
-  }
-
-  .review a {
-    color: var(--muted);
-    text-decoration: none;
-  }
-
-  .review a:hover {
-    color: var(--ink);
-    text-decoration: underline;
-  }
-
-  .review a[aria-current='true'] {
-    color: var(--accent);
-    text-decoration: underline;
-    text-decoration-thickness: 2px;
-  }
-
-  .review-sep {
-    color: var(--faint);
-  }
-
-  .review-note {
-    margin-left: auto;
-    color: var(--faint);
   }
 
   /* Dateline: the live clock, where this is from, and the conditions at the
@@ -911,25 +789,6 @@ const weatherLine = weather
 
     .brief-num {
       text-align: right;
-    }
-  }
-
-  /* The one placement question the lead picture raises. */
-  .front[data-lead='text'] .lead-figure {
-    display: none;
-  }
-
-  .front[data-lead='text'] .lead-body {
-    grid-template-columns: minmax(0, 1fr);
-  }
-
-  .front[data-lead='text'] .lead-note {
-    max-width: 62ch;
-  }
-
-  @media print {
-    .review {
-      display: none;
     }
   }
 </style>

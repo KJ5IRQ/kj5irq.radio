@@ -93,7 +93,6 @@ const marks = [20, 80, 140];
       </svg>
     )
   }
-  <span class="hr-plain"></span>
 </span>
 
 <style>
@@ -137,24 +136,5 @@ const marks = [20, 80, 140];
   .hr-svg--fixed {
     flex: none;
     width: 80px;
-  }
-
-  .hr-plain {
-    display: none;
-    width: 100%;
-  }
-
-  /* The straight-rule variant of the review harness. */
-  :global([data-rules='straight']) .hr-svg {
-    display: none;
-  }
-
-  :global([data-rules='straight']) .hr-plain {
-    display: block;
-    border-top: 1px solid var(--rule-strong);
-  }
-
-  :global([data-rules='straight']) .hr--heavy .hr-plain {
-    border-top: 2px solid var(--ink);
   }
 </style>
