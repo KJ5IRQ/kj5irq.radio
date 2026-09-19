@@ -1,0 +1,78 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { site } from '../data/site';
+import { talks } from '../data/talks';
+---
+
+<BaseLayout
+  title={`Talks · ${site.name}`}
+  description="Talks and interviews: Joshua Ford (KJ5IRQ) on AI for amateur radio operators."
+>
+  <header class="page-head">
+    <p class="label">Talks</p>
+    <h1>Talks and interviews</h1>
+    <p class="page-dek">
+      Nets and interviews where I talked through AI for amateur radio operators. Title, date, and
+      venue live here so the page still works if a recording link dies.
+    </p>
+  </header>
+
+  <ol class="talk-list">
+    {
+      talks.map((talk) => (
+        <li>
+          <p class="meta">{talk.date}</p>
+          <h2>{talk.title}</h2>
+          <p>
+            <a href={talk.venueUrl} rel="noopener">
+              {talk.venue}
+            </a>
+            {talk.recordingUrl ? (
+              <>
+                {' · '}
+                <a href={talk.recordingUrl} rel="noopener">
+                  Recording
+                </a>
+              </>
+            ) : null}
+          </p>
+        </li>
+      ))
+    }
+  </ol>
+</BaseLayout>
+
+<style>
+  .page-head {
+    padding-block: var(--space-8) var(--space-7);
+  }
+
+  .page-dek {
+    margin-top: var(--space-4);
+    color: var(--muted);
+    font-size: var(--size-h3);
+    line-height: 1.4;
+  }
+
+  .talk-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 var(--space-8);
+    max-width: var(--measure);
+  }
+
+  .talk-list li {
+    padding-block: var(--space-6);
+    border-top: 1px solid var(--rule);
+  }
+
+  .talk-list h2 {
+    font-size: var(--size-h3);
+    margin-top: var(--space-2);
+  }
+
+  .talk-list p + p,
+  .talk-list h2 + p {
+    margin-top: var(--space-3);
+  }
+</style>
