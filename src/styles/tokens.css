@@ -12,7 +12,11 @@
   --surface: #f1eee8;
   --ink: #201f1d;
   --muted: #67645d;
-  --faint: #9b968d;
+  /* Raised from #9b968d on 2026-09-19. The old value measured 2.75:1 against
+     the paper, which fails AA at the 12 to 13px the faint labels are set in,
+     and those labels are dates and entry numbers rather than decoration.
+     4.55:1 here, deliberately still quieter than --muted at 5.52:1. */
+  --faint: #757168;
   --rule: #e2ddd4;
   --rule-strong: #cfc9be;
 
@@ -59,7 +63,9 @@
   --surface: #1b1a18;
   --ink: #ece9e3;
   --muted: #a3a09a;
-  --faint: #77746e;
+  /* Raised from #77746e (4.02:1) with the light value. 4.95:1 on the dark
+     paper, still quieter than --muted at 7.17:1. */
+  --faint: #86837d;
   --rule: #2b2926;
   --rule-strong: #3a3833;
   --accent: #8fae76;

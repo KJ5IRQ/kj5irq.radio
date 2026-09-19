@@ -173,6 +173,9 @@ main.wrap {
   margin-top: var(--space-8);
 }
 
+/* The skip link is focus-only furniture. It takes a system stack rather than the
+   site's mono so that a homepage visit does not pull a whole extra font file for
+   an element nobody sees unless they tab. */
 .skip-link {
   position: absolute;
   top: -100px;
@@ -181,7 +184,7 @@ main.wrap {
   padding: var(--space-3) var(--space-5);
   background: var(--ink);
   color: var(--bg);
-  font-family: var(--font-mono);
+  font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
   font-size: var(--size-meta);
   text-decoration: none;
 }
@@ -433,6 +436,10 @@ td {
   text-transform: uppercase;
   color: var(--muted);
   text-decoration: none;
+  /* WCAG 2.2 target size: these are navigation, not links inside a sentence, so
+     they need a 24px-tall target rather than the 15px the type alone gives. */
+  display: inline-block;
+  padding-block: var(--space-2);
 }
 
 .footer-links a:hover {
