@@ -44,7 +44,12 @@ const hrefFor = (p: (typeof published)[number]) =>
    link so the state is shareable and survives a reload; the query is applied to
    the page by the inline script below. Delete this block, the <aside>, and that
    script before anything merges to main. */
-const state: Record<string, string> = { rules: 'hand', texture: 'off', lead: 'picture' };
+const state: Record<string, string> = {
+  rules: 'hand',
+  texture: 'off',
+  lead: 'picture',
+  type: 'plex',
+};
 const linkFor = (key: string, value: string) => {
   const q = new URLSearchParams(state);
   q.set(key, value);
@@ -54,6 +59,7 @@ const switches: { key: string; values: string[] }[] = [
   { key: 'rules', values: ['hand', 'straight'] },
   { key: 'texture', values: ['off', 'on'] },
   { key: 'lead', values: ['picture', 'text'] },
+  { key: 'type', values: ['plex', 'courier', 'elite', 'cutive'] },
 ];
 
 const nameplateLine =
@@ -116,7 +122,13 @@ const observedLabel = weather ? clockTime(new Date(weather.observedAt)) : null;
 ---
 
 <BaseLayout chrome={false} sheet="broadsheet">
-  <div class="front" data-rules={state.rules} data-texture={state.texture} data-lead={state.lead}>
+  <div
+    class="front"
+    data-rules={state.rules}
+    data-texture={state.texture}
+    data-lead={state.lead}
+    data-type={state.type}
+  >
     <aside class="review" aria-label="Review controls">
       <span class="review-tag">Review</span>
       {
@@ -334,7 +346,7 @@ const observedLabel = weather ? clockTime(new Date(weather.observedAt)) : null;
     var front = document.querySelector('.front');
     if (!front) return;
     var q = new URLSearchParams(location.search);
-    ['rules', 'texture', 'lead'].forEach(function (key) {
+    ['rules', 'texture', 'lead', 'type'].forEach(function (key) {
       var value = q.get(key);
       if (value) front.setAttribute('data-' + key, value);
     });
@@ -373,10 +385,52 @@ const observedLabel = weather ? clockTime(new Date(weather.observedAt)) : null;
      because the contrast between a 44px headline and an 11px dateline is a
      large part of what makes a page read as set rather than generated. */
   .front {
-    /* The doodle texture, off by default. Mid grey so one file works on both
+    /* The small-face slot. Every piece of small type on this page reads from
+       --mono, so a typewriter face swaps in one place rather than in fifteen.
+
+       The sizes are per face because Courier and Cutive are optically smaller
+       than Plex at the same pixel size; a straight family swap would set the
+       dateline a size down without anyone deciding to.
+
+       The doodle texture, off by default. Mid grey so one file works on both
        themes; see public/doodle.svg. */
+    --mono: var(--font-mono);
+    --mono-sm: 0.6875rem;
+    --mono-md: 0.75rem;
+    --mono-lg: 0.875rem;
+
     background-repeat: repeat;
     background-position: 0 0;
+  }
+
+  .front[data-type='courier'] {
+    --mono: 'Courier Prime', 'Courier New', monospace;
+    --mono-sm: 0.75rem;
+    --mono-md: 0.8125rem;
+    --mono-lg: 0.9375rem;
+  }
+
+  .front[data-type='elite'] {
+    --mono: 'Special Elite', 'Courier New', monospace;
+    --mono-sm: 0.6875rem;
+    --mono-md: 0.75rem;
+    --mono-lg: 0.875rem;
+  }
+
+  .front[data-type='cutive'] {
+    --mono: 'Cutive Mono', 'Courier New', monospace;
+    --mono-sm: 0.8125rem;
+    --mono-md: 0.875rem;
+    --mono-lg: 1rem;
+  }
+
+  /* Kickers, mono meta rows and status tags come from shared components, so
+     they need the same swap. */
+  .front :global(.kicker),
+  .front :global(.meta),
+  .front :global(.status-tag) {
+    font-family: var(--mono);
+    font-size: var(--mono-md);
   }
 
   .front[data-texture='on'] {
@@ -393,8 +447,8 @@ const observedLabel = weather ? clockTime(new Date(weather.observedAt)) : null;
     margin-block: var(--space-5) 0;
     padding: var(--space-3) var(--space-4);
     border: 1px dashed var(--rule-strong);
-    font-family: var(--font-mono);
-    font-size: 0.6875rem;
+    font-family: var(--mono);
+    font-size: var(--mono-sm);
     letter-spacing: 0.08em;
     text-transform: uppercase;
     color: var(--muted);
@@ -448,8 +502,8 @@ const observedLabel = weather ? clockTime(new Date(weather.observedAt)) : null;
     justify-content: space-between;
     gap: var(--space-3) var(--space-5);
     padding-block: var(--space-3);
-    font-family: var(--font-mono);
-    font-size: 0.6875rem;
+    font-family: var(--mono);
+    font-size: var(--mono-sm);
     font-variant-numeric: tabular-nums slashed-zero;
     letter-spacing: 0.12em;
     text-transform: uppercase;
@@ -517,8 +571,8 @@ const observedLabel = weather ? clockTime(new Date(weather.observedAt)) : null;
   }
 
   .sections a {
-    font-family: var(--font-mono);
-    font-size: 0.6875rem;
+    font-family: var(--mono);
+    font-size: var(--mono-sm);
     letter-spacing: 0.14em;
     text-transform: uppercase;
     text-decoration: none;
@@ -612,8 +666,8 @@ const observedLabel = weather ? clockTime(new Date(weather.observedAt)) : null;
   .facts dd {
     padding-block: var(--space-3);
     border-bottom: 1px solid var(--rule);
-    font-family: var(--font-mono);
-    font-size: 0.6875rem;
+    font-family: var(--mono);
+    font-size: var(--mono-sm);
     letter-spacing: 0.08em;
   }
 
@@ -639,8 +693,8 @@ const observedLabel = weather ? clockTime(new Date(weather.observedAt)) : null;
 
   .read-on {
     margin-top: var(--space-5);
-    font-family: var(--font-mono);
-    font-size: 0.6875rem;
+    font-family: var(--mono);
+    font-size: var(--mono-sm);
     letter-spacing: 0.12em;
     text-transform: uppercase;
   }
@@ -734,8 +788,8 @@ const observedLabel = weather ? clockTime(new Date(weather.observedAt)) : null;
   }
 
   .briefs-heading {
-    font-family: var(--font-mono);
-    font-size: 0.6875rem;
+    font-family: var(--mono);
+    font-size: var(--mono-sm);
     font-weight: 400;
     letter-spacing: 0.14em;
     text-transform: uppercase;
@@ -760,8 +814,8 @@ const observedLabel = weather ? clockTime(new Date(weather.observedAt)) : null;
   .brief-date,
   .brief-kicker,
   .brief-num {
-    font-family: var(--font-mono);
-    font-size: 0.6875rem;
+    font-family: var(--mono);
+    font-size: var(--mono-sm);
     font-variant-numeric: tabular-nums slashed-zero;
     letter-spacing: 0.1em;
     text-transform: uppercase;
@@ -805,8 +859,8 @@ const observedLabel = weather ? clockTime(new Date(weather.observedAt)) : null;
 
   .more {
     margin-top: var(--space-5);
-    font-family: var(--font-mono);
-    font-size: 0.6875rem;
+    font-family: var(--mono);
+    font-size: var(--mono-sm);
     letter-spacing: 0.12em;
     text-transform: uppercase;
   }
@@ -831,8 +885,8 @@ const observedLabel = weather ? clockTime(new Date(weather.observedAt)) : null;
   }
 
   .station-call {
-    font-family: var(--font-mono);
-    font-size: 0.875rem;
+    font-family: var(--mono);
+    font-size: var(--mono-lg);
     letter-spacing: 0.1em;
     color: var(--accent);
     margin-right: var(--space-2);
