@@ -1,79 +1,739 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
-import ProjectEntry from '../components/ProjectEntry.astro';
-import { site } from '../data/site';
+import HandRule from '../components/HandRule.astro';
+import StatusTag from '../components/StatusTag.astro';
+import ThemeToggle from '../components/ThemeToggle.astro';
+import { site, clusterLabels } from '../data/site';
 
-/* The front door. A masthead, then the work itself, newest first. No hero
-   animation, no featured-card grid: a contents page is the better routing
-   device for employers, friends and strangers alike. */
-const entries = (await getCollection('projects', ({ data }) => data.publish))
+/* The front page, broadsheet.
+
+   A newspaper does not give every story the same space. A nameplate, then a
+   three-tier index: one lead entry with its picture, a two-column tier, then a
+   text-only briefs list. The hierarchy is the editorial judgment, and it is
+   the thing a uniform card list cannot show.
+
+   Placement is data, not markup: the lead is whatever `order` puts first, the
+   next two fill the columns, the rest drop to briefs. To move a story up, edit
+   its `order` in the content file. */
+const published = (await getCollection('projects', ({ data }) => data.publish))
   .filter((p) => p.data.status !== 'archived')
-  // `order` is explicit editorial placement; everything left at the default
-  // falls back to most recently updated first.
   .sort(
     (a, b) => a.data.order - b.data.order || b.data.updated.valueOf() - a.data.updated.valueOf(),
   );
 
-const buildDate = new Date().toISOString().slice(0, 10);
+const [lead, ...theRest] = published;
+const columns = theRest.slice(0, 2);
+const briefs = theRest.slice(2);
+
+const iso = (d: Date) => d.toISOString().slice(0, 10);
+/* The date on a front page is the date of its newest content, not the date the
+   page was printed. Showing the build date here claimed the site was updated on
+   a day when nothing was. */
+const latest = published.reduce(
+  (newest, p) => (p.data.updated > newest ? p.data.updated : newest),
+  new Date(0),
+);
+const folio = String(published.length).padStart(2, '0');
+const ordinal = (i: number) => String(i + 1).padStart(2, '0');
+const hrefFor = (p: (typeof published)[number]) =>
+  p.data.caseStudy ? `/projects/${p.id}/` : p.data.repo;
+
+/* REVIEW HARNESS, branch only. Switches that answer the two things Josh asked
+   about (the hand-made layer, a doodle pattern) and the one placement question
+   the picture raises, without a round trip of prose. Each switch is a plain
+   link so the state is shareable and survives a reload; the query is applied to
+   the page by the inline script below. Delete this block, the <aside>, and that
+   script before anything merges to main. */
+const state: Record<string, string> = { rules: 'hand', texture: 'off', lead: 'picture' };
+const linkFor = (key: string, value: string) => {
+  const q = new URLSearchParams(state);
+  q.set(key, value);
+  return `/?${q.toString()}`;
+};
+const switches: { key: string; values: string[] }[] = [
+  { key: 'rules', values: ['hand', 'straight'] },
+  { key: 'texture', values: ['off', 'on'] },
+  { key: 'lead', values: ['picture', 'text'] },
+];
+
+const nameplateLine =
+  'Systems operator in Texas. I run an ERP platform for work, and I build the missing interfaces between business platforms, radios, and AI agents.';
 ---
 
-<BaseLayout>
-  <section class="masthead">
-    <h1 class="masthead-name">{site.name}</h1>
-    <p class="masthead-line">
-      Systems operator in Texas. I run an ERP platform for work, and I build the missing
-      interfaces between business platforms, radios, and AI agents.
-    </p>
-    <p class="meta masthead-meta">TX · {site.callsign} · Updated {buildDate}</p>
-    <p class="masthead-actions">
-      <a class="button button-primary" href={`mailto:${site.email}`}>Email me</a>
-      <a class="button" href="/about/">About</a>
-    </p>
-  </section>
+<BaseLayout chrome={false} sheet="broadsheet">
+  <div class="front" data-rules={state.rules} data-texture={state.texture} data-lead={state.lead}>
+    <aside class="review" aria-label="Review controls">
+      <span class="review-tag">Review</span>
+      {
+        switches.map(({ key, values }) => (
+          <span class="review-group">
+            <span class="review-key">{key}</span>
+            {values.map((value, i) => (
+              <>
+                {i > 0 && <span class="review-sep">/</span>}
+                <a
+                  href={linkFor(key, value)}
+                  aria-current={state[key] === value ? 'true' : undefined}
+                >
+                  {value}
+                </a>
+              </>
+            ))}
+          </span>
+        ))
+      }
+      <span class="review-note">not part of the design</span>
+    </aside>
 
-  <section aria-labelledby="entries-heading">
-    <h2 class="section-heading" id="entries-heading">Entries</h2>
-    {entries.map((project) => (
-      <ProjectEntry project={project} />
-    ))}
-    <p class="more-link"><a href="/projects/">All entries →</a></p>
-  </section>
+    <div class="dateline">
+      <span>Vol. I · No. {folio}</span>
+      <span>{site.location} · {site.callsign}</span>
+      <span>Newest entry {iso(latest)}</span>
+    </div>
+    <HandRule variant="hair" />
+
+    <header class="nameplate">
+      <h1 class="nameplate-name">{site.name}</h1>
+      <p class="nameplate-line">{nameplateLine}</p>
+    </header>
+    <HandRule variant="heavy" />
+
+    <nav class="sections" aria-label="Sections">
+      <ul>
+        <li><a href="/projects/">Entries</a></li>
+        <li><a href="/radio/">Radio</a></li>
+        <li><a href="/about/">About</a></li>
+        <li><a href="/colophon/">Colophon</a></li>
+      </ul>
+      <ThemeToggle />
+    </nav>
+    <HandRule variant="hair" />
+
+    <section class="lead" aria-labelledby="lead-title">
+      <p class="kicker lead-kicker">
+        <span>{clusterLabels[lead.data.cluster]}</span>
+        <span class="lead-num">Entry {ordinal(0)}</span>
+      </p>
+      <h2 class="lead-title" id="lead-title">
+        <a href={hrefFor(lead)}>{lead.data.title}</a>
+      </h2>
+      <p class="lead-deck">{lead.data.summary}</p>
+      <div class="lead-body">
+        {
+          lead.data.image && (
+            <figure class="lead-figure">
+              <img
+                src={lead.data.image.src}
+                alt={lead.data.image.alt}
+                width={lead.data.image.width}
+                height={lead.data.image.height}
+              />
+            </figure>
+          )
+        }
+        <div class="lead-text">
+          <p class="lead-note">{lead.data.whyItMatters}</p>
+          {/* A spec box, not a meta row. Four labelled facts behind hairlines
+              is how a paper would set them, and it gives the lead's second
+              column something to hold besides three lines of type. */}
+          <dl class="facts">
+            <dt>Status</dt>
+            <dd><StatusTag status={lead.data.status} /></dd>
+            {
+              lead.data.stack && (
+                <>
+                  <dt>Stack</dt>
+                  <dd>{lead.data.stack.join(' / ')}</dd>
+                </>
+              )
+            }
+            {
+              lead.data.repo && (
+                <>
+                  <dt>Repo</dt>
+                  <dd>
+                    <a href={lead.data.repo} rel="noopener">
+                      {lead.data.repo.replace('https://github.com/', '')} ↗
+                    </a>
+                  </dd>
+                </>
+              )
+            }
+            <dt>Updated</dt>
+            <dd>{iso(lead.data.updated)}</dd>
+          </dl>
+          {
+            lead.data.caseStudy ? (
+              <p class="read-on">
+                <a href={hrefFor(lead)}>Read the entry →</a>
+              </p>
+            ) : (
+              lead.data.repo && (
+                <p class="read-on">
+                  <a href={lead.data.repo} rel="noopener">Source on GitHub ↗</a>
+                </p>
+              )
+            )
+          }
+        </div>
+      </div>
+    </section>
+
+    <HandRule variant="double" />
+
+    <section class="columns" aria-label="More entries">
+      {
+        columns.map((p, i) => (
+          <article class="column">
+            <p class="kicker column-kicker">
+              <span>{clusterLabels[p.data.cluster]}</span>
+              <span class="column-num">Entry {ordinal(i + 1)}</span>
+            </p>
+            <h3 class="column-title">
+              <a href={hrefFor(p)}>{p.data.title}</a>
+            </h3>
+            {p.data.image && (
+              <img
+                class="column-figure"
+                src={p.data.image.src}
+                alt={p.data.image.alt}
+                width={p.data.image.width}
+                height={p.data.image.height}
+              />
+            )}
+            <p class="column-summary">{p.data.summary}</p>
+            <p class="column-note">{p.data.whyItMatters}</p>
+            <p class="meta column-meta">
+              <StatusTag status={p.data.status} />
+              <span>{iso(p.data.updated)}</span>
+            </p>
+          </article>
+        ))
+      }
+    </section>
+
+    <HandRule variant="ornament" />
+
+    <section class="briefs" aria-labelledby="briefs-heading">
+      <h2 class="briefs-heading" id="briefs-heading">Also on the bench</h2>
+      <ul class="brief-list">
+        {
+          briefs.map((p, i) => (
+            <li class="brief">
+              <time class="brief-date" datetime={iso(p.data.updated)}>{iso(p.data.updated)}</time>
+              <span class="brief-kicker">{clusterLabels[p.data.cluster]}</span>
+              <div class="brief-body">
+                <h3 class="brief-title">
+                  <a href={hrefFor(p)}>{p.data.title}</a>
+                </h3>
+                <p class="brief-summary">{p.data.summary}</p>
+              </div>
+              <span class="brief-num">{ordinal(i + 3)}</span>
+            </li>
+          ))
+        }
+      </ul>
+      <p class="more"><a href="/projects/">Every entry →</a></p>
+    </section>
+
+    <HandRule variant="hair" />
+
+    <section class="station">
+      <p class="station-line">
+        <span class="station-call">{site.callsign}</span> AllStarLink node, an API and an agent that
+        can key the radio. <a href="/radio/">The station →</a>
+      </p>
+    </section>
+  </div>
 </BaseLayout>
 
+<script is:inline>
+  /* REVIEW HARNESS, branch only: apply the URL's switches to the page. Remove
+     with the <aside class="review"> block above. */
+  (function () {
+    var front = document.querySelector('.front');
+    if (!front) return;
+    var q = new URLSearchParams(location.search);
+    ['rules', 'texture', 'lead'].forEach(function (key) {
+      var value = q.get(key);
+      if (value) front.setAttribute('data-' + key, value);
+    });
+  })();
+</script>
+
 <style>
-  .masthead {
-    padding-block: var(--space-9) var(--space-8);
-    border-bottom: 1px solid var(--rule-strong);
-    margin-bottom: var(--space-7);
+  /* Front page only. The tokens are shared; nothing here changes another page.
+     Metadata is deliberately smaller than the site default (11px and 10px)
+     because the contrast between a 44px headline and an 11px dateline is a
+     large part of what makes a page read as set rather than generated. */
+  .front {
+    /* The doodle texture, off by default. Mid grey so one file works on both
+       themes; see public/doodle.svg. */
+    background-repeat: repeat;
+    background-position: 0 0;
   }
 
-  .masthead-name {
-    font-size: var(--size-masthead);
-    letter-spacing: -0.02em;
+  .front[data-texture='on'] {
+    background-image: url('/doodle.svg');
+    background-size: 240px 240px;
   }
 
-  .masthead-line {
-    margin-top: var(--space-5);
-    max-width: 58ch;
-    font-size: var(--size-h3);
-    line-height: 1.5;
+  /* Review harness. Dashed so it cannot be mistaken for the design. */
+  .review {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: var(--space-4);
+    margin-block: var(--space-5) 0;
+    padding: var(--space-3) var(--space-4);
+    border: 1px dashed var(--rule-strong);
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .review-tag {
+    color: var(--ink);
+    font-weight: 500;
+  }
+
+  .review-group {
+    display: inline-flex;
+    align-items: baseline;
+    gap: var(--space-2);
+  }
+
+  .review-key {
+    color: var(--faint);
+  }
+
+  .review a {
+    color: var(--muted);
+    text-decoration: none;
+  }
+
+  .review a:hover {
+    color: var(--ink);
+    text-decoration: underline;
+  }
+
+  .review a[aria-current='true'] {
+    color: var(--accent);
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+  }
+
+  .review-sep {
+    color: var(--faint);
+  }
+
+  .review-note {
+    margin-left: auto;
+    color: var(--faint);
+  }
+
+  /* Dateline: the strip of volume, place and date above the nameplate. */
+  .dateline {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: var(--space-3) var(--space-5);
+    padding-block: var(--space-3);
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    font-variant-numeric: tabular-nums slashed-zero;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .nameplate {
+    padding-block: var(--space-6) var(--space-5);
+  }
+
+  .nameplate-name {
+    font-size: clamp(2.4rem, 7vw, 3.75rem);
+    line-height: 0.98;
+    letter-spacing: -0.025em;
+  }
+
+  .nameplate-line {
+    margin-top: var(--space-4);
+    max-width: 64ch;
+    font-size: 1.0625rem;
+    line-height: 1.55;
+    color: var(--muted);
+  }
+
+  .sections {
+    display: flex;
+    align-items: center;
+    gap: var(--space-5);
+    padding-block: var(--space-3);
+  }
+
+  .sections ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-5);
+    list-style: none;
+    padding: 0;
+  }
+
+  .sections a {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    text-decoration: none;
     color: var(--ink);
   }
 
-  .masthead-meta {
-    margin-top: var(--space-5);
+  .sections a:hover {
+    color: var(--accent);
+    text-decoration: underline;
   }
 
-  .masthead-actions {
+  .sections :global(.theme-toggle) {
+    margin-left: auto;
+  }
+
+  /* Lead: the loudest thing on the page. Everything about it is larger than
+     the entries below except the metadata, which stays at 11px. */
+  .lead {
+    padding-block: var(--space-7) var(--space-6);
+  }
+
+  .lead-kicker {
     display: flex;
-    gap: var(--space-4);
-    flex-wrap: wrap;
-    margin-top: var(--space-6);
-    max-width: none;
+    justify-content: space-between;
+    gap: var(--space-5);
   }
 
-  .more-link {
+  .lead-num,
+  .column-num,
+  .brief-num {
+    color: var(--faint);
+  }
+
+  .lead-title {
+    margin-top: var(--space-4);
+    max-width: 30ch;
+    font-size: clamp(1.9rem, 4.6vw, 2.75rem);
+    line-height: 1.08;
+    letter-spacing: -0.02em;
+  }
+
+  .lead-title a {
+    color: var(--ink);
+    text-decoration: none;
+  }
+
+  .lead-title a:hover {
+    color: var(--ink);
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 0.12em;
+  }
+
+  .lead-deck {
+    margin-top: var(--space-4);
+    max-width: 62ch;
+    font-size: 1.1875rem;
+    line-height: 1.55;
+    color: var(--muted);
+    text-wrap: pretty;
+  }
+
+  .lead-body {
+    display: grid;
+    gap: var(--space-6);
     margin-top: var(--space-6);
+  }
+
+  .lead-figure img {
+    width: 100%;
+    height: auto;
+    border: 1px solid var(--rule);
+  }
+
+  .lead-note {
+    max-width: 46ch;
+    font-size: 1.0625rem;
+    line-height: 1.6;
+    font-style: italic;
+  }
+
+  .facts {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: center;
+    margin-top: var(--space-5);
+    border-top: 1px solid var(--rule);
+  }
+
+  .facts dt,
+  .facts dd {
+    padding-block: var(--space-3);
+    border-bottom: 1px solid var(--rule);
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.08em;
+  }
+
+  .facts dt {
+    padding-right: var(--space-6);
+    text-transform: uppercase;
+    color: var(--faint);
+  }
+
+  .facts dd {
+    color: var(--ink);
+  }
+
+  .facts dd a {
+    color: var(--ink);
+    text-decoration: none;
+  }
+
+  .facts dd a:hover {
+    color: var(--accent);
+    text-decoration: underline;
+  }
+
+  .read-on {
+    margin-top: var(--space-5);
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .read-on a {
+    text-decoration: none;
+  }
+
+  /* Second tier: two columns with a visible rule between them. */
+  .columns {
+    display: grid;
+    gap: var(--space-6);
+    padding-block: var(--space-6);
+  }
+
+  .column-title {
+    margin-top: var(--space-3);
+    font-size: 1.375rem;
+    line-height: 1.15;
+  }
+
+  .column-title a {
+    color: var(--ink);
+    text-decoration: none;
+  }
+
+  .column-title a:hover {
+    text-decoration: underline;
+    text-underline-offset: 0.14em;
+  }
+
+  .column-figure {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    object-position: top;
+    border: 1px solid var(--rule);
+    margin-top: var(--space-4);
+  }
+
+  .column-summary {
+    margin-top: var(--space-4);
+    font-size: 1.0625rem;
+    line-height: 1.55;
+    text-wrap: pretty;
+  }
+
+  .column-note {
+    margin-top: var(--space-3);
+    font-size: 1rem;
+    line-height: 1.55;
+    font-style: italic;
+    color: var(--muted);
+  }
+
+  .column-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-4);
+    margin-top: var(--space-4);
+    padding-top: var(--space-3);
+    border-top: 1px solid var(--rule);
+  }
+
+  /* Third tier: briefs, text only, date in the margin. */
+  .briefs {
+    padding-block: var(--space-6) var(--space-5);
+  }
+
+  .briefs-heading {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    font-weight: 400;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding-bottom: var(--space-3);
+    border-bottom: 1px solid var(--rule-strong);
+  }
+
+  .brief-list {
+    list-style: none;
+    padding: 0;
+  }
+
+  .brief {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: var(--space-2) var(--space-4);
+    padding-block: var(--space-4);
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .brief-date,
+  .brief-kicker,
+  .brief-num {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    font-variant-numeric: tabular-nums slashed-zero;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .brief-date,
+  .brief-num {
+    color: var(--faint);
+  }
+
+  .brief-kicker {
+    color: var(--accent);
+  }
+
+  .brief-body {
+    grid-column: 1 / -1;
+  }
+
+  .brief-title {
+    font-size: 1.125rem;
+    line-height: 1.3;
+  }
+
+  .brief-title a {
+    color: var(--ink);
+    text-decoration: none;
+  }
+
+  .brief-title a:hover {
+    text-decoration: underline;
+    text-underline-offset: 0.14em;
+  }
+
+  .brief-summary {
+    margin-top: var(--space-2);
+    max-width: 78ch;
+    color: var(--muted);
+    font-size: 1rem;
+    line-height: 1.5;
+  }
+
+  .more {
+    margin-top: var(--space-5);
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .more a {
+    text-decoration: none;
+  }
+
+  .station {
+    padding-block: var(--space-5) var(--space-4);
+  }
+
+  .station-line {
+    max-width: 72ch;
+    font-size: 1.0625rem;
+    line-height: 1.5;
+  }
+
+  .station-call {
+    font-family: var(--font-mono);
+    font-size: 0.875rem;
+    letter-spacing: 0.1em;
+    color: var(--accent);
+    margin-right: var(--space-2);
+  }
+
+  /* Wide enough for the tiers to sit side by side. The desktop preview pane is
+     about 800px, so this has to fire below that or the pane shows the mobile
+     stack and Josh judges a layout he cannot see. */
+  @media (min-width: 720px) {
+    .lead-body {
+      grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+      align-items: start;
+      gap: var(--space-7);
+    }
+
+    .columns {
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+    }
+
+    .column + .column {
+      padding-left: var(--space-6);
+      border-left: 1px solid var(--rule);
+    }
+
+    .column {
+      padding-right: var(--space-6);
+    }
+
+    .brief {
+      grid-template-columns: 116px 104px minmax(0, 1fr) 32px;
+      align-items: baseline;
+      gap: var(--space-5);
+    }
+
+    .brief-body {
+      grid-column: auto;
+    }
+
+    .brief-num {
+      text-align: right;
+    }
+  }
+
+  /* The one placement question the lead picture raises. */
+  .front[data-lead='text'] .lead-figure {
+    display: none;
+  }
+
+  .front[data-lead='text'] .lead-body {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .front[data-lead='text'] .lead-note {
+    max-width: 62ch;
+  }
+
+  @media print {
+    .review {
+      display: none;
+    }
   }
 </style>

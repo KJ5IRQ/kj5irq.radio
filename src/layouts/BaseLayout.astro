@@ -11,9 +11,23 @@ interface Props {
   title?: string;
   description?: string;
   noindex?: boolean;
+  /* The front page carries its own nameplate, which includes the section strip
+     and the theme toggle. Rendering the site header there as well puts the
+     name on the page twice within 100px, so the front page opts out. Every
+     other page keeps the header. */
+  chrome?: boolean;
+  /* The front page is a sheet rather than a page: it gets the wider measure and
+     does not need a prose page's breathing room above the footer. */
+  sheet?: 'default' | 'broadsheet';
 }
 
-const { title = site.defaultTitle, description = site.defaultDescription, noindex = false } = Astro.props;
+const {
+  title = site.defaultTitle,
+  description = site.defaultDescription,
+  noindex = false,
+  chrome = true,
+  sheet = 'default',
+} = Astro.props;
 const canonical = new URL(Astro.url.pathname, site.url).href;
 
 const personJsonLd = JSON.stringify({
@@ -63,8 +77,8 @@ const personJsonLd = JSON.stringify({
   </head>
   <body>
     <a class="skip-link" href="#main">Skip to content</a>
-    <Header />
-    <main id="main" class="wrap">
+    {chrome && <Header />}
+    <main id="main" class:list={['wrap', sheet === 'broadsheet' && 'wrap--broadsheet']}>
       <slot />
     </main>
     <Footer />

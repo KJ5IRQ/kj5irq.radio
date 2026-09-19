@@ -156,6 +156,23 @@ main.wrap {
   }
 }
 
+/* The broadsheet sheet. A wider measure than a prose page, and the last rule on
+   the front page sits closer to the footer: a newspaper page ends, it does not
+   trail off into padding. */
+.wrap--broadsheet {
+  max-width: 1120px;
+}
+
+@media (min-width: 900px) {
+  main.wrap--broadsheet {
+    padding-block-end: var(--space-7);
+  }
+}
+
+.wrap--broadsheet + .site-footer {
+  margin-top: var(--space-8);
+}
+
 .skip-link {
   position: absolute;
   top: -100px;
