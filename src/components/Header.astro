@@ -1,9 +1,17 @@
 ---
+import { getCollection } from 'astro:content';
 import ThemeToggle from './ThemeToggle.astro';
 import { site } from '../data/site';
 
+/* Writing appears in the navigation only once there is something to read. An
+   empty shelf is worse than no shelf, which is the rule in
+   docs/website-redesign/03_information_architecture.md section D. Add the
+   first published piece and this turns itself on. */
+const hasWriting = (await getCollection('writing', ({ data }) => data.publish)).length > 0;
+
 const nav = [
   { label: 'Entries', href: '/projects/' },
+  ...(hasWriting ? [{ label: 'Writing', href: '/writing/' }] : []),
   { label: 'Radio', href: '/radio/' },
   { label: 'About', href: '/about/' },
 ];

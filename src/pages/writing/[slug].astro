@@ -1,0 +1,74 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { site } from '../../data/site';
+
+export async function getStaticPaths() {
+  const pieces = await getCollection('writing', ({ data }) => data.publish);
+  return pieces.map((piece) => ({
+    params: { slug: piece.id },
+    props: { piece },
+  }));
+}
+
+const { piece } = Astro.props;
+const { Content } = await render(piece);
+const kindLabel: Record<string, string> = {
+  essay: 'Essay',
+  note: 'Note',
+  analysis: 'Analysis',
+  satire: 'Satire',
+  fiction: 'Fiction',
+};
+const iso = (d: Date) => d.toISOString().slice(0, 10);
+---
+
+<BaseLayout title={`${piece.data.title} · ${site.name}`} description={piece.data.summary}>
+  <article>
+    <header class="piece-head">
+      <p class="label">{kindLabel[piece.data.kind] ?? piece.data.kind}</p>
+      <h1>{piece.data.title}</h1>
+      <p class="page-dek">{piece.data.summary}</p>
+      <p class="meta piece-meta">
+        <time datetime={iso(piece.data.date)}>{iso(piece.data.date)}</time>
+        {
+          piece.data.updated && (
+            <span> · updated {iso(piece.data.updated)}</span>
+          )
+        }
+        {piece.data.series && <span> · {piece.data.series}</span>}
+      </p>
+    </header>
+
+    <div class="prose prose-numbered">
+      <Content />
+    </div>
+
+    <p class="back-link"><a href="/writing/">← All writing</a></p>
+  </article>
+</BaseLayout>
+
+<style>
+  .piece-head {
+    padding-block: var(--space-8) var(--space-6);
+  }
+
+  .page-dek {
+    margin-top: var(--space-4);
+    color: var(--muted);
+    font-size: var(--size-h3);
+    line-height: 1.4;
+    max-width: var(--measure);
+  }
+
+  .piece-meta {
+    margin-top: var(--space-5);
+    color: var(--faint);
+    padding-top: var(--space-4);
+    border-top: 1px solid var(--rule);
+  }
+
+  .back-link {
+    margin-block: var(--space-8);
+  }
+</style>

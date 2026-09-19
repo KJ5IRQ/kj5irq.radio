@@ -38,4 +38,45 @@ const projects = defineCollection({
     .strict(),
 });
 
-export const collections = { projects };
+// Writing and notes, per docs/website-redesign/06_content_model.md sections 3
+// and 4, and gated by the doc 09 publication rules.
+//
+// Same fail-closed shape as projects: publish and privacyReviewed must be
+// literally true or the build fails, and unknown fields are rejected. That
+// matters more here than for projects, because the doc 09 sync script is
+// meant to copy notes out of the private vault: an allowlist that rejects
+// everything it does not recognise is what stops vault-side metadata (state,
+// private tags, aliases) reaching the repo by accident.
+const writing = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: './src/content/writing' }),
+  schema: z
+    .object({
+      title: z.string(),
+      // The index one-liner and the meta description. Longer than a project
+      // summary because a piece of writing needs a real sentence, not a label.
+      summary: z.string().max(200),
+      date: z.coerce.date(),
+      // Satire is labeled as satire on the page, so a future reader and a
+      // quote-miner both know what they are holding.
+      kind: z.enum(['essay', 'note', 'analysis', 'satire', 'fiction']),
+      publish: z.literal(true),
+      privacyReviewed: z.literal(true),
+      updated: z.coerce.date().optional(),
+      series: z.string().optional(),
+      topics: z.array(z.string()).optional(),
+      // Set only by the vault sync path, so a vault note is never mistaken for
+      // something written directly for the site.
+      source: z.literal('vault').optional(),
+      image: z
+        .object({
+          src: z.string(),
+          alt: z.string(),
+          width: z.number(),
+          height: z.number(),
+        })
+        .optional(),
+    })
+    .strict(),
+});
+
+export const collections = { projects, writing };

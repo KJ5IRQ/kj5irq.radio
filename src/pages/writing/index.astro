@@ -1,0 +1,176 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import HandRule from '../../components/HandRule.astro';
+import { site } from '../../data/site';
+
+/* The writing index. Newest first, margin dates, kind as a tag:
+   docs/website-redesign/06_content_model.md section 3.
+
+   Same spine as the rest of the site on purpose. docs/design/BRIEF.md is
+   explicit that writing does not get its own visual identity and that a blog
+   post is just another entry, so the branding here is the site's own: the
+   mark, the display serif, the hand-drawn rules, one accent. The only thing
+   that makes this page a blog is what it lists.
+
+   While the shelf is empty this page is noindex and nothing links to it: doc 03
+   section D rules that launching an empty writing index undermines the site.
+   The first published piece turns the navigation on by itself. */
+const pieces = (await getCollection('writing', ({ data }) => data.publish)).sort(
+  (a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
+);
+const empty = pieces.length === 0;
+
+const iso = (d: Date) => d.toISOString().slice(0, 10);
+const kindLabels: Record<string, string> = {
+  essay: 'Essay',
+  note: 'Note',
+  analysis: 'Analysis',
+  satire: 'Satire',
+  fiction: 'Fiction',
+};
+const kindLabel = (kind: string) => kindLabels[kind] ?? kind;
+---
+
+<BaseLayout
+  title={`Writing · ${site.name}`}
+  description="Essays and working notes: Joshua Ford (KJ5IRQ) on systems, radios, and keeping them running."
+  noindex={empty}
+>
+  <header class="blog-head">
+    <img class="blog-mark" src="/mark-80.png" alt="" width="80" height="80" />
+    <div class="blog-id">
+      <p class="label">Writing</p>
+      <h1 class="blog-title">The notebook</h1>
+      <p class="page-dek">
+        Essays and working notes, newest first. Notes are working material, not finished arguments,
+        and anything satirical is labeled as satire.
+      </p>
+    </div>
+  </header>
+  <HandRule variant="heavy" />
+
+  {
+    empty ? (
+      <p class="empty-note">
+        <em>Nothing published here yet.</em>
+      </p>
+    ) : (
+      <ol class="pieces">
+        {pieces.map((piece, i) => (
+          <li>
+            {i > 0 && <HandRule variant="hair" />}
+            <div class="piece">
+              <p class="meta piece-date">
+                <time datetime={iso(piece.data.date)}>{iso(piece.data.date)}</time>
+              </p>
+              <div class="piece-body">
+                <p class="piece-kind">{kindLabel(piece.data.kind)}</p>
+                <h2 class="piece-title">
+                  <a href={`/writing/${piece.id}/`}>{piece.data.title}</a>
+                </h2>
+                <p class="piece-summary">{piece.data.summary}</p>
+              </div>
+            </div>
+          </li>
+        ))}
+      </ol>
+    )
+  }
+</BaseLayout>
+
+<style>
+  /* The masthead. The mark gives the page the one piece of brand furniture the
+     site has, and it is the same file the footer and /radio/ use, so nothing
+     new is being invented for writing. */
+  .blog-head {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-6);
+    padding-block: var(--space-8) var(--space-6);
+  }
+
+  .blog-mark {
+    width: 80px;
+    height: 80px;
+    flex: none;
+  }
+
+  [data-theme='dark'] .blog-mark {
+    filter: invert(1);
+  }
+
+  .blog-title {
+    font-size: var(--size-h1);
+    margin-top: var(--space-2);
+  }
+
+  .page-dek {
+    margin-top: var(--space-4);
+    color: var(--muted);
+    font-size: var(--size-h3);
+    line-height: 1.4;
+    max-width: var(--measure);
+  }
+
+  .empty-note {
+    padding-block: var(--space-8);
+    color: var(--muted);
+  }
+
+  .pieces {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 var(--space-8);
+  }
+
+  /* The date sits in the margin, which is what makes a dated list read as a
+     record rather than a card stack. It folds above the title on a phone. */
+  .piece {
+    display: grid;
+    grid-template-columns: 116px minmax(0, 1fr);
+    gap: var(--space-5);
+    padding-block: var(--space-6);
+  }
+
+  .piece-date {
+    color: var(--faint);
+    padding-top: var(--space-1);
+  }
+
+  .piece-kind {
+    font-family: var(--font-mono);
+    font-size: var(--size-meta);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: var(--space-2);
+  }
+
+  .piece-title {
+    font-size: var(--size-h2);
+    margin: 0;
+  }
+
+  .piece-summary {
+    margin-top: var(--space-3);
+    color: var(--muted);
+    max-width: var(--measure);
+  }
+
+  @media (max-width: 620px) {
+    .blog-head {
+      gap: var(--space-4);
+    }
+
+    .blog-mark {
+      width: 56px;
+      height: 56px;
+    }
+
+    .piece {
+      grid-template-columns: minmax(0, 1fr);
+      gap: var(--space-2);
+    }
+  }
+</style>

@@ -24,6 +24,10 @@ const published = (await getCollection('projects', ({ data }) => data.publish))
 
 const [lead, ...theRest] = published;
 const columns = theRest.slice(0, 2);
+
+/* Writing joins the section strip only when the shelf has something on it:
+   docs/website-redesign/03_information_architecture.md section D. */
+const hasWriting = (await getCollection('writing', ({ data }) => data.publish)).length > 0;
 const briefs = theRest.slice(2);
 
 const iso = (d: Date) => d.toISOString().slice(0, 10);
@@ -125,8 +129,13 @@ const observedLabel = weather ? clockTime(new Date(weather.observedAt)) : null;
     <nav class="sections" aria-label="Sections">
       <ul>
         <li><a href="/projects/">Entries</a></li>
-        <li><a href="/radio/">Radio</a></li>
-        <li><a href="/talks/">Talks</a></li>
+        {hasWriting && <li><a href="/writing/">Writing</a></li>}
+        <li class="section-group">
+          <a href="/radio/">Radio</a>
+          <ul class="section-sub">
+            <li><a href="/talks/">Talks</a></li>
+          </ul>
+        </li>
         <li><a href="/about/">About</a></li>
         <li><a href="/colophon/">Colophon</a></li>
       </ul>
@@ -494,6 +503,32 @@ const observedLabel = weather ? clockTime(new Date(weather.observedAt)) : null;
     gap: var(--space-5);
     list-style: none;
     padding: 0;
+  }
+
+  /* Talks sits under Radio rather than beside it, because it belongs to the
+     station instead of being a section of its own. No dropdown and no
+     JavaScript: the child is set beneath its parent, smaller and quieter.
+     A hover menu in a strip this narrow would be a worse answer than simply
+     showing the structure. */
+  .sections .section-group {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .sections .section-sub {
+    gap: 0;
+    margin-left: var(--space-5);
+  }
+
+  .sections .section-sub a {
+    font-size: calc(var(--mono-sm) - 0.0625rem);
+    letter-spacing: 0.1em;
+    color: var(--faint);
+  }
+
+  .sections .section-sub a:hover {
+    color: var(--accent);
   }
 
   .sections a {
@@ -904,6 +939,20 @@ const observedLabel = weather ? clockTime(new Date(weather.observedAt)) : null;
     .sections a {
       font-size: 0.75rem;
       letter-spacing: 0.08em;
+    }
+
+    /* Below 720px the sub-item tucks in beside its parent instead of under it.
+       A child parked beneath Radio forces a third line, and a lone TALKS
+       floating under the strip reads as a mistake for the same reason COLOPHON
+       stranded there before. The smaller size still carries the relationship. */
+    .sections .section-group {
+      flex-direction: row;
+      align-items: baseline;
+      gap: var(--space-2);
+    }
+
+    .sections .section-sub {
+      margin-left: 0;
     }
   }
 </style>

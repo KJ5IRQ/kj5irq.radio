@@ -1,6 +1,10 @@
 ---
+import { getCollection } from 'astro:content';
 import { site } from '../data/site';
 const year = new Date().getFullYear();
+
+/* Same rule as the header: the link exists only when the shelf is not empty. */
+const hasWriting = (await getCollection('writing', ({ data }) => data.publish)).length > 0;
 ---
 
 <footer class="site-footer">
@@ -12,7 +16,7 @@ const year = new Date().getFullYear();
       <li><a href={site.github} rel="me noopener">GitHub</a></li>
       <li><a href={site.linkedin} rel="me noopener">LinkedIn</a></li>
       <li><a href={site.qrz} rel="me noopener">QRZ</a></li>
-      <li><a href="/talks/">Talks</a></li>
+      {hasWriting && <li><a href="/writing/">Writing</a></li>}
       <li><a href="/colophon/">Colophon</a></li>
       <li><a href="/privacy/">Privacy</a></li>
     </ul>
