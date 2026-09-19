@@ -193,21 +193,34 @@ const nameplateLine =
             <h3 class="column-title">
               <a href={hrefFor(p)}>{p.data.title}</a>
             </h3>
-            {p.data.image && (
-              <img
-                class="column-figure"
-                src={p.data.image.src}
-                alt={p.data.image.alt}
-                width={p.data.image.width}
-                height={p.data.image.height}
-              />
-            )}
+            {/* The picture takes half the column and the facts sit beside it,
+                so a smaller picture does not leave a hole in the column. */}
+            <div class:list={['column-media', !p.data.image && 'column-media--solo']}>
+              {
+                p.data.image && (
+                  <img
+                    class="column-figure"
+                    src={p.data.image.src}
+                    alt={p.data.image.alt}
+                    width={p.data.image.width}
+                    height={p.data.image.height}
+                  />
+                )
+              }
+              <div class="column-side">
+                <p class="meta">
+                  <StatusTag status={p.data.status} />
+                </p>
+                <p class="meta column-side-line">{iso(p.data.updated)}</p>
+                {
+                  p.data.stack && (
+                    <p class="meta column-side-line">{p.data.stack.join(' / ')}</p>
+                  )
+                }
+              </div>
+            </div>
             <p class="column-summary">{p.data.summary}</p>
             <p class="column-note">{p.data.whyItMatters}</p>
-            <p class="meta column-meta">
-              <StatusTag status={p.data.status} />
-              <span>{iso(p.data.updated)}</span>
-            </p>
           </article>
         ))
       }
@@ -539,6 +552,20 @@ const nameplateLine =
     text-underline-offset: 0.14em;
   }
 
+  /* The picture is half the column width, with the entry's facts beside it.
+     Halving the pictures without giving the other half a job leaves a hole. */
+  .column-media {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-4);
+    align-items: start;
+    margin-top: var(--space-4);
+  }
+
+  .column-media--solo {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
   .column-figure {
     width: 100%;
     height: auto;
@@ -546,11 +573,28 @@ const nameplateLine =
     object-fit: cover;
     object-position: top;
     border: 1px solid var(--rule);
-    margin-top: var(--space-4);
+  }
+
+  .column-side {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    padding-left: var(--space-4);
+    border-left: 1px solid var(--rule);
+  }
+
+  .column-side .meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+
+  .column-side-line {
+    line-height: 1.45;
   }
 
   .column-summary {
-    margin-top: var(--space-4);
+    margin-top: var(--space-5);
     font-size: 1.0625rem;
     line-height: 1.55;
     text-wrap: pretty;
@@ -562,16 +606,6 @@ const nameplateLine =
     line-height: 1.55;
     font-style: italic;
     color: var(--muted);
-  }
-
-  .column-meta {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: var(--space-4);
-    margin-top: var(--space-4);
-    padding-top: var(--space-3);
-    border-top: 1px solid var(--rule);
   }
 
   /* Third tier: briefs, text only, date in the margin. */
@@ -684,7 +718,9 @@ const nameplateLine =
      stack and Josh judges a layout he cannot see. */
   @media (min-width: 720px) {
     .lead-body {
-      grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+      /* The lead picture is half the width it used to be; the freed column
+         goes to the reading side. */
+      grid-template-columns: minmax(0, 2.5fr) minmax(0, 8.5fr);
       align-items: start;
       gap: var(--space-7);
     }
